@@ -1,0 +1,16 @@
+{% load ninecms_extras %}
+{% comment %}
+
+Block template for search
+Author: George Karakostas
+Copyright: Copyright 2015, George Karakostas
+Licence: BSD-3
+Email: gkarak@9-dev.com
+
+{% endcomment %}
+<div class="search">
+    <form id="searchform" action="/search/" method="get">
+        {% field form.query %}
+        <input type="submit" value="Search" class="btn btn-primary btn-block">
+    </form>
+</div>

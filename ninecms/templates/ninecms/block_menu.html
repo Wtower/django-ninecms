@@ -1,0 +1,30 @@
+{% load mptt_tags %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% comment %}
+Block template for menu
+Author: George Karakostas
+Copyright: Copyright 2015, George Karakostas
+Licence: BSD-3
+Email: gkarak@9-dev.com
+{% endcomment %}
+<ul class="menu">
+    {% recursetree menu %}
+        <li>
+            {% if not node.disabled %}
+                {% if node.language == LANGUAGE_CODE or node.language == '' %}
+                    {% if node.path %}
+                        <a href="{{ node.full_path }}"><span>{{ node.title }}</span></a>
+                    {% else %}
+                        {{ node.title }}
+                    {% endif %}
+                    {% if not node.is_leaf_node %}
+                        <ul class="menu children">
+                            {{ children }}
+                        </ul>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        </li>
+    {% endrecursetree %}
+</ul>

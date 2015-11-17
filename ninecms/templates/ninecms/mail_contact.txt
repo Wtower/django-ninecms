@@ -1,0 +1,10 @@
+{% comment %}
+Mail template for contact
+Author: George Karakostas
+Copyright: Copyright 2015, George Karakostas
+Licence: BSD-3
+Email: gkarak@9-dev.com
+{% endcomment %}
+{{ sender_name|striptags }} <{{ sender_email|striptags }}> sent a message using the contact form.
+
+{{ message|striptags }}

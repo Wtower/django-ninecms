@@ -1,0 +1,14 @@
+*.pyc
+.idea/
+ninecms/static/ninecms/bootstrap/
+ninecms/static/ninecms/ckeditor/
+ninecms/static/ninecms/images/
+ninecms/static/ninecms/jquery/
+ninecms/static/ninecms/jquery.scrollTo/
+ninecms/static/ninecms/masonry/
+ninecms/static/ninecms/video-js/
+ninecms/static/ninecms/waypoints/
+ninecms/static/ninecms/owl-carousel/
+ninecms/static/ninecms/wow/
+ninecms/static/ninecms/angular.min.js
+ninecms/version.txt

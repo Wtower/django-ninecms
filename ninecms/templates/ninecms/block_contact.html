@@ -1,0 +1,23 @@
+{% load ninecms_extras %}
+{% comment %}
+Block template for contact
+Author: George Karakostas
+Copyright: Copyright 2015, George Karakostas
+Licence: BSD-3
+Email: gkarak@9-dev.com
+{% endcomment %}
+<div class="contact-form container padding-vertical-80">
+    <div class="row header">
+        <div class="col-md-10 col-md-offset-1"><div class="title"><h2>Contact</h2></div></div>
+    </div>
+    <form action="{% url 'ninecms:contact' %}" method="post">
+        {% csrf_token %}
+        {% include 'ninecms/form_non_field_errors.html' with errors=form.non_field_errors only %}
+        {% field form.sender_name %}
+        {% field form.sender_email %}
+        {% field form.subject %}
+        {% field form.message %}
+        <input id="id_redirect" name="redirect" type="hidden" value="ninecms:index">
+        <input type="submit" value="Send" class="btn btn-primary btn-lg">
+    </form>
+</div>

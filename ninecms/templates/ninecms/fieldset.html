@@ -1,0 +1,11 @@
+{% comment %}
+Fieldset template
+Author: George Karakostas
+Copyright: Copyright 2015, George Karakostas
+Licence: BSD-3
+Email: gkarak@9-dev.com
+{% endcomment %}
+<div class="fieldset panel panel-default panel-name-{{ id|slugify }}">
+    <div class="panel-heading">{{ name }}</div>
+    <div class="panel-body">{{ var }}</div>
+</div>

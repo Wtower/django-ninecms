@@ -1,0 +1,22 @@
+{% load mptt_tags %}
+{% comment %}
+Block template for view: terms
+Author: George Karakostas
+Copyright: Copyright 2015, George Karakostas
+Licence: BSD-3
+Email: gkarak@9-dev.com
+{% endcomment %}
+<li>Terms
+    <ul>
+        {% recursetree content %}
+            <li>
+                {{ node.name }}
+                {% if not node.is_leaf_node %}
+                    <ul class="children">
+                        {{ children }}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endrecursetree %}
+    </ul>
+</li>

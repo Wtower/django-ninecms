@@ -1,0 +1,344 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_static bootstrapped_goodies_tags ninecms_extras %}
+
+{% comment %}
+Index template
+Author: George Karakostas
+Copyright: Copyright 2015, George Karakostas
+Licence: BSD-3
+Email: gkarak@9-dev.com
+{% endcomment %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}" />{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+<li>{% trans 'Home' %}</li>
+</ul>
+{% endblock %}
+
+{% block content-navbar-collapse %}
+{% endblock %}
+
+{% block object-tools %}
+<ul class="nav navbar-nav">
+    <li class="dropdown">
+        <a role="button" href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans "Applications" %} <span class="caret"></span></a>
+        <ul class="dropdown-menu" role="menu">
+            {% for app in app_list %}
+            <li>
+                <a href="#"><strong>{% render_app_name app %}</strong></a>
+            </li>
+            {% for model in app.models %}
+            <li>
+                {% if model.admin_url %}
+                    <a href="{{ model.admin_url }}">{{ model.name }}</a>
+                {% else %}
+                   {{ model.name }}
+                {% endif %}
+            </li>
+            {% endfor %}
+            {% if not forloop.last %}
+            <li role="presentation" class="divider"></li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </li>
+    {% if user.is_superuser %}
+        <li class="dropdown">
+            <a role="button" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                Utilities <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+                <li class="text-center">
+                    <form action="{% url 'ninecms:status' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" name="clear-cache" value="Clear cache" class="btn btn-default">
+                            {% glyphicon 'folder-close' %} Clear cache
+                        </button>
+                    </form>
+                </li>
+                <li role="presentation" class="divider"></li>
+                <li class="text-center">
+                    <form action="{% url 'ninecms:status' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" name="menu-rebuild" value="Rebuild menu" class="btn btn-default">
+                            {% glyphicon 'indent-left' %} Rebuild menu
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </li>
+    {% endif %}
+</ul>
+{% endblock %}
+
+
+{% block content %}
+<div class="row">
+    <div id="content-main" class="col-sm-12">
+
+        {% get_status as status %}
+        <div class="tabbable row">
+            {# STATUS: counters #}
+            {% for stat in status.user_stats %}
+                <div class="col-md-3 col-xs-6">
+                    <div class="panel panel-{% if stat.is_recent %}info{% else %}default{% endif %}">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-lg-2 col-md-3 col-sm-2">
+                                    <a href="{% url stat.url %}?{{ stat.parameters }}">
+                                        <span class="{% if forloop.counter <= 4 %}h1{% else %}h4{% endif %}">
+                                            {% glyphicon stat.icon %}</span>
+                                    </a>
+                                </div>
+                                <div class="col-lg-7 col-md-6 col-sm-7">
+                                    <a href="{% url stat.url %}?{{ stat.parameters }}">
+                                        {% if forloop.counter <= 4 %}<div>&nbsp;</div>{% endif %}
+                                        <div>{{ stat.stat_type|title }}</div>
+                                    </a>
+                                </div>
+                                <div class="col-sm-3 text-right">
+                                    <span class="stat-count-{{ stat.stat_type|slugify }} {% if forloop.counter <= 4 %}h1{% else %}h4{% endif %}">
+                                        {{ stat.count }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <span class="stat-latest-{{ stat.stat_type|slugify }}">
+                                {% if stat.last %}Latest: <a href="{% url stat.url %}{# stat.last.pk #}">
+                                    {{ stat.last|truncatechars:22 }}</a>{% else %}-{% endif %}
+                            </span>
+                            <span class="pull-right">
+                                <a href="{% url stat.url %}?{{ stat.parameters }}">
+                                    {% glyphicon 'circle-arrow-right' %}</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {# STATUS: checks #}
+            {% if user.is_superuser %}
+                <div class="col-md-3 col-xs-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <span class="h4">{% glyphicon 'tag' %}</span>&nbsp;
+                            <span>9cms version</span>
+                        </div>
+                        <div class="panel-body text-center"><span class="h4">{{ status.version }}</span></div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-xs-6">
+                    <div id="panel-updates"
+                         class="panel panel-{% if status.updates %}warning{% else %}success{% endif %}">
+                        <div class="panel-heading">
+                            <span class="h4">{% glyphicon 'cog' %}</span>&nbsp;
+                            <span>Updates</span>
+                        </div>
+                        <div class="panel-body">
+                            {% if status.updates %}
+                                <span class="h4 text-warning">{% glyphicon 'remove' %}</span>
+                                <span class="pull-right">
+                                    <a href="#updates" class="text-warning">
+                                        {% glyphicon 'circle-arrow-down' %}</a>
+                                </span>
+                            {% else %}
+                                <span class="h4 text-success">{% glyphicon 'ok' %}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-xs-6">
+                    <div id="panel-django-check"
+                         class="panel panel-{% if status.django_check.stderr %}warning{% else %}success{% endif %}">
+                        <div class="panel-heading">
+                            <span class="h4">{% glyphicon 'th-list' %}</span>&nbsp;
+                            <span>Django check</span>
+                        </div>
+                        <div class="panel-body">
+                            {% if status.django_check.stderr %}
+                                <span class="h4 text-warning">{% glyphicon 'remove' %}</span>
+                                <span class="pull-right">
+                                    <a href="#django-check-report" class="text-warning">
+                                        {% glyphicon 'circle-arrow-down' %}</a>
+                                </span>
+                            {% else %}
+                                <span class="h4 text-success">{% glyphicon 'ok' %}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-xs-6">
+                    <div id="panel-migrations"
+                         class="panel panel-{% if status.migrations %}warning{% else %}success{% endif %}">
+                        <div class="panel-heading">
+                            <span class="h4">{% glyphicon 'road' %}</span>&nbsp;
+                            <span>Database migrations</span>
+                        </div>
+                        <div class="panel-body">
+                            {% if status.migrations %}
+                                <span class="h4 text-warning">{% glyphicon 'remove' %}</span>
+                                <span class="pull-right">
+                                    <a href="#migrations" class="text-warning">
+                                        {% glyphicon 'circle-arrow-down' %}</a>
+                                </span>
+                            {% else %}
+                                <span class="h4 text-success">{% glyphicon 'ok' %}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-xs-6">
+                    <div id="panel-permissions"
+                         class="panel panel-{% if not status.permissions.status %}warning{% else %}success{% endif %}">
+                        <div class="panel-heading">
+                            <span class="h4">{% glyphicon 'cog' %}</span>&nbsp;
+                            <span>Permissions</span>
+                        </div>
+                        <div class="panel-body">
+                            {% if not status.permissions.status %}
+                                <span class="h4 text-warning">{% glyphicon 'remove' %}</span>
+                                <span class="pull-right">
+                                    <a href="#permissions" class="text-warning">
+                                        {% glyphicon 'circle-arrow-down' %}</a>
+                                </span>
+                            {% else %}
+                                <span class="h4 text-success">{% glyphicon 'ok' %}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-xs-6">
+                    <div id="panel-imagemagick"
+                         class="panel panel-{% if status.imagemagick %}warning{% else %}success{% endif %}">
+                        <div class="panel-heading">
+                            <span class="h4">{% glyphicon 'picture' %}</span>&nbsp;
+                            <span>Image library</span>
+                        </div>
+                        <div class="panel-body">
+                            {% if status.imagemagick %}
+                                <span class="h4 text-warning">{% glyphicon 'remove' %}</span>
+                            {% else %}
+                                <span class="h4 text-success">{% glyphicon 'ok' %}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="tabbable row">
+            {# STATUS: additional information #}
+            {% if status.updates and user.is_superuser %}
+                <div class="col-md-6" id="updates">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading"><h2>Site updates</h2></div>
+                        <div class="panel-body">{{ status.updates|join:'<br />' }}</div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if status.django_check.stderr and user.is_superuser %}
+                <div class="col-md-6" id="django-check-report">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading"><h2>Django check report</h2></div>
+                        <div class="panel-body"><code>{{ status.django_check.stderr|linebreaks }}</code></div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if status.migrations and user.is_superuser %}
+                <div class="col-md-6" id="migrations">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading"><h2>Database migrations</h2></div>
+                        <div class="panel-body">
+{#                            <table class="table table-bordered">#}
+{#                                <tr><td>{{ status.migrations|join:'</td></tr><tr><td>' }}</td></tr>#}
+{#                            </table>#}
+                            <code>{{ status.migrations|join:'<br />' }}</code>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {# STATUS: models #}
+            {% for app in app_list %}
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            {% include "admin/bootstrapped_extra/app_name.html" %}
+                            {% render_app_description app %}
+                        </div>
+                        <div class="panel-body">
+                            <table summary="{% blocktrans with name=app.name %}Models available in the {{ name }} application.{% endblocktrans %}"
+                                   class="table table-bordered">
+                            {% for model in app.models %}
+                                <tr>
+                                    <th scope="row">
+                                        {% if model.admin_url %}
+                                            <a href="{{ model.admin_url }}">{{ model.name }}</a>
+                                        {% else %}
+                                            {{ model.name }}
+                                        {% endif %}
+
+                                        {% if model.add_url or model.admin_url%}
+                                            <div class="pull-right">
+                                                {% if model.add_url %}
+                                                    <a href="{{ model.add_url }}" class="btn btn-xs addlink"><span
+                                                            class="glyphicon glyphicon-plus"></span>
+                                                        {% trans 'Add' %}</a>
+                                                {% endif %}
+                                                {% if model.admin_url %}
+                                                    <a href="{{ model.admin_url }}" class="btn btn-xs changelink"><span
+                                                            class="glyphicon glyphicon-edit"></span>
+                                                        {% trans 'Change' %}</a>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                    </th>
+                                </tr>
+                            {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p>{% trans "You don't have permission to edit anything." %}</p>
+            {% endfor %}
+            {# STATUS: additional information below #}
+            {% if user.is_superuser %}
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h2>Packages</h2></div>
+                        <div class="panel-body">
+                            <table class="table table-striped table-bordered">
+                                {% for package in status.packages %}
+                                    {% cycle 'row' '' as row silent %}
+                                    {% if row %}<tr>{% endif %}
+                                        <td>{{ package }}</td>
+                                    {% if not row %}</tr>{% endif %}
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="panel panel-default" id="permissions">
+                        <div class="panel-heading"><h2>Permission check</h2></div>
+                        <div class="panel-body">
+                            <table class="table table-bordered">
+                                {% for perm in status.permissions.perms %}
+                                    <tr class="{{ perm.1|yesno:'bg-none,bg-warning,bg-danger' }}">
+                                        <td>{{ perm.0 }}</td><td>{% glyphicon perm.1|yesno:'ok,remove,minus' %}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block sidebar %}
+{% endblock %}

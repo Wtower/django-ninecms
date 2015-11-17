@@ -1,0 +1,25 @@
+{% extends "admin/change_list.html" %}
+{% load ninecms_extras %}
+
+{% comment %}
+Template for Node list: add clear cache action
+Author: George Karakostas
+Copyright: Copyright 2015, George Karakostas
+Licence: BSD-3
+Email: gkarak@9-dev.com
+{% endcomment %}
+
+{% block object-tools-items %}
+    {{ block.super }}
+    {% if user.is_superuser %}
+        <li>&nbsp;</li>
+        <li>
+            <form action="{% url 'ninecms:status' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" name="clear-cache" value="Clear cache" class="btn btn-primary">
+                    {% glyphicon 'folder-close' %} Clear cache
+                </button>
+            </form>
+        </li>
+    {% endif %}
+{% endblock %}

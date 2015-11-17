@@ -1,0 +1,46 @@
+{% load mptt_tags %}
+{% load i18n %}
+{% load ninecms_extras %}
+{% get_current_language as LANGUAGE_CODE %}
+{% comment %}
+
+Block template for menu in header region
+Author: George Karakostas
+Copyright: Copyright 2015, George Karakostas
+Licence: BSD-3
+Email: gkarak@9-dev.com
+
+{% endcomment %}
+<ul class="nav navbar-nav navbar-right menu">
+    {% with active_trail=menu|active_trail:request.path|flatten:'path' %}
+        {% recursetree menu %}
+            {% if node.is_leaf_node %}
+                {% if not node.disabled %}
+                    {% if node.language == LANGUAGE_CODE or node.language == '' %}
+                        {% if node.path %}
+                            <li class="{% if node.path in active_trail %}active-trail {% endif %}{% if node.path|check_path_active:request.path %}active{% endif %}">
+                                <a href="{{ node.full_path }}">
+                                    {{ node.title }}
+                                    {% if node.path|check_path_active:request.path %}<span class="sr-only">(current)</span>{% endif %}
+                                </a>
+                            </li>
+                        {% elif node.title == '---' %}
+                            <li class="divider"></li>
+                        {% else %}
+                            <li><span>{{ node.title }}</span></li>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% else %}
+                <li class="dropdown {% if node.path in active_trail %}active-trail {% endif %}{% if node.path|check_path_active:request.path %}active{% endif %}">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        {{ node.title }}<span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        {{ children }}
+                    </ul>
+                </li>
+            {% endif %}
+        {% endrecursetree %}
+    {% endwith %}
+</ul>

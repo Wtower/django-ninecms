@@ -1,0 +1,57 @@
+{% extends 'admin/base_site.html' %}
+{% load i18n ninecms_extras %}
+
+{% comment %}
+Edit Page type permissions
+Author: George Karakostas
+Copyright: Copyright 2015, George Karakostas
+Licence: BSD-3
+Email: gkarak@9-dev.com
+{% endcomment %}
+
+{% block title %}Edit permissions for page type {{ page_type.name }}{% endblock %}
+
+{% if not is_popup %}
+    {% block breadcrumbs %}
+        <ul class="breadcrumb">
+            <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+            <li><a href="{% url 'admin:index' %}ninecms/">Nine Cms</a></li>
+            <li><a href="{% url 'admin:index' %}ninecms/pagetype">Page types</a></li>
+            <li>{{ page_type.description }}</li>
+        </ul>
+    {% endblock %}
+{% endif %}
+
+{% block object-tools %}
+    {% if not is_popup %}
+        <div id="content-navbar-collapse" class="navbar-collapse collapse">
+            <span class="navbar-brand">Edit permissions for page type</span>
+            <ul class="nav navbar-nav navbar-right">
+                {% block object-tools-items %}
+                    <li><a href="{% url 'admin:ninecms_pagetype_change' page_type.pk %}">Edit</a></li>
+                {% endblock %}
+            </ul>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <form action="{% url 'admin:ninecms_pagetype_perms' page_type.id %}" method="post">
+        {% csrf_token %}
+        <div class="permissions-form">
+            {% fieldset "Permissions" %}
+                <div class="row">
+                    <div class="col-xs-4">{% field permissions_form.add_node %}</div>
+                    <div class="col-xs-4">{% field permissions_form.change_node %}</div>
+                    <div class="col-xs-4">{% field permissions_form.delete_node %}</div>
+                </div>
+                {% if not groups %}
+                    <p><em><a href="{% url 'admin:auth_group_changelist' %}">No user groups available.</a></em></p>
+                {% endif %}
+            {% endfieldset %}
+        </div>
+        <div class="form-actions">
+            <div class="pull-right"><input type="submit" value="Save" class="btn btn-primary default"></div>
+        </div>
+    </form>
+{% endblock content %}

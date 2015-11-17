@@ -1,0 +1,32 @@
+{% load ninecms_extras %}
+{% comment %}
+
+Block template for login
+Author: George Karakostas
+Copyright: Copyright 2015, George Karakostas
+Licence: BSD-3
+Email: gkarak@9-dev.com
+
+{% endcomment %}
+{% if not user.is_authenticated %}
+    <div class="login-form container padding-vertical-80">
+        <div class="row header">
+            <div class="col-md-10 col-md-offset-1"><div class="title"><h2>Login</h2></div></div>
+        </div>
+        <form action="{% url 'ninecms:login' %}" method="post">
+            {% csrf_token %}
+            {% include 'ninecms/form_non_field_errors.html' with errors=form.non_field_errors only %}
+            {% field form.username %}
+            {% field form.password %}
+            <input id="id_redirect" name="redirect" type="hidden" value="ninecms:index">
+            <input type="submit" value="Login" class="btn btn-primary btn-lg">
+        </form>
+        <hr>
+        <p><a href="#{# /user/register #}">Create new account</a></p>
+        <p><a href="#{# /user/password #}">Recover password</a></p>
+    </div>
+{% else %}
+    <div class="logout-form container padding-vertical-80">
+        {% include 'ninecms/form_logout.html' %}
+    </div>
+{% endif %}

@@ -1,0 +1,30 @@
+{% comment %}
+Block template for signal Random Video Node
+Render HTML video
+
+Author: George Karakostas
+Copyright: Copyright 2015, George Karakostas
+Licence: BSD-3
+Email: gkarak@9-dev.com
+{% endcomment %}
+
+
+<div class="video slogan">
+    <div class="highlight">{{ content.highlight|safe }}</div>
+    <div class="body">{{ content.body|safe }}</div>
+</div>
+<video id="node-{{ content.id }}" class="video-js vjs-default-skin" preload="auto" autoplay loop
+        {% for source in node.video_set.all %}
+            {% if source.type == 'jpg' %}poster="{{ source.video.url }}"{% endif %}
+        {% endfor %}>
+    {% for source in content.video_set.all %}
+        {% if source.type != 'swf' and source.type != 'jpg' %}
+            <source src="{{ source.video.url }}" type="{{ source.get_type_display }}" media="{{ source.media }}"/>
+        {% elif source.type == 'swf' %}
+            <embed src="{{ source.video.url }}" type="application/x-shockwave-flash"></embed>
+        {% elif source.type == 'jpg' %}
+            <img src="{{ source.video.url }}" alt="{{ content.title }}">
+        {% endif %}
+    {% endfor %}
+    <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+</video>

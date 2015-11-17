@@ -1,0 +1,44 @@
+{% load staticfiles %}
+{% comment %}
+CKEditor template
+
+For toolbar layout edit ckeditor/config.js
+http://docs.ckeditor.com/#!/guide/dev_toolbarconcepts
+http://docs.ckeditor.com/#!/guide/dev_howtos_styles
+
+Author: George Karakostas
+Copyright: Copyright 2015, George Karakostas
+Licence: BSD-3
+Email: gkarak@9-dev.com
+
+{% endcomment %}
+<script src="{% static 'ninecms/ckeditor/ckeditor.js' %}"></script>
+<script>
+    cke_o = {};
+    cke_o.toolbarGroups= [
+        { name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
+        { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+        { name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
+        { name: 'forms' },
+        { name: 'links' },
+        { name: 'insert' },
+        { name: 'styles' },
+        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+        { name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
+        { name: 'colors' },
+        { name: 'tools' },
+        { name: 'others' },
+        { name: 'about' }
+    ];
+    CKEDITOR.config.entities_greek = false;
+    CKEDITOR.config.format_tags = 'p;h2;h3;h4';
+    {% if perms.ninecms.use_full_html %}
+        cke_o.removeButtons = '';
+    {% else %}
+        CKEDITOR.config.removePlugins = 'pbckcode, codeTag, div, elementspath, filebrowser, youtube, pagebreak, removeformat, showblocks, sourcearea';
+        {# basic: CKEDITOR.config.removePlugins += ', blockquote, find, format, horizontalrule, image, indentblock, justify, magicline, maximize, newpage, pastetext, pastefromword, quicktable, selectall, showborders, specialchar, scayt, stylescombo, table, tabletools, wsc, wordcount'; #}
+        {# default {removeButtons: 'Cut, Copy, Paste, Undo, Redo, Anchor'}); #}
+    {% endif %}
+    CKEDITOR.replace('summary', cke_o);
+    CKEDITOR.replace('body', cke_o);
+</script>

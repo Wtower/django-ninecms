@@ -1,0 +1,69 @@
+{% extends 'ninecms/base.html' %}
+
+{% comment %}
+Content page
+Author: George Karakostas
+Copyright: Copyright 2015, George Karakostas
+Licence: BSD-3
+Email: gkarak@9-dev.com
+{% endcomment %}
+
+{% block content %}
+    <nav id="header" class="navbar navbar-default">
+        <div class="container">
+            {# Brand and mobile button (toggle get grouped for better mobile display) #}
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header-inner">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand site-name" href="/">{% include 'ninecms/site-name.html' %}</a>
+            </div>
+            <div class="collapse navbar-collapse" id="header-inner">
+                {{ header|safe }}
+            </div>
+        </div>
+    </nav>
+    <div id="featured" class="container">
+        {{ featured|safe }}
+    </div>
+    <div id="content" class="container">
+        <div class="page-header">
+            <h1>{{ node.title }}</h1>
+        </div>
+        {% include 'ninecms/messages.html' %}
+        <div class="row">
+            {% if sidebar_first %}
+                <div class="col-md-4">{{ sidebar_first|safe }}</div>
+                <div class="col-md-8">{{ content|safe }}</div>
+            {% elif sidebar_second %}
+                <div class="col-md-8">{{ content|safe }}</div>
+                <div class="col-md-4">{{ sidebar_second|safe }}</div>
+            {% elif sidebar_first and sidebar_second %}
+                <div class="col-md-4">{{ sidebar_first|safe }}</div>
+                <div class="col-md-4">{{ content|safe }}</div>
+                <div class="col-md-4">{{ sidebar_second|safe }}</div>
+            {% else %}
+                <div class="col-md-12">{{ content|safe }}</div>
+            {% endif %}
+        </div>
+        {% if node.terms.all %}
+            <p>Tags</p>
+            <ul>
+                {% for term in node.terms.all %}
+                    <li>{{ term.name }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    {{ content_below|safe }}
+
+    <div id="footer">
+        <div class="container">
+            {{ footer|safe }}
+        </div>
+    </div>
+{% endblock content %}

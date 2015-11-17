@@ -1,0 +1,15 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls admin_static admin_modify %}
+
+{% comment %}
+Template for Node edit form: add CKEditor
+Author: George Karakostas
+Copyright: Copyright 2015, George Karakostas
+Licence: BSD-3
+Email: gkarak@9-dev.com
+{% endcomment %}
+
+{% block admin_change_form_document_ready %}
+    {{ block.super }}
+    {% include 'ninecms/ckeditor.html' %}
+{% endblock %}

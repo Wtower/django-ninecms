@@ -1,0 +1,21 @@
+{% load ninecms_extras %}
+{% comment %}
+
+Block template for search results
+Author: George Karakostas
+Copyright: Copyright 2015, George Karakostas
+Licence: BSD-3
+Email: gkarak@9-dev.com
+
+{% endcomment %}
+<div class="container search-results">
+    {% if results.q %}<h3>Search results for <em>{{ results.q }}</em></h3>{% endif %}
+    {% if results.nodes %}
+        {% for result in results.nodes %}
+            <h4><a href="{{ result.get_absolute_url }}">{{ result }}</a></h4>
+            {% if result.summary %}{{ result.summary|safe }}{% else %}{{ result.body|safe }}{% endif %}
+        {% endfor %}
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+</div>

@@ -1,0 +1,13 @@
+{% comment %}
+Form template for logout
+Author: George Karakostas
+Copyright: Copyright 2015, George Karakostas
+Licence: BSD-3
+Email: gkarak@9-dev.com
+{% endcomment %}
+<form action="{% url 'ninecms:logout' %}" method="post">
+    {% csrf_token %}
+    <input id="id_redirect" name="redirect" type="hidden" value="ninecms:index">
+    {% include 'ninecms/form_non_field_errors.html' with errors=form.non_field_errors only %}
+    <input type="submit" value="Logout" class="btn btn-primary btn-block">
+</form>

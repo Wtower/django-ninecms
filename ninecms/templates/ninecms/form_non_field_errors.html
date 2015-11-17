@@ -1,0 +1,16 @@
+{% comment %}
+Messages template for non-field errors
+
+Author: George Karakostas
+Copyright: Copyright 2015, George Karakostas
+Licence: BSD-3
+Email: gkarak@9-dev.com
+{% endcomment %}
+
+{% if errors %}
+    <div class="messages">
+        {% for error in errors %}
+            <div class="alert alert-warning" role="alert">{{ error }}</div>
+        {% endfor %}
+    </div>
+{% endif %}

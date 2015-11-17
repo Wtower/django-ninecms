@@ -1,0 +1,46 @@
+{% load i18n %}
+{% load staticfiles %}
+{% comment %}
+
+Block template for language menu
+Author: George Karakostas
+Copyright: Copyright 2015, George Karakostas
+Licence: BSD-3
+Email: gkarak@9-dev.com
+
+http://stackoverflow.com/a/30779618/940098
+{% endcomment %}
+<form action="{% url 'set_language' %}" method="post">
+    {% csrf_token %}
+    <input name="next" type="hidden" value="{{ request.get_full_path|slice:'3:' }}" />
+    <ul class="nav navbar-nav navbar-right language menu {{ labels }}">
+        {% get_current_language as LANGUAGE_CODE %}
+        {% get_available_languages as LANGUAGES %}
+        {% get_language_info_list for LANGUAGES as languages %}
+        {% for language in languages %}
+            <li>
+                <button type="submit"
+                        name="language"
+                        value="{{ language.code }}"
+                        class="{% if language.code == LANGUAGE_CODE %}selected{% endif %}">
+                    {% if labels == 'name' %}
+                        {{ language.name_local }}
+                    {% elif labels == 'code' %}
+                        {{ language.code }}
+                    {% elif labels == 'flag' %}
+                        {% with 'ninecms/images/flags/'|add:language.code|add:'.png' as flag %}
+                            <img src="{% static flag %}"
+                                 alt="{{ language.name_local }}"
+                                 title="{{ language.name_local }}">
+                        {% endwith %}
+                    {% endif %}
+                </button>
+                <a href="/{{ language.code }}{{ request.get_full_path|slice:'3:' }}"
+                   class="hide"
+                   lang="{{ language.code }}">
+                    {{ language.name_local }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</form>
