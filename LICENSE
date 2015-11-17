@@ -1,10 +1,6 @@
 Copyright (c) George Karakostas and individual contributors.
 All rights reserved.
 
-Developed by George Karakostas
-https://github.com/Wtower
-Licensed under BSD-3
-
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
@@ -15,7 +11,7 @@ are permitted provided that the following conditions are met:
        notice, this list of conditions and the following disclaimer in the
        documentation and/or other materials provided with the distribution.
 
-    3. Neither the name of Nine CMS (9cms) nor the names of its contributors may be used
+    3. Neither the name of django-ninecms (Nine CMS, 9cms) nor the names of its contributors may be used
        to endorse or promote products derived from this software without
        specific prior written permission.
 

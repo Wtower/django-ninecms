@@ -1,0 +1,5 @@
+include LICENSE
+include README.rst
+recursive-include ninecms/static *
+recursive-include ninecms/templates *
+recursive-include docs *
