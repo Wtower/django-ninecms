@@ -1,5 +1,18 @@
-*.pyc
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+*.egg-info/
+
+# Unit test / coverage reports
+.coverage
+.cache
+
+# IDE
 .idea/
+
+# Libraries
 ninecms/static/ninecms/bootstrap/
 ninecms/static/ninecms/ckeditor/
 ninecms/static/ninecms/images/

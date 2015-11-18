@@ -15,6 +15,7 @@ import sys
 import os
 # noinspection PyPackageRequirements
 import pip
+import ninecms
 
 
 class Capturing(list):
@@ -42,10 +43,7 @@ def version():
     """ Return the current 9cms version
     :return: a version string
     """
-    file = open(os.path.join(settings.BASE_DIR, 'ninecms', 'version.txt'))
-    v = file.read()
-    file.close()
-    return v
+    return 'v%s' % ninecms.__version__
 
 
 def packages():

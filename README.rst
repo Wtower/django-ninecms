@@ -103,7 +103,7 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
 
 3. Dependencies:
 
- - Add the following to the `requirements.txt` file::
+ - Add the following to the ``requirements.txt`` file::
 
     bleach==1.4.2
     Django==1.8.6
@@ -132,7 +132,7 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
  All relevant settings sample also exist in ninecms/settings.py as comment.
  From the code samples below remove any settings refer to optional packages that are not installed as above.
 
- - `INSTALLED_APPS` setting::
+ - ``INSTALLED_APPS`` setting::
 
     INSTALLED_APPS = (
         'admin_bootstrapped_plus',
@@ -168,7 +168,7 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
 
  - Templates
 
-  Add `'debug': True` only if planning to have a separate live settings file for your project::
+  Add ``'debug': True`` only if planning to have a separate live settings file for your project::
 
     TEMPLATES = [
         {
@@ -226,7 +226,7 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
 
  - Security:
 
-  Replace `myapp`::
+  Replace ``myapp``::
 
     LOGIN_URL = '/admin/login/'
     SECURE_CONTENT_TYPE_NOSNIFF = True
@@ -269,7 +269,7 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
     SITE_KEYWORDS = "..."
     I18N_URLS = True  # False
 
- - Optional settings for testing (separate file eg `settings_test.py`)::
+ - Optional settings for testing (separate file eg ``settings_test.py``)::
 
     from myapp.settings import *
     DEBUG = True
@@ -310,7 +310,7 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
         },
     })
 
- - Optional settings for live (separate file eg `settings_live.py`)::
+ - Optional settings for live (separate file eg ``settings_live.py``)::
 
     from myapp.settings import *
     DEBUG = False
@@ -348,18 +348,18 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
 
 5. Create empty folders in project root:
 
- - `/static/`
- - `/media/`
+ - ``/static/``
+ - ``/media/``
 
-  - Optionally copy folder `ninecms/basic/image/` to `/media/ninecms/basic/image` if you intend to run ninecms tests
+  - Optionally copy folder ``ninecms/basic/image/`` to ``/media/ninecms/basic/image`` if you intend to run ninecms tests
 
-6. Run `./manage.py migrate` to create the models.
+6. Run ``./manage.py migrate`` to create the models.
 
 7. Url configuration
 
  - Include the URL configurations for admin, i18n and 9cms
  - Make sure 9cms URL conf is the last line so the dynamic router catches all URLs.
- - Include `robots.txt`
+ - Include ``robots.txt``
  - Include static files for local server
 
  URL Example::
@@ -392,9 +392,9 @@ From here on common tasks include:
 
 - Override templates such as:
 
- - `index.html`
- - `site-name.html`
- - `block_content.html` and `block_static.html` (optionally, to fine tune the fields present and therefore to reduce
+ - ``index.html``
+ - ``site-name.html``
+ - ``block_content.html`` and ``block_static.html`` (optionally, to fine tune the fields present and therefore to reduce
    the number of queries executed)
 
 - Add page types
@@ -405,23 +405,23 @@ From here on common tasks include:
 Views
 -----
 
-Add a new Django app in your project with `signals.py` to listen to the corresponding signal that is declared with
+Add a new Django app in your project with ``signals.py`` to listen to the corresponding signal that is declared with
 a new content block in admin.
-Look at the `ninecms/signals.py` file on how to code the signals.
+Look at the ``ninecms/signals.py`` file on how to code the signals.
 
 Theme suggestions
 -----------------
-Add a file in the project's `templates` folder, with the following names, in order to override a 9cms template.
+Add a file in the project's ``templates`` folder, with the following names, in order to override a 9cms template.
 
-- content: `[block_content]_[page_type]_[node_id]` (eg `block_content_basic_5.html`)
-- static node: `[block_static]_[region]_[alias]` (eg `block_static_header_blog_1.html`)
-- menu: `[block_menu]_[region]_[menu.id]` (eg `block_menu_header_1.html`)
-- signal (view): `[block_signal]_[region]_[signal]` (eg `block_signal_header_random_video_node.html`)
-- contact form: `[block_contact]_[region]`
-- language menu: `[block_language]_[region]`
+- content: ``[block_content]_[page_type]_[node_id]`` (eg ``block_content_basic_5.html``)
+- static node: ``[block_static]_[region]_[alias]`` (eg ``block_static_header_blog_1.html``)
+- menu: ``[block_menu]_[region]_[menu.id]`` (eg ``block_menu_header_1.html``)
+- signal (view): ``[block_signal]_[region]_[signal]`` (eg ``block_signal_header_random_video_node.html``)
+- contact form: ``[block_contact]_[region]``
+- language menu: ``[block_language]_[region]``
 
-Any combination of `[]` is allowed, eg. `block_content_basic.html` or `block_content_5.html`.
-Always append `.html` extension.
+Any combination of ``[]`` is allowed, eg. ``block_content_basic.html`` or ``block_content_5.html``.
+Always append ``.html`` extension.
 
 Permissions summary
 -------------------
@@ -454,7 +454,7 @@ This is a summary of all applicable permissions:
  - Node: view unpublished
  - Per content type group permissions (provided from Guardian, accessible through 'page types' change-list admin page)
 
-Example of configuration of an `editor` group perms:
+Example of configuration of an ``editor`` group perms:
 
 - Node: view unpublished
 - Node: add
@@ -468,7 +468,8 @@ Important points
 - If i18n urls: menu items for internal pages should always have language [v0.3.1a]
 - Theme suggestions [v0.4.4b]
 - Search page requires a search results block in page type and 'search' alias, requires MySQL [v0.4.4b]
-- When serializing related field using `table__field` notation, always add `select_related` to query prior calling serialize [v0.4.7b]
+- When serializing related field using ``table__field`` notation, always add ``select_related`` to query prior calling
+  serialize [v0.4.7b]
 - Add LANGUAGES in settings_test when I18N_URLS (see aluminium( [v0.4.7b]
 
 Footnote

@@ -1,4 +1,5 @@
 import os
+import ninecms
 from setuptools import setup
 
 with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
@@ -9,15 +10,16 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-ninecms',
-    version='0.5.0',
-    packages=['ninecms'],
-    include_package_data=True,
-    license='BSD-3 License',
+    version=ninecms.__version__,
     description="Nine CMS is a simple Django app to manage content.",
     long_description=README,
     url='https://github.com/Wtower/django-ninecms/',
     author='George Karakostas',
     author_email='info@9-dev.com',
+    license='BSD-3 License',
+    keywords='cms content management system',
+    packages=['ninecms', 'docs'],
+    include_package_data=True,
     install_requires=[
         'Django',
         'django-guardian',
@@ -30,12 +32,14 @@ setup(
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: BSD-3 License',
+        'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
