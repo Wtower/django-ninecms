@@ -89,299 +89,306 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
 
 1. Create a new project
 
-  Create a new project, if not existing, and optionally (as a reminder):
+   Create a new project, if not existing, and optionally (as a reminder):
 
-  - Create new virtualenv
-  - Initialize git and initial commit
+   - Create new virtualenv
+   - Initialize git and initial commit
 
-2. Dependencies:
+2. Dependencies
 
-  - Add the following to the ``requirements.txt`` file::
+   - Add the following to the ``requirements.txt`` file::
 
-    bleach==1.4.2
-    Django==1.8.6
-    django-guardian==1.3.2
-    django-mptt==0.7.4
-    django-ninecms==0.5.2
-    Pillow==3.0.0
-    pytz==2015.7
+       django-ninecms>=0.5.2
 
-  - And optionally::
+   - And optionally::
 
-    coverage==4.0.2
-    django-admin-bootstrapped==2.5.6
-    django-admin-bootstrapped-plus==0.1.1
-    django-bootstrap3==6.2.2
-    django-debug-toolbar==1.4.0
-    mysqlclient==1.3.7
-    newrelic==2.58.0.43
-    python3-memcached==1.51
-    sqlparse==0.1.18
+       coverage==4.0.2
+       django-admin-bootstrapped==2.5.6
+       django-admin-bootstrapped-plus>=0.1.1
+       django-bootstrap3==6.2.2
+       django-debug-toolbar==1.4.0
+       mysqlclient==1.3.7
+       newrelic==2.58.0.43
+       python3-memcached==1.51
+       sqlparse==0.1.18
 
-  - Then run::
+   - Then run::
 
-    $ pip install -r requirements.txt
+       $ pip install -r requirements.txt
 
 3. Settings
 
-  All relevant settings sample also exist in ninecms/settings.py as comment.
-  From the code samples below remove any settings refer to optional packages that are not installed as above.
+   All relevant settings sample also exist in ninecms/settings.py as comment.
+   From the code samples below remove any settings refer to optional packages that are not installed as above.
 
-  - ``INSTALLED_APPS`` setting::
+   - ``INSTALLED_APPS`` setting::
 
-    INSTALLED_APPS = (
-        'admin_bootstrapped_plus',
-        'django_admin_bootstrapped',
-        'django.contrib.admin',
-        'django.contrib.auth',
-        'django.contrib.contenttypes',
-        'django.contrib.sessions',
-        'django.contrib.messages',
-        'django.contrib.staticfiles',
-        'mptt',
-        'debug_toolbar',
-        'guardian',
-        'ninecms',
-        # ...
-    )
+       INSTALLED_APPS = (
+           'admin_bootstrapped_plus',
+           'django_admin_bootstrapped',
+           'django.contrib.admin',
+           'django.contrib.auth',
+           'django.contrib.contenttypes',
+           'django.contrib.sessions',
+           'django.contrib.messages',
+           'django.contrib.staticfiles',
+           'mptt',
+           'debug_toolbar',
+           'guardian',
+           'ninecms',
+           # ...
+       )
 
-  - Middleware::
+   - Middleware::
 
-    MIDDLEWARE_CLASSES = (
-        'django.middleware.cache.UpdateCacheMiddleware',
-        'django.contrib.sessions.middleware.SessionMiddleware',
-        'django.middleware.locale.LocaleMiddleware',
-        'django.middleware.common.CommonMiddleware',
-        'django.middleware.cache.FetchFromCacheMiddleware',
-        'django.middleware.csrf.CsrfViewMiddleware',
-        'django.contrib.auth.middleware.AuthenticationMiddleware',
-        'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-        'django.contrib.messages.middleware.MessageMiddleware',
-        'django.middleware.clickjacking.XFrameOptionsMiddleware',
-        'django.middleware.security.SecurityMiddleware',
-    )
+       MIDDLEWARE_CLASSES = (
+           'django.middleware.cache.UpdateCacheMiddleware',
+           'django.contrib.sessions.middleware.SessionMiddleware',
+           'django.middleware.locale.LocaleMiddleware',
+           'django.middleware.common.CommonMiddleware',
+           'django.middleware.cache.FetchFromCacheMiddleware',
+           'django.middleware.csrf.CsrfViewMiddleware',
+           'django.contrib.auth.middleware.AuthenticationMiddleware',
+           'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+           'django.contrib.messages.middleware.MessageMiddleware',
+           'django.middleware.clickjacking.XFrameOptionsMiddleware',
+           'django.middleware.security.SecurityMiddleware',
+       )
 
-  - Templates
+   - Templates
 
-  Add ``'debug': True`` only if planning to have a separate live settings file for your project::
+     Add ``'debug': True`` only if planning to have a separate live settings file for your project::
 
-    TEMPLATES = [
-        {
-            'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': [
-                os.path.join(BASE_DIR,  'templates'),
-            ],
-            'APP_DIRS': True,
-            'OPTIONS': {
-                'context_processors': [
-                    'django.template.context_processors.debug',
-                    'django.template.context_processors.request',
-                    'django.contrib.auth.context_processors.auth',
-                    'django.contrib.messages.context_processors.messages',
-                ],
-                'debug': True,
-            },
-        },
-    ]
+       TEMPLATES = [
+           {
+               'BACKEND': 'django.template.backends.django.DjangoTemplates',
+               'DIRS': [
+                   os.path.join(BASE_DIR,  'templates'),
+               ],
+               'APP_DIRS': True,
+               'OPTIONS': {
+                   'context_processors': [
+                       'django.template.context_processors.debug',
+                       'django.template.context_processors.request',
+                       'django.contrib.auth.context_processors.auth',
+                       'django.contrib.messages.context_processors.messages',
+                   ],
+                   'debug': True,
+               },
+           },
+       ]
 
-  - Languages::
+   - Languages::
 
-    LANGUAGE_CODE = 'en'  # or whatever
-    LANGUAGES = (
-        ('en', 'English'),
-        # ('el', 'Greek'),
-        # ...
-    )
-    TIME_ZONE = 'Europe/Athens'  # or whatever
-    USE_I18N = True
-    USE_L10N = True
-    USE_TZ = True
+       LANGUAGE_CODE = 'en'  # or whatever
+       LANGUAGES = (
+           ('en', 'English'),
+           # ('el', 'Greek'),
+           # ...
+       )
+       TIME_ZONE = 'Europe/Athens'  # or whatever
+       USE_I18N = True
+       USE_L10N = True
+       USE_TZ = True
 
-  - Media::
+   - Media::
 
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-    MEDIA_URL = '/media/'
+       MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+       MEDIA_URL = '/media/'
 
-  - Error reporting::
+   - Error reporting::
 
-    ADMINS = (
-        ("Webmaster", "web@9-dev.com"),
-    )
-    MANAGERS = (
-        ("Webmaster", "web@9-dev.com"),
-    )
-    EMAIL_HOST = 'mail.9-dev.com'
-    EMAIL_HOST_USER = 'do-not-reply@9-dev.com'
-    EMAIL_HOST_PASSWORD = ''
-    EMAIL_USE_SSL = True
-    EMAIL_PORT = 465
-    EMAIL_SUBJECT_PREFIX = '[9cms] '
-    SERVER_EMAIL = 'do-not-reply@9-dev.com'
-    DEFAULT_FROM_EMAIL = 'do-not-reply@9-dev.com'
+       ADMINS = (
+           ("Webmaster", "web@9-dev.com"),
+       )
+       MANAGERS = (
+           ("Webmaster", "web@9-dev.com"),
+       )
+       EMAIL_HOST = 'mail.9-dev.com'
+       EMAIL_HOST_USER = 'do-not-reply@9-dev.com'
+       EMAIL_HOST_PASSWORD = ''
+       EMAIL_USE_SSL = True
+       EMAIL_PORT = 465
+       EMAIL_SUBJECT_PREFIX = '[9cms] '
+       SERVER_EMAIL = 'do-not-reply@9-dev.com'
+       DEFAULT_FROM_EMAIL = 'do-not-reply@9-dev.com'
 
-  - Security:
+   - Security:
 
-  Replace ``myapp``::
+     Replace ``myapp``::
 
-    LOGIN_URL = '/admin/login/'
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_BROWSER_XSS_FILTER = True
-    X_FRAME_OPTIONS = 'DENY'
-    CSRF_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_NAME = 'myapp_sessionid'
+       LOGIN_URL = '/admin/login/'
+       SECURE_CONTENT_TYPE_NOSNIFF = True
+       SECURE_BROWSER_XSS_FILTER = True
+       X_FRAME_OPTIONS = 'DENY'
+       CSRF_COOKIE_HTTPONLY = True
+       SESSION_COOKIE_NAME = 'myapp_sessionid'
 
-  - Caches::
+   - Caches::
 
-    CACHES = {
-        'default': {
-            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-        }
-    }
-    CACHE_MIDDLEWARE_SECONDS = 3 * 60 * 60  # or whatever
+       CACHES = {
+           'default': {
+               'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+           }
+       }
+       CACHE_MIDDLEWARE_SECONDS = 3 * 60 * 60  # or whatever
 
-  - Guardian::
+   - Guardian::
 
-    AUTHENTICATION_BACKENDS = (
-        'django.contrib.auth.backends.ModelBackend',  # this is default
-        'guardian.backends.ObjectPermissionBackend',
-    )
-    ANONYMOUS_USER_ID = -1
+       AUTHENTICATION_BACKENDS = (
+           'django.contrib.auth.backends.ModelBackend',  # this is default
+           'guardian.backends.ObjectPermissionBackend',
+       )
+       ANONYMOUS_USER_ID = -1
 
-  - Django admin::
+   - Django admin::
 
-    DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'
-    MESSAGE_TAGS = {
-        messages.SUCCESS: 'alert-success success',
-        messages.WARNING: 'alert-warning warning',
-        messages.ERROR: 'alert-danger error'
-    }
+       DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'
 
-  - CMS settings::
+       from django.contrib import messages
+       MESSAGE_TAGS = {
+           messages.SUCCESS: 'alert-success success',
+           messages.WARNING: 'alert-warning warning',
+           messages.ERROR: 'alert-danger error'
+       }
 
-    from ninecms.settings import *
-    SITE_NAME = "..."
-    SITE_AUTHOR = "..."
-    SITE_KEYWORDS = "..."
-    I18N_URLS = True  # False
+   - CMS settings::
 
-  - Optional settings for testing (separate file eg ``settings_test.py``)::
+       from ninecms.settings import *
+       SITE_NAME = "..."
+       SITE_AUTHOR = "..."
+       SITE_KEYWORDS = "..."
+       I18N_URLS = True  # False
 
-    from myapp.settings import *
-    DEBUG = True
-    PASSWORD_HASHERS = (
-        'django.contrib.auth.hashers.MD5PasswordHasher',
-    )
-    TEMPLATES = [
-        {
-            'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': [  # disable overriden templates
-            ],
-            'APP_DIRS': True,
-            'OPTIONS': {
-                'context_processors': [
-                    'django.template.context_processors.debug',
-                    'django.template.context_processors.request',
-                    'django.contrib.auth.context_processors.auth',
-                    'django.contrib.messages.context_processors.messages',
-                ],
-                'debug': True,
-            },
-        },
-    ]
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
-    LANGUAGES = (  # at least 2
-        ('el', 'Greek'),
-        ('en', 'English'),
-    )
-    IMAGE_STYLES.update({
-        'thumbnail-upscale': {
-            'type': 'thumbnail-upscale',
-            'size': (150, 150)
-        },
-    })
+   - Optional settings for testing (separate file eg ``settings_test.py``)::
 
-  - Optional settings for live (separate file eg ``settings_live.py``)::
+       from myapp.settings import *
+       DEBUG = True
+       PASSWORD_HASHERS = (
+           'django.contrib.auth.hashers.MD5PasswordHasher',
+       )
+       TEMPLATES = [
+           {
+               'BACKEND': 'django.template.backends.django.DjangoTemplates',
+               'DIRS': [  # disable overriden templates
+               ],
+               'APP_DIRS': True,
+               'OPTIONS': {
+                   'context_processors': [
+                       'django.template.context_processors.debug',
+                       'django.template.context_processors.request',
+                       'django.contrib.auth.context_processors.auth',
+                       'django.contrib.messages.context_processors.messages',
+                   ],
+                   'debug': True,
+               },
+           },
+       ]
+       DATABASES = {
+           'default': {
+               'ENGINE': 'django.db.backends.sqlite3',
+               'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+           }
+       }
+       LANGUAGES = (  # at least 2
+           ('el', 'Greek'),
+           ('en', 'English'),
+       )
+       IMAGE_STYLES.update({
+           'thumbnail-upscale': {
+               'type': 'thumbnail-upscale',
+               'size': (150, 150)
+           },
+       })
 
-    from myapp.settings import *
-    DEBUG = False
-    ALLOWED_HOSTS = [
-        # ...
-    ]
-    TEMPLATES = [
-        {
-            'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': [
-                os.path.join(BASE_DIR,  'templates'),
-            ],
-            'APP_DIRS': True,
-            'OPTIONS': {
-                'context_processors': [
-                    'django.template.context_processors.debug',
-                    'django.template.context_processors.request',
-                    'django.contrib.auth.context_processors.auth',
-                    'django.contrib.messages.context_processors.messages',
-                ],
-            },
-        },
-    ]
-    STATIC_ROOT =  # ...
-    STATICFILES_DIRS = []
-    CACHES = {
-        'default': {
-            'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-            'LOCATION': '127.0.0.1:11211',
-            'TIMEOUT': # ...
-            'KEY_PREFIX': # ...
-            'VERSION': 1,
-        }
-    }
+   - Optional settings for live (separate file eg ``settings_live.py``)::
+
+       from myapp.settings import *
+       DEBUG = False
+       ALLOWED_HOSTS = [
+           # ...
+       ]
+       TEMPLATES = [
+           {
+               'BACKEND': 'django.template.backends.django.DjangoTemplates',
+               'DIRS': [
+                   os.path.join(BASE_DIR,  'templates'),
+               ],
+               'APP_DIRS': True,
+               'OPTIONS': {
+                   'context_processors': [
+                       'django.template.context_processors.debug',
+                       'django.template.context_processors.request',
+                       'django.contrib.auth.context_processors.auth',
+                       'django.contrib.messages.context_processors.messages',
+                   ],
+               },
+           },
+       ]
+       # STATIC_ROOT = ...
+       STATICFILES_DIRS = []
+       CACHES = {
+           'default': {
+               'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+               'LOCATION': '127.0.0.1:11211',
+               'TIMEOUT': 3 * 60 * 60,  # or whatever
+               'KEY_PREFIX': 'myapp_',
+               'VERSION': 1,
+           }
+       }
 
 4. Create empty folders in project root:
 
-  - ``/static/``
-  - ``/media/``
+   - ``/static/``
+   - ``/media/``
 
-    - Optionally copy folder ``ninecms/basic/image/`` to ``/media/ninecms/basic/image`` if you intend to run ninecms tests
+     - Optionally copy ``ninecms/basic/image/`` to ``/media/ninecms/basic/image`` if you intend to run ninecms tests
 
 5. Run ``./manage.py migrate`` to create the models.
 
 6. Url configuration
 
-  - Include the URL configurations for admin, i18n and 9cms
-  - Make sure 9cms URL conf is the last line so the dynamic router catches all URLs.
-  - Include ``robots.txt``
-  - Include static files for local server
+   - Include the URL configurations for admin, i18n and 9cms
+   - Make sure 9cms URL conf is the last line so the dynamic router catches all URLs.
+   - Include ``robots.txt``
+   - Include static files for local server
 
-  URL Example::
+   URL Example::
 
-    urlpatterns = [
-        url(r'^admin/', include(admin.site.urls)),
-        url(r'^i18n/', include('django.conf.urls.i18n')),
-        url(r'^robots\.txt/$', TemplateView.as_view(template_name='ninecms/robots.txt', content_type='text/plain')),
-    ]
+     from django.conf import settings
+     from django.conf.urls import include, url
+     from django.conf.urls.i18n import i18n_patterns
+     from django.conf.urls.static import static
+     from django.contrib import admin
+     from django.views.generic import TemplateView
 
-    # static files (images, css, javascript, etc.)
-    if settings.DEBUG:
-        urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # pragma: no cover
+     urlpatterns = [
+         url(r'^admin/', include(admin.site.urls)),
+         url(r'^i18n/', include('django.conf.urls.i18n')),
+         url(r'^robots\.txt/$', TemplateView.as_view(template_name='ninecms/robots.txt', content_type='text/plain')),
+     ]
 
-    # Last: all remaining pass to CMS
-    if settings.I18N_URLS:  # pragma: nocover
-        urlpatterns += i18n_patterns(
-            url(r'^', include('ninecms.urls', namespace='ninecms')),
-        )
-    else:  # pragma: nocover
-        urlpatterns += [
-            url(r'^', include('ninecms.urls', namespace='ninecms')),
-        ]
+     # static files (images, css, javascript, etc.)
+     if settings.DEBUG:
+         urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # pragma: no cover
 
-7. Start the development server and visit http://127.0.0.1:8000/admin/ (you'll need the Admin app enabled).
+     # Last: all remaining pass to CMS
+     if settings.I18N_URLS:  # pragma: nocover
+         urlpatterns += i18n_patterns(
+             url(r'^', include('ninecms.urls', namespace='ninecms')),
+         )
+     else:  # pragma: nocover
+         urlpatterns += [
+             url(r'^', include('ninecms.urls', namespace='ninecms')),
+         ]
+
+7. Start the development server and visit http://127.0.0.1:8000/admin/
+
+   You'll need the Admin app enabled and a superuser with ``python manage.py createsuperuser``.
 
 8. Visit http://127.0.0.1:8000/ to view content.
+
+9. Optionally run test with ``python manage.py test --settings=myapp.settings_test ninecms``.
 
 From here on common tasks include:
 
