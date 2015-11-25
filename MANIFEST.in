@@ -1,5 +1,4 @@
 include LICENSE
 include README.rst
-recursive-include ninecms/static *
-recursive-include ninecms/templates *
+recursive-include ninecms *
 recursive-include docs *
