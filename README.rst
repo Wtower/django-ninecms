@@ -6,8 +6,6 @@ Nine CMS is a simple Django app to manage content. Users can create content and 
 
 Detailed documentation soon to be published.
 
-Screenshots under the ``docs/`` project directory.
-
 .. image:: https://raw.githubusercontent.com/Wtower/django-ninecms/master/docs/screenshots/index1.png
 
 Objectives
@@ -104,7 +102,7 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
     Django==1.8.6
     django-guardian==1.3.2
     django-mptt==0.7.4
-    django-ninecms==0.5.1
+    django-ninecms==0.5.2
     Pillow==3.0.0
     pytz==2015.7
 

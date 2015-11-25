@@ -18,7 +18,7 @@ setup(
     author_email='info@9-dev.com',
     license='BSD-3 License',
     keywords='cms content management system',
-    packages=['ninecms', 'docs'],
+    packages=['ninecms'],
     include_package_data=True,
     install_requires=[
         'Django',
