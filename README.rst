@@ -8,6 +8,8 @@ Detailed documentation soon to be published.
 
 Screenshots under the ``docs/`` project directory.
 
+.. image:: https://raw.githubusercontent.com/Wtower/django-ninecms/master/docs/screenshots/index1.png
+
 Objectives
 ----------
 
@@ -94,16 +96,7 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
   - Create new virtualenv
   - Initialize git and initial commit
 
-2. Add 9cms
-
-  - Download source and place in project root
-  - Or if in existing folder::
-
-    $ rsync -rtv --delete --exclude=.* path/to/ninecms path/to/project/
-
-  - *Soon available as python package*
-
-3. Dependencies:
+2. Dependencies:
 
   - Add the following to the ``requirements.txt`` file::
 
@@ -111,6 +104,7 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
     Django==1.8.6
     django-guardian==1.3.2
     django-mptt==0.7.4
+    django-ninecms==0.5.1
     Pillow==3.0.0
     pytz==2015.7
 
@@ -118,7 +112,7 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
 
     coverage==4.0.2
     django-admin-bootstrapped==2.5.6
-    django-admin-bootstrapped-plus==0.1.0
+    django-admin-bootstrapped-plus==0.1.1
     django-bootstrap3==6.2.2
     django-debug-toolbar==1.4.0
     mysqlclient==1.3.7
@@ -130,7 +124,7 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
 
     $ pip install -r requirements.txt
 
-4. Settings
+3. Settings
 
   All relevant settings sample also exist in ninecms/settings.py as comment.
   From the code samples below remove any settings refer to optional packages that are not installed as above.
@@ -349,16 +343,16 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
         }
     }
 
-5. Create empty folders in project root:
+4. Create empty folders in project root:
 
   - ``/static/``
   - ``/media/``
 
     - Optionally copy folder ``ninecms/basic/image/`` to ``/media/ninecms/basic/image`` if you intend to run ninecms tests
 
-6. Run ``./manage.py migrate`` to create the models.
+5. Run ``./manage.py migrate`` to create the models.
 
-7. Url configuration
+6. Url configuration
 
   - Include the URL configurations for admin, i18n and 9cms
   - Make sure 9cms URL conf is the last line so the dynamic router catches all URLs.
@@ -387,9 +381,9 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
             url(r'^', include('ninecms.urls', namespace='ninecms')),
         ]
 
-8. Start the development server and visit http://127.0.0.1:8000/admin/ (you'll need the Admin app enabled).
+7. Start the development server and visit http://127.0.0.1:8000/admin/ (you'll need the Admin app enabled).
 
-9. Visit http://127.0.0.1:8000/ to view content.
+8. Visit http://127.0.0.1:8000/ to view content.
 
 From here on common tasks include:
 
