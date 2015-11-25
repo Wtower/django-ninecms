@@ -12,11 +12,12 @@ from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.models import ContentType
+from django.conf import settings
 # noinspection PyPackageRequirements
 from guardian.models import GroupObjectPermission
 from ninecms.forms import ContentNodeEditForm, ImageForm, FileForm, VideoForm
 from ninecms.tests.setup import create_front, create_basic, create_user, create_image, create_block_simple, \
-    get_front_title, assert_front, data_login, data_node
+    get_front_title, assert_front, data_login, data_node, get_basic_title
 from ninecms.models import PageType, Node
 
 
@@ -67,7 +68,8 @@ class ContentLoginTests(TestCase):
         # Nodes
         self.assertContains(response, '<span class="stat-count-nodes h1">2</span>', html=True)
         self.assertContains(response, ('<span class="stat-latest-nodes">'
-                                       'Latest: <a href="/admin/ninecms/node/">Sxetika</a></span>'), html=True)
+                                       'Latest: <a href="/admin/ninecms/node/">'
+                                       '%s</a></span>' % get_basic_title(settings.LANGUAGE_CODE, '')), html=True)
         # Page types
         self.assertContains(response, '<span class="stat-count-page-types h4">2</span>', html=True)
         self.assertContains(response, ('<span class="stat-latest-page-types">'
@@ -75,7 +77,8 @@ class ContentLoginTests(TestCase):
         # Images
         self.assertContains(response, '<span class="stat-count-images h4">1</span>', html=True)
         self.assertContains(response, ('<span class="stat-latest-images">'
-                                       'Latest: <a href="/admin/ninecms/node/">Sxetika</a></span>'), html=True)
+                                       'Latest: <a href="/admin/ninecms/node/">'
+                                       '%s</a></span>' % get_basic_title(settings.LANGUAGE_CODE, '')), html=True)
         # Other status
         self.assertRegex(response.content.decode(), '<div id="panel-updates"[\W\s]+class="panel panel-success">')
         self.assertRegex(response.content.decode(), '<div id="panel-migrations"[\W\s]+class="panel panel-success">')
