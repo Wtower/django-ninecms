@@ -6,13 +6,15 @@ Nine CMS is a simple Django app to manage content. Users can create content and 
 
 Detailed documentation soon to be published.
 
+Screenshots under the ``docs/`` project directory.
+
 Objectives
 ----------
 
-It is the author's opinion that heavyweight content management systems are not so important,
+It is the author's opinion that heavyweight content management systems are not so important to Django,
 as much as established CMS are important to other languages such as PHP.
-Django can be very easily used to build exotic web applications in very short time.
-Therefore Django too often does not need another heavyweight CMS.
+Django can be very easily used to build exotic web applications in very short time,
+therefore too often Django does not need another heavyweight CMS.
 Nine CMS is intended to provide a common denominator for simple content when building a Django app or for small sites.
 
 To sum up:
@@ -27,20 +29,20 @@ Features
 
 - Node modeling inspired by Drupal nodes featuring:
 
- - Dynamic content (obviously) rendered as nodes
- - Revisioning system
- - Internationalisation (i18n) right from the beginning
- - URL aliases that may be automatically generated based on provided patterns
- - Page types that may be used in different templates or views (below)
- - Per page type permissions
- - Sanitize HTML
+  - Dynamic content (obviously) rendered as nodes
+  - Revisioning system
+  - Internationalisation (i18n) right from the beginning
+  - URL aliases that may be automatically generated based on provided patterns
+  - Page types that may be used in different templates or views (below)
+  - Per page type permissions
+  - Sanitize HTML
 
 - Content blocks
 - Menus
 - Media management
 
- - Images, videos, files
- - Image styles
+  - Images, videos, files
+  - Image styles
 
 - Views (requires decoupled signals providing context)
 - Taxonomy (terms)
@@ -48,12 +50,12 @@ Features
 - Admin interface with dashboard
 - Utilities
 
- - Libraries
- - Character transliteration
- - Serializers
- - Custom tags
- - Basic search functionality
- - Template suggestions
+  - Libraries
+  - Character transliteration
+  - Serializers
+  - Custom tags
+  - Basic search functionality
+  - Template suggestions
 
 - Bootstrap
 
@@ -87,23 +89,23 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
 
 1. Create a new project
 
- Create a new project, if not existing, and optionally (as a reminder):
+  Create a new project, if not existing, and optionally (as a reminder):
 
- - Create new virtualenv
- - Initialize git and initial commit
+  - Create new virtualenv
+  - Initialize git and initial commit
 
 2. Add 9cms
 
- - Download source and place in project root
- - Or if in existing folder::
+  - Download source and place in project root
+  - Or if in existing folder::
 
     $ rsync -rtv --delete --exclude=.* path/to/ninecms path/to/project/
 
- - *Soon available as python package*
+  - *Soon available as python package*
 
 3. Dependencies:
 
- - Add the following to the ``requirements.txt`` file::
+  - Add the following to the ``requirements.txt`` file::
 
     bleach==1.4.2
     Django==1.8.6
@@ -112,10 +114,11 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
     Pillow==3.0.0
     pytz==2015.7
 
- - And optionally::
+  - And optionally::
 
     coverage==4.0.2
     django-admin-bootstrapped==2.5.6
+    django-admin-bootstrapped-plus==0.1.0
     django-bootstrap3==6.2.2
     django-debug-toolbar==1.4.0
     mysqlclient==1.3.7
@@ -123,16 +126,16 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
     python3-memcached==1.51
     sqlparse==0.1.18
 
- - Then run::
+  - Then run::
 
-    $ sudo pip install -r requirements.txt
+    $ pip install -r requirements.txt
 
 4. Settings
 
- All relevant settings sample also exist in ninecms/settings.py as comment.
- From the code samples below remove any settings refer to optional packages that are not installed as above.
+  All relevant settings sample also exist in ninecms/settings.py as comment.
+  From the code samples below remove any settings refer to optional packages that are not installed as above.
 
- - ``INSTALLED_APPS`` setting::
+  - ``INSTALLED_APPS`` setting::
 
     INSTALLED_APPS = (
         'admin_bootstrapped_plus',
@@ -150,7 +153,7 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
         # ...
     )
 
- - Middleware::
+  - Middleware::
 
     MIDDLEWARE_CLASSES = (
         'django.middleware.cache.UpdateCacheMiddleware',
@@ -166,7 +169,7 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
         'django.middleware.security.SecurityMiddleware',
     )
 
- - Templates
+  - Templates
 
   Add ``'debug': True`` only if planning to have a separate live settings file for your project::
 
@@ -189,7 +192,7 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
         },
     ]
 
- - Languages::
+  - Languages::
 
     LANGUAGE_CODE = 'en'  # or whatever
     LANGUAGES = (
@@ -202,12 +205,12 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
     USE_L10N = True
     USE_TZ = True
 
- - Media::
+  - Media::
 
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
     MEDIA_URL = '/media/'
 
- - Error reporting::
+  - Error reporting::
 
     ADMINS = (
         ("Webmaster", "web@9-dev.com"),
@@ -224,7 +227,7 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
     SERVER_EMAIL = 'do-not-reply@9-dev.com'
     DEFAULT_FROM_EMAIL = 'do-not-reply@9-dev.com'
 
- - Security:
+  - Security:
 
   Replace ``myapp``::
 
@@ -235,7 +238,7 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
     CSRF_COOKIE_HTTPONLY = True
     SESSION_COOKIE_NAME = 'myapp_sessionid'
 
- - Caches::
+  - Caches::
 
     CACHES = {
         'default': {
@@ -244,7 +247,7 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
     }
     CACHE_MIDDLEWARE_SECONDS = 3 * 60 * 60  # or whatever
 
- - Guardian::
+  - Guardian::
 
     AUTHENTICATION_BACKENDS = (
         'django.contrib.auth.backends.ModelBackend',  # this is default
@@ -252,7 +255,7 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
     )
     ANONYMOUS_USER_ID = -1
 
- - Django admin::
+  - Django admin::
 
     DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'
     MESSAGE_TAGS = {
@@ -261,7 +264,7 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
         messages.ERROR: 'alert-danger error'
     }
 
- - CMS settings::
+  - CMS settings::
 
     from ninecms.settings import *
     SITE_NAME = "..."
@@ -269,7 +272,7 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
     SITE_KEYWORDS = "..."
     I18N_URLS = True  # False
 
- - Optional settings for testing (separate file eg ``settings_test.py``)::
+  - Optional settings for testing (separate file eg ``settings_test.py``)::
 
     from myapp.settings import *
     DEBUG = True
@@ -310,7 +313,7 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
         },
     })
 
- - Optional settings for live (separate file eg ``settings_live.py``)::
+  - Optional settings for live (separate file eg ``settings_live.py``)::
 
     from myapp.settings import *
     DEBUG = False
@@ -348,21 +351,21 @@ This is a full guide to create a new project. *Soon a Quick Guide will be added*
 
 5. Create empty folders in project root:
 
- - ``/static/``
- - ``/media/``
+  - ``/static/``
+  - ``/media/``
 
-  - Optionally copy folder ``ninecms/basic/image/`` to ``/media/ninecms/basic/image`` if you intend to run ninecms tests
+    - Optionally copy folder ``ninecms/basic/image/`` to ``/media/ninecms/basic/image`` if you intend to run ninecms tests
 
 6. Run ``./manage.py migrate`` to create the models.
 
 7. Url configuration
 
- - Include the URL configurations for admin, i18n and 9cms
- - Make sure 9cms URL conf is the last line so the dynamic router catches all URLs.
- - Include ``robots.txt``
- - Include static files for local server
+  - Include the URL configurations for admin, i18n and 9cms
+  - Make sure 9cms URL conf is the last line so the dynamic router catches all URLs.
+  - Include ``robots.txt``
+  - Include static files for local server
 
- URL Example::
+  URL Example::
 
     urlpatterns = [
         url(r'^admin/', include(admin.site.urls)),
@@ -392,10 +395,10 @@ From here on common tasks include:
 
 - Override templates such as:
 
- - ``index.html``
- - ``site-name.html``
- - ``block_content.html`` and ``block_static.html`` (optionally, to fine tune the fields present and therefore to reduce
-   the number of queries executed)
+  - ``index.html``
+  - ``site-name.html``
+  - ``block_content.html`` and ``block_static.html`` (optionally, to fine tune the fields present and therefore to reduce
+    the number of queries executed)
 
 - Add page types
 - Add content
@@ -430,29 +433,29 @@ This is a summary of all applicable permissions:
 
 - Django admin:
 
- - User: is staff (access to admin)
- - User: is superuser (with caution)
+  - User: is staff (access to admin)
+  - User: is superuser (with caution)
 
-  - unconditional access everywhere
-  - additional fields for nodes
-  - dashboard
-  - utilities on dashboard
+    - unconditional access everywhere
+    - additional fields for nodes
+    - dashboard
+    - utilities on dashboard
 
- - User: add, change, delete
- - Group: add, change, delete
- - Permission: add, change, delete
+  - User: add, change, delete
+  - Group: add, change, delete
+  - Permission: add, change, delete
 
 - Guardian:
 
- - User-object permissions: add, change, delete
- - Group-object permissions: add, change, delete
+  - User-object permissions: add, change, delete
+  - Group-object permissions: add, change, delete
 
 - 9cms:
 
- - Per model permissions: add, change, delete
- - Node: can use full HTML
- - Node: view unpublished
- - Per content type group permissions (provided from Guardian, accessible through 'page types' change-list admin page)
+  - Per model permissions: add, change, delete
+  - Node: can use full HTML
+  - Node: view unpublished
+  - Per content type group permissions (provided from Guardian, accessible through 'page types' change-list admin page)
 
 Example of configuration of an ``editor`` group perms:
 

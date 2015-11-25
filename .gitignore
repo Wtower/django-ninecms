@@ -1,16 +1,43 @@
+### Python
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*$py.class
 
 # Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
 *.egg-info/
+.installed.cfg
+*.egg
 
 # Unit test / coverage reports
+htmlcov/
+.tox/
 .coverage
+.coverage.*
 .cache
+nosetests.xml
+coverage.xml
+*,cover
 
-# IDE
+### IDE
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio
 .idea/
+
+### Django
+media/
 
 # Libraries
 ninecms/static/ninecms/bootstrap/
@@ -24,4 +51,3 @@ ninecms/static/ninecms/waypoints/
 ninecms/static/ninecms/owl-carousel/
 ninecms/static/ninecms/wow/
 ninecms/static/ninecms/angular.min.js
-ninecms/version.txt
