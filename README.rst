@@ -87,6 +87,9 @@ New project guide
 
 This is a full guide to create a new project. *Soon a Quick Guide will be added*.
 
+There is also a project that can be used as an
+`empty Django 9cms web site starter<http://www.github.com/Wtower/django-ninecms-starter>`_.
+
 1. Create a new project
 
    Create a new project, if not existing, and optionally (as a reminder):
