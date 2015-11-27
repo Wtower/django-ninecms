@@ -57,7 +57,7 @@ class ContentLoginSimpleTests(TestCase):
         :return: None
         """
         response = self.client.get(reverse('admin:index'))
-        self.assertContains(response, "9cms administration")
+        self.assertContains(response, "administration")
         self.assertContains(response, '<span class="stat-count-users h1">')
         self.assertContains(response, '<span class="stat-count-staff h1">')
         self.assertContains(response, '<span class="stat-count-superusers h1">')
