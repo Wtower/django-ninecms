@@ -23,6 +23,7 @@ To sum up:
 - Easy to start up AND customize a project
 - Inspired by Drupal node model architecture
 - Obviously uses the Django web framework on Python
+- Quality: hate bugs; also test coverage is 100%
 
 Features
 --------

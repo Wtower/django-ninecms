@@ -17,8 +17,9 @@ from django.conf import settings
 from guardian.models import GroupObjectPermission
 from ninecms.forms import ContentNodeEditForm, ImageForm, FileForm, VideoForm
 from ninecms.tests.setup import create_front, create_basic, create_user, create_image, create_block_simple, \
-    get_front_title, assert_front, data_login, data_node, get_basic_title
+    get_front_title, assert_front, data_login, data_node, get_basic_title, create_video, create_file
 from ninecms.models import PageType, Node
+import os
 
 
 class ContentLoginTests(TestCase):
@@ -52,7 +53,7 @@ class ContentLoginTests(TestCase):
         :return: None
         """
         response = self.client.get(reverse('admin:index'))
-        self.assertContains(response, "9cms administration")
+        self.assertContains(response, "administration")
         # Users
         self.assertContains(response, '<span class="stat-count-users h1">1</span>', html=True)
         self.assertContains(response, ('<span class="stat-latest-users">'
@@ -157,6 +158,40 @@ class ContentLoginTests(TestCase):
         for form in (ImageForm(data=data), FileForm(data=data), VideoForm(data=data)):
             self.assertEqual(form.is_valid(), False)
             self.assertEqual(form.cleaned_data['title'], 'test')
+
+    def test_image_delete(self):
+        """ Test that files are deleted when a media is deleted
+        :return: None
+        """
+        obj = create_image('media_delete.jpg')
+        path = obj.image.path
+        # create_path_file(path)
+        open(path, 'a').close()
+        self.assertTrue(os.path.isfile(path))
+        obj.delete()
+        self.assertFalse(os.path.isfile(path))
+
+    def test_video_delete(self):
+        """ Test that files are deleted when a media is deleted
+        :return: None
+        """
+        obj = create_video('ninecms/basic/image/media_delete.jpg')
+        path = obj.video.path
+        open(path, 'a').close()
+        self.assertTrue(os.path.isfile(path))
+        obj.delete()
+        self.assertFalse(os.path.isfile(path))
+
+    def test_file_delete(self):
+        """ Test that files are deleted when a media is deleted
+        :return: None
+        """
+        obj = create_file('ninecms/basic/image/media_delete.txt')
+        path = obj.file.path
+        open(path, 'a').close()
+        self.assertTrue(os.path.isfile(path))
+        obj.delete()
+        self.assertFalse(os.path.isfile(path))
 
     def test_admin_node_action_node_publish(self):
         """ Test admin action node publish
