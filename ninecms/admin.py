@@ -7,7 +7,6 @@ __email__ = 'gkarak@9-dev.com'
 from django.contrib import admin, messages
 from django.core.urlresolvers import reverse
 from django.conf.urls import url
-from django.shortcuts import redirect
 from django.core.exceptions import PermissionDenied
 from mptt.admin import MPTTModelAdmin
 # noinspection PyPackageRequirements
@@ -29,6 +28,7 @@ class PageTypeAdmin(admin.ModelAdmin):
     search_fields = ['name']
     inlines = [PageLayoutElementInline]
 
+    # noinspection PyMethodMayBeStatic
     def operations(self, obj):
         """ Return a custom column with operations edit, perms
         :param obj: a node object
@@ -265,9 +265,7 @@ class NodeAdmin(admin.ModelAdmin):
         """
         if db_field.name == 'page_type':
             page_types = get_objects_for_user(request.user, 'ninecms.add_node_pagetype', klass=models.PageType)
-            if len(page_types) < 1 and request.user.is_superuser:
-                return redirect('admin:ninecms_pagetype_add')  # pragma: nocover
-            elif len(page_types) < 1:
+            if len(page_types) < 1 and not request.user.is_superuser:
                 raise PermissionDenied
             kwargs['queryset'] = page_types
         return super(NodeAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)

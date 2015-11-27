@@ -115,7 +115,7 @@ class ContentTests(TestCase):
         self.assertIn('"page_type": "front"', data)
         self.assertIn('"user": 1', data)
         self.assertIn('"get_absolute_url": "/"', data)
-        self.assertIn('"title": "Logismiko"', data)
+        self.assertIn('"title": "%s"' % get_front_title(), data)
         # assert not ok
         nodes = Node.objects.all()
         self.assertRaises(ProgrammingError, serialize, nodes)

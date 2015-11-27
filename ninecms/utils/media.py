@@ -24,7 +24,7 @@ def path_file_name(instance, context, filename):
     context = transliterate(context, True, True)
     group = transliterate(instance.group, True, True)
     filename = transliterate(filename, True, True)
-    return '/'.join(filter(None, ('ninecms', page_type_name, context, group, filename)))
+    return os.path.join(*filter(None, ('ninecms', page_type_name, context, group, filename)))
 
 
 def image_path_file_name(instance, filename):
@@ -80,6 +80,31 @@ def validate_video_ext(value):
     """
     validate_ext(value, ['.mp4', '.mpeg', '.m4v', '.webm', '.ogg', '.ogv', '.flv', '.jpg'])
 
+
+def find_all(filename):
+    """ Get all path file names under the path of a given path file name
+    Useful in order to get all files and files from image styles
+    Used in media delete signal
+    http://stackoverflow.com/questions/1724693/find-a-file-in-python
+    :param filename: the absolute path file name to use
+    :return: a list of all absolute path file names
+    """
+    path = os.path.dirname(filename)
+    name = os.path.basename(filename)
+    result = []
+    for root, dirs, files in os.walk(path):
+        if name in files:
+            result.append(os.path.join(root, name))
+    return result
+
+
+def delete_all(filename):
+    """ Delete all files that `find_all` returns
+    :param filename: the absolute path file name to use
+    :return: None
+    """
+    for file in find_all(filename):
+        os.remove(file)
 
 def image_style(url, style):
     """ Return the url of different image style
