@@ -62,7 +62,8 @@ Features
 Dependencies
 ------------
 
-It is intented to keep the number of external dependencies as low as possible, if no significant reason is necessary. The following are needed:
+It is intented to keep the number of external dependencies as low as possible, if no significant reason is necessary.
+The following are needed:
 
 - Python (3.4+)
 - Django (1.8+): Web framework
@@ -345,7 +346,9 @@ There is also a project that can be used as an
    - ``/static/``
    - ``/media/``
 
-     - Optionally copy ``ninecms/basic/image/`` to ``/media/ninecms/basic/image`` if you intend to run ninecms tests
+     - *Optionally* copy the images from
+       https://github.com/Wtower/django-ninecms-starter/tree/master/media/ninecms/basic/image to
+       ``/media/ninecms/basic/image`` if you intend to run ninecms tests (see below).
 
 5. Run ``./manage.py migrate`` to create the models.
 
