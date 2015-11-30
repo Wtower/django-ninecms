@@ -90,7 +90,7 @@ New project guide
 This is a full guide to create a new project. *Soon a Quick Guide will be added*.
 
 There is also a project that can be used as an
-`empty Django 9cms web site starter<http://www.github.com/Wtower/django-ninecms-starter>`_.
+`empty Django 9cms web site starter <http://www.github.com/Wtower/django-ninecms-starter>`_.
 
 1. Create a new project
 
@@ -103,6 +103,7 @@ There is also a project that can be used as an
 
    - Add the following to the ``requirements.txt`` file::
 
+       Django==1.8.7
        django-ninecms>=0.5.2
 
    - And optionally::
@@ -196,8 +197,11 @@ There is also a project that can be used as an
        USE_L10N = True
        USE_TZ = True
 
-   - Media::
+   - Static and Media::
 
+       STATICFILES_DIRS = (
+           os.path.join(BASE_DIR, "static"),
+       )
        MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
        MEDIA_URL = '/media/'
 
@@ -399,27 +403,60 @@ There is also a project that can be used as an
 
 From here on common tasks include:
 
-- Override templates such as:
-
-  - ``index.html``
-  - ``site-name.html``
-  - ``block_content.html`` and ``block_static.html`` (optionally, to fine tune the fields present and therefore to reduce
-    the number of queries executed)
-
+- Theming (see below)
 - Add page types
 - Add content
 - Add menus
 - Add blocks
 
-Views
------
+Theming
+-------
 
-Add a new Django app in your project with ``signals.py`` to listen to the corresponding signal that is declared with
-a new content block in admin.
-Look at the ``ninecms/signals.py`` file on how to code the signals.
+Theming is easy and straightforward. Besides from developing a custom theme, it is easy to use any ready-made
+HTML theme from the myriads available on the web.
+
+There is a ``base.html`` which gets extended by an ``index.html``. The base declares the doc type (HTML5),
+loads scripts (from an indicative common pre-selected list as defined in settings) and defines blocks to extend
+in index. For Drupal veterans it is the equivalent of ``html.tpl.php`` and it usually doesn't need to be overridden.
+
+The index file is the one that most probably needs to be overridden. You can check the base to see where each of
+the following blocks appears. These are defined by order of appearance:
+
+- ``meta``: define any custom keywords in ``<head>``.
+  Some defaults are generated based on settings and the node (page) presented.
+- ``head``: define any additional elements at the bottom of the ``<head>``.
+  Here add favicon and additional stylesheets / head scripts.
+- ``body_attrs``: define any additional attributes to be appended to ``<body>``.
+  Default is ``class`` only.
+- ``body_top``: a small link to the top of the page. This is used by a small javascript to display by default
+  a small fixed top link at the right bottom of the page, after having scrolled down. If it is not overridden,
+  then you might need to add a ``static/ninecms/images/toplink.png`` background or custom css for ``#toplink``.
+- ``body_loader``: a convenient page loader (splash screen) is defined.
+  Override and leave blank if not suitable.
+- ``content``: this is the main content block that needs to be overridden in index.
+- ``body_bottom``: a small non-visible link at the bottom of the page.
+- ``body_scripts``: define any additional content at the bottom of the ``<body>``.
+  Here add additional scripts to be loaded in the end of the document.
+
+Other important template is ``site-name.html``. This is a small template to define the site name, usually
+an image with logo. Unlike Drupal7, we decided to keep such one-off settings hard-coded and simple rather than
+dynamic in the db.
+
+The templates ``block_content.html`` and ``block_static.html`` fine-tune how the content is displayed.
+The former loads only for the main content node as presented in index. The latter is used for any static node blocks
+as defined in the administration panel (db). Optionally override them to fine tune the fields present and therefore
+to reduce the number of queries executed.
+
+In summary, override templates such as:
+
+- ``index.html``
+- ``site-name.html``
+- ``block_content.html``
+- ``block_static.html``
 
 Theme suggestions
 -----------------
+
 Add a file in the project's ``templates`` folder, with the following names, in order to override a 9cms template.
 
 - content: ``[block_content]_[page_type]_[node_id]`` (eg ``block_content_basic_5.html``)
@@ -431,6 +468,32 @@ Add a file in the project's ``templates`` folder, with the following names, in o
 
 Any combination of ``[]`` is allowed, eg. ``block_content_basic.html`` or ``block_content_5.html``.
 Always append ``.html`` extension.
+
+Block types
+-----------
+
+Additionally to content of any node, which is rendered anyway (unlike from eg. Drupal that has a content block),
+the following block types are supported:
+
+- ``static``: Static content provided by linking to a node.
+  Unlike from Drupal concept of block that defines a text fields anyway.
+- ``menu``: Render a menu or submenu by linking to a menu item.
+- ``signal``: Call a site-specific custom view render (see Views below).
+- ``language``: Render a language switch menu.
+- ``user-menu``: Render a user menu with login/logout or register links.
+- ``login``: Render a login form.
+- ``search``: Render a search form.
+- ``search-results``: Render search results. Simple search functionality. For advanced search a proper package
+  needs to be used. For a search results page add a new page type and implement the block. Case insensitive
+  search cannot be done in Sqlite (see also Important points below).
+- ``contact``: Render a contact form.
+
+Views
+-----
+
+Add a new Django app in your project with ``signals.py`` to listen to the corresponding signal that is declared with
+a new content block in admin.
+Look at the ``ninecms/signals.py`` file on how to code the signals.
 
 Permissions summary
 -------------------
@@ -471,12 +534,29 @@ Example of configuration of an ``editor`` group perms:
 - Image: add, change, delete
 - Page type specific permissions: add, change
 
+Libraries
+---------
+
+Libraries is a minor convenience feature (discussion open) that allows to easily integrate JS scripts in the template.
+A small number of files are involved: ``settings``, ``templatetags``, ``base.html`.
+The implementor may select to ignore libraries and override ``base.html`` or ``index.html`` blocks for
+adding scripts anyway.
+
+Alternatively, use ``django-bower``. Bower is a front-end packages repository that by itself requires node.js,
+but this package makes possible to use bower easily and install libraries easily. The downside is that proper
+and sometimes plenty HTML still needs to be authored in templates, which is now handled in base.html.
+
+Second alternative is to create (in future) and use separate django packages, such as django-bootstrap3,
+and other custom package for each major widely used js package. This is nice because it deals with the
+above downside with custom template tags such as ``{% bootstrap_javascript %}``, but also deals with the
+requirements issue. Downside is increased maintenance for the author of them.
+
 Important points
 ----------------
 
 - If i18n urls: menu items for internal pages should always have language [v0.3.1a]
 - Theme suggestions [v0.4.4b]
-- Search page requires a search results block in page type and 'search' alias, requires MySQL [v0.4.4b]
+- Search page requires a search results block in page type and 'search' alias, requires not Sqlite [v0.4.4b]
 - When serializing related field using ``table__field`` notation, always add ``select_related`` to query prior calling
   serialize [v0.4.7b]
 - Add LANGUAGES in settings_test when I18N_URLS (see aluminium( [v0.4.7b]

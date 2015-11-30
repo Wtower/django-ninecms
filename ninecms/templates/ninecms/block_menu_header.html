@@ -18,7 +18,7 @@ Email: gkarak@9-dev.com
                 {% if not node.disabled %}
                     {% if node.language == LANGUAGE_CODE or node.language == '' %}
                         {% if node.path %}
-                            <li class="{% if node.path in active_trail %}active-trail {% endif %}{% if node.path|check_path_active:request.path %}active{% endif %}">
+                            <li class="{% if node.path in active_trail %}active-trail {% endif %}{% if node.full_path|check_path_active:request.path %}active{% endif %}">
                                 <a href="{{ node.full_path }}">
                                     {{ node.title }}
                                     {% if node.path|check_path_active:request.path %}<span class="sr-only">(current)</span>{% endif %}
@@ -32,7 +32,7 @@ Email: gkarak@9-dev.com
                     {% endif %}
                 {% endif %}
             {% else %}
-                <li class="dropdown {% if node.path in active_trail %}active-trail {% endif %}{% if node.path|check_path_active:request.path %}active{% endif %}">
+                <li class="dropdown {% if node.path in active_trail %}active-trail {% endif %}{% if node.full_path|check_path_active:request.path %}active{% endif %}">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                         {{ node.title }}<span class="caret"></span>
                     </a>

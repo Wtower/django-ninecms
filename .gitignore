@@ -42,7 +42,6 @@ media/
 # Libraries
 ninecms/static/ninecms/bootstrap/
 ninecms/static/ninecms/ckeditor/
-ninecms/static/ninecms/images/
 ninecms/static/ninecms/jquery/
 ninecms/static/ninecms/jquery.scrollTo/
 ninecms/static/ninecms/masonry/
