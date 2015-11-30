@@ -83,17 +83,19 @@ Email: gkarak@9-dev.com
     {% endblock head %}
 </head>
 
-<body class="{{ classes }}">
+<body {% block body_attrs %}class="{{ classes }}"{% endblock %}>
     {#  <!--suppress HtmlUnknownAnchorTarget --> #}
-    <a href="#top" id="top-link">^</a>
+    {% block body_top %}<a href="#top" id="top-link">^</a>{% endblock %}
 
-    <div id="loader">
-        <div class="loader-container">
-            <div class="wow pulse" data-wow-iteration="infinite" data-wow-duration="3s">
-                {% include 'ninecms/site-name.html' %}
+    {% block body_loader %}
+        <div id="loader">
+            <div class="loader-container">
+                <div class="wow pulse" data-wow-iteration="infinite" data-wow-duration="3s">
+                    {% include 'ninecms/site-name.html' %}
+                </div>
             </div>
         </div>
-    </div>
+    {% endblock %}
 
     <!--[if lt IE 9]><div id="ie8" class="alert alert-warning">Your browser version is deprecated</div><![endif]-->
 
@@ -102,7 +104,7 @@ Email: gkarak@9-dev.com
     </div>
 
     {#  <!--suppress HtmlUnknownAnchorTarget --> #}
-    <a href="#bottom" id="bottom-link"></a>
+    {% block body_bottom %}<a href="#bottom" id="bottom-link"></a>{% endblock %}
 
     {% if 'jQuery'|library %}
         {# jQuery (necessary for Bootstrap's JavaScript plugins) #}
