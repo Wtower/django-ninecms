@@ -17,6 +17,7 @@ from django.core import mail
 from ninecms.models import Node
 from ninecms.tests.setup import assert_no_front, create_front, assert_front, create_basic, assert_basic, url_with_lang
 from ninecms.management.commands.check_updates import Capturing
+from ninecms.checks import check_settings
 from io import StringIO
 # noinspection PyPackageRequirements
 import pip
@@ -107,3 +108,23 @@ class NoContentTests(TestCase):
         out = StringIO()
         call_command('cache_clear', stdout=out)
         self.assertEqual(out.getvalue(), 'Cache cleared.\n')
+
+    def test_checks(self):
+        """ Test custom system checks
+        :return: None
+        """
+        self.assertFalse(check_settings(None))
+
+        with self.settings(
+                MEDIA_ROOT=None,
+                MEDIA_URL=None,
+                ADMINS=None,
+                MANAGERS=None,
+                SESSION_COOKIE_NAME='sessionid',
+                CACHES={
+                    'default': {
+                        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+                        'KEY_PREFIX': None,
+                    }
+                }):
+            self.assertEqual(len(check_settings(None)), 6)
