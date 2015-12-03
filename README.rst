@@ -67,9 +67,9 @@ It is intented to keep the number of external dependencies as low as possible, i
 The following are needed:
 
 - Python (3.4+)
-- Django (1.8+): Web framework
+- Django (1.7+, 1.9 recommended): Web framework
 - django-guardian (1.3+): provide per-page-type permissions
-- django-mptt (0.7+): provide trees for tags and menus
+- django-mptt (0.7.4): provide trees for tags and menus
 - bleach (1.4+): bleach-sanitize user HTML
 - Pillow (3+): create different sizes for user images
 - pytz (2015+): handle user time zones
@@ -83,6 +83,17 @@ The following packages are optional/recommended:
 - mysqlclient: or any other db connector
 - newrelic: or any other monitoring tool
 - python3-memcached: for memory caching
+
+`:warning:` Django 1.9 notices:
+
+- Until a new django-mptt version is released, install mptt from git to avoid `issue #402`_::
+
+      pip install git+https://github.com/django-mptt/django-mptt.git
+
+.. _issue #402: https://github.com/django-mptt/django-mptt/pull/402
+
+- Getting ``RemovedInDjango110Warning: render() must be called with a dict, not a Context.`` to a couple of places.
+  Many other apps get similar warnings. Looking for solution without offending Django <1.9.
 
 New project guide
 -----------------
@@ -103,7 +114,7 @@ There is also a project that can be used as an
 
    - Add the following to the ``requirements.txt`` file::
 
-       Django==1.8.7
+       Django==1.9.0
        django-ninecms>=0.5.2
 
    - And optionally::
@@ -468,6 +479,34 @@ Add a file in the project's ``templates`` folder, with the following names, in o
 
 Any combination of ``[]`` is allowed, eg. ``block_content_basic.html`` or ``block_content_5.html``.
 Always append ``.html`` extension.
+
+Page types
+----------
+
+Page types are central to the organisation of a CMS content. In NineCMS, apart from logically organising content
+to relevant page types, which can be done also with taxonomy terms, each page type can have a different page layout,
+with different blocks specified as elements to different regions.
+
+Page types do not feature custom fields and thus cannot be used as the separation of entity-like models,
+as eg. in Drupal. There is no intention to add such a feature as Django models can be very easily be added
+in code and extend the CMS functionality.
+
+URL aliases
+-----------
+
+Each content type can have a pre-specified default url alias for the nodes under it. If a node of that page type
+does not have a url alias specified, the default will be used.
+
+The following replacement tokens can be used:
+
+- ``[node:id]``: The id of the node.
+- ``[node:title]``: The transliterated slugified title of the node.
+- ``[node:created:format]``: The date of node creation.
+- ``[node:changed:format]``: The date of last node update.
+- Format can be any `PHP date format`_ specifier in form
+  ``(specifier)(separator)(specifier)(separator)(specifier)``, eg ``d-m-Y``.
+
+.. _PHP date format: http://www.php.net/date
 
 Block types
 -----------
