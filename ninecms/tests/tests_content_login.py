@@ -246,10 +246,21 @@ class ContentLoginTests(TestCase):
         """
         response = self.client.get(reverse('admin:ninecms_contentblock_changelist'))
         self.assertContains(response, "content block")
-        self.assertContains(response, '<th scope="col" class="column-description"><span>Description</span></th>',
-                            html=True)
-        self.assertContains(response, '<a href="/admin/ninecms/contentblock/2/">user-menu</a>', html=True)
-        self.assertContains(response, '<a href="/admin/ninecms/contentblock/1/">login</a>', html=True)
+        self.assertContains(
+            response,
+            '<th scope="col" class="column-description"><span>Description</span></th>',
+            html=True
+        )
+        self.assertContains(
+            response,
+            '<a href="%s">user-menu</a>' % reverse('admin:ninecms_contentblock_change', args=(2,)),
+            html=True
+        )
+        self.assertContains(
+            response,
+            '<a href="%s">login</a>' % reverse('admin:ninecms_contentblock_change', args=(1,)),
+            html=True
+        )
         self.assertContains(response, '<th scope="col" class="column-elements"><span>Page types</span></th>', html=True)
         self.assertContains(response, '<a href="/admin/ninecms/pagelayoutelement/2">Front Page</a>', html=True)
 
