@@ -598,7 +598,7 @@ These can be extended or replaced using the ``IMAGE_STYLES`` in the project's  `
 This is a dictionary where the index is the defined style name and its value is a dictionary with indexes ``type``
 and ``value``. For example::
 
-    IMAGE_STYLES += { 'my_style': { 'type': 'thumbnail', 'size: (120, 100) } }
+    IMAGE_STYLES.update({'my_style': {'type': 'thumbnail', 'size': (120, 100)}})
 
 Possible types can be:
 
