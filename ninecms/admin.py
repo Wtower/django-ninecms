@@ -20,15 +20,31 @@ class PageLayoutElementInline(admin.StackedInline):
     extra = 0
 
 
+# noinspection PyMethodMayBeStatic
 @admin.register(models.PageType)
 class PageTypeAdmin(admin.ModelAdmin):
     """ Get a list of Page Types """
-    list_display = ('name', 'description', 'url_pattern', 'operations')
+    list_display = ('name', 'description', 'url_pattern', 'elements', 'operations')
     list_editable = ('description', 'url_pattern')
     search_fields = ['name']
     inlines = [PageLayoutElementInline]
 
-    # noinspection PyMethodMayBeStatic
+    def elements(self, obj):
+        """ Return a custom column with blocks in the page type
+        :param obj: a page type object
+        :return: column output
+        """
+        # r = []
+        # region = ''
+        # for element in obj.pagelayoutelement_set.all():
+        #     region_text = '' if region == element.region else ''  # '[%s] ' % element.region
+        #     r.append('<a href="%s">%s%s</a>' % (
+        #         reverse('admin:ninecms_contentblock_change', args=(element.block.id,)), region_text, element.block))
+        #     region = element.region
+        # return ', '.join(r)
+        return obj.pagelayoutelement_set.count()
+    elements.short_description = "Blocks"
+
     def operations(self, obj):
         """ Return a custom column with operations edit, perms
         :param obj: a node object
@@ -299,7 +315,8 @@ class ContentBlockAdmin(admin.ModelAdmin):
         """
         r = []
         for element in obj.pagelayoutelement_set.all():
-            r.append('<a href="/admin/ninecms/pagelayoutelement/%d">%s</a>' % (element.id, element.page_type))
+            r.append('<a href="%s">%s</a>' % (
+                reverse('admin:ninecms_pagetype_change', args=(element.page_type.id,)), element.page_type))
         return ', '.join(r)
     elements.allow_tags = True
     elements.short_description = "Page types"
