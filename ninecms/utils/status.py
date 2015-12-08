@@ -124,6 +124,8 @@ def check_command(command):
         call([command])
     except CalledProcessError:  # pragma: nocover
         return False
+    except FileNotFoundError:  # pragma: nocover
+        return False
     else:
         return True
 

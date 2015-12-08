@@ -86,11 +86,11 @@ The following packages are optional/recommended:
 
 `:warning:` Django 1.9 notices:
 
-- Until a new django-mptt version is released, install mptt from git to avoid `issue #402`_::
+- Until a new django-mptt version is released, use Django 1.8.7, or install mptt from git to avoid `mptt issue #402`_::
 
       pip install git+https://github.com/django-mptt/django-mptt.git
 
-.. _issue #402: https://github.com/django-mptt/django-mptt/pull/402
+.. _mptt issue #402: https://github.com/django-mptt/django-mptt/pull/402
 
 - Getting ``RemovedInDjango110Warning: render() must be called with a dict, not a Context.`` to a couple of places.
   Many other apps get similar warnings. Looking for solution without offending Django <1.9.
@@ -577,7 +577,7 @@ Libraries
 ---------
 
 Libraries is a minor convenience feature (discussion open) that allows to easily integrate JS scripts in the template.
-A small number of files are involved: ``settings``, ``templatetags``, ``base.html`.
+A small number of files are involved: ``settings``, ``templatetags``, ``base.html``.
 The implementor may select to ignore libraries and override ``base.html`` or ``index.html`` blocks for
 adding scripts anyway.
 
@@ -589,6 +589,36 @@ Second alternative is to create (in future) and use separate django packages, su
 and other custom package for each major widely used js package. This is nice because it deals with the
 above downside with custom template tags such as ``{% bootstrap_javascript %}``, but also deals with the
 requirements issue. Downside is increased maintenance for the author of them.
+
+Image styles
+------------
+
+NineCMS allows to display images using specific styles. Some predefined styles can be found in ``ninecms/settings.py``.
+These can be extended or replaced using the ``IMAGE_STYLES`` in the project's  ``settings.py``.
+This is a dictionary where the index is the defined style name and its value is a dictionary with indexes ``type``
+and ``value``. For example::
+
+    IMAGE_STYLES.update({'my_style': {'type': 'thumbnail', 'size': (120, 100)}})
+
+Possible types can be:
+
+- ``thumbnail``: Scales an image to the smallest provided dimension.
+- ``thumbnail-upscale``: Scales an image to the provided dimensions, allowing upscale.
+- ``thumbnail-crop``: Crops an image to the ratio of the provided dimensions and the scales it.
+
+The in order to use an image style in a template (eg for a ``node`` context::
+
+    <img src="{{ node.image_set.all.0.image.url|image_style:'my_style' }}">
+
+NineCMS uses the `Imagemagick<http://www.imagemagick.org/script/binary-releases.php>`_ library for this matter.
+In order to use image styles it has to be installed on the server. When an image style for a particular image
+is requested for the first time, NineCMS uses Imagemagick to create a new file in a new directory in the
+initial file path with the name of the style. To refresh this file cache simply remove the directory with
+the style name. Be careful not to remove the original file.
+
+Pillow has not been used becaue at that time it had multiple issues with Python3. If a large memcache or redis is
+available, `sorl-thumbnail<https://github.com/mariocesar/sorl-thumbnail>`_ may be a better solution
+for high traffic web sites.
 
 Important points
 ----------------
