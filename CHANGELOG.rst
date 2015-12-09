@@ -2,21 +2,25 @@
 CHANGELOG
 =========
 
-Development: v0.5.2.x
----------------------
+v0.5.3
+------
 
-commit 82471878fd36e8ddd4cfdea35dc39290963edc43 (HEAD, origin/develop, develop)
-
-Date:   Fri Nov 27 2015
+Date:   Wed Dec 9 2015
 
 What's new
 
 - Added feature: remove uploaded file (and any image styles-thumbnails) when the relevant record is removed.
 - Improved documentation
 - Improvements
+- Upgraded to Django 1.9
 
 All changes
 
+- Fix #11
+- Added help texts to models with reference to documentation
+- Added images to the project
+- Added more blocks in ``base.html``.
+- Fixes #8
 - Added feature: remove uploaded file (and any image styles-thumbnails) when the relevant record is removed.
 - Added pre-delete signal.
 - It appears that multiple pre-delete functions with decorators do not get called, so merged function with
@@ -31,6 +35,23 @@ All changes
 - Added class to index.html to improve navigation in inspector
 - Added reference to django-ninecms-starter on readme
 - Improved documentation
+
+**:warning: Changes that require manual migration actions:**
+
+- Replace ``node.path`` with ``node.full_path`` when checking if ``active`` path in derived
+  ``block_menu_header.html`` templates (Nov 29)
+
+v0.5.2
+------
+
+Date:   Wed Nov 25 2015
+
+What's new
+
+- Package fixes
+
+All changes
+
 - Bumped minor version from v0.5.2 to v0.5.2.2 to update pypi.
 - Fixed manifest to include all subpackages in python setup.
 - Fixed tests to respect current language.
@@ -42,11 +63,6 @@ All changes
 - Fix setup.py
 - Removed incorrectly added ``docs`` from ``setup.py``
 - Bumped version 0.5.2 to allow pypi upload.
-
-**:warning: Changes that require manual migration actions:**
-
-- Replace ``node.path`` with ``node.full_path`` when checking if ``active`` path in derived
-  ``block_menu_header.html`` templates (Nov 29)
 
 v0.5.1
 ------
@@ -439,8 +455,8 @@ What's new
 
 - Improvements on menus
 - Other improvements
-- Upgraded to Python 3
-- Upgraded to Django 1.8
+- Upgraded to Python 3.4
+- Upgraded to Django 1.8 LTS
 
 All changes
 
@@ -676,3 +692,8 @@ All changes
 
 - Blocks system (models)
 - Initial commit
+
+Version requirements
+
+- Python 2.7
+- Django 1.7

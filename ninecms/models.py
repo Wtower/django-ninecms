@@ -23,11 +23,31 @@ Node System
 
 class PageType(models.Model):
     """ Page Type Model: acts as a single page layout """
-    name = models.CharField(max_length=100, unique=True)
-    description = models.CharField(max_length=255)
-    guidelines = models.CharField(max_length=255, blank=True)
-    template = models.CharField(max_length=255, blank=True)
-    url_pattern = models.CharField(max_length=255, blank=True)
+    name = models.CharField(
+        max_length=100,
+        unique=True,
+        help_text="Specify a unique page type name. A machine name is recommended if to be used in code.",
+    )
+    description = models.CharField(
+        max_length=255,
+        help_text="Describe the page type.",
+    )
+    guidelines = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Provide content submission guidelines for this page type.",
+    )
+    template = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Custom template name (deprecated).",
+    )
+    url_pattern = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text=('Default pattern for page type, if no alias is specified in node edit. '
+                   '<a href="https://github.com/Wtower/django-ninecms#url-aliases" target="_blank">More info</a>.'),
+    )
 
     def __str__(self):
         """ Get model name
@@ -159,7 +179,7 @@ class MenuItem(MPTTModel):
     """ Menu Item Model: menu tree item in a single tree, paths can be empty for parents """
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
     weight = models.IntegerField(default=0, db_index=True)
-    language = models.CharField(max_length=2, blank=True)
+    language = models.CharField(max_length=2, blank=True, choices=settings.LANGUAGES)
     path = models.CharField(max_length=255, blank=True)
     title = models.CharField(max_length=255)
     disabled = models.BooleanField(default=False)
@@ -209,11 +229,36 @@ class ContentBlock(models.Model):
         ('search-results', "Search: render search results"),
         ('contact', "Contact: render contact form"),
     )
-    type = models.CharField(max_length=50, choices=BLOCK_TYPES, default='static')
-    classes = models.CharField(max_length=255, blank=True)
-    node = models.ForeignKey(Node, null=True, blank=True)
-    menu_item = TreeForeignKey(MenuItem, null=True, blank=True)
-    signal = models.CharField(max_length=100, blank=True)
+    type = models.CharField(
+        max_length=50,
+        choices=BLOCK_TYPES,
+        default='static',
+        help_text="How to render the block.",
+    )
+    classes = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Additional CSS classes to append to block.",
+    )
+    node = models.ForeignKey(
+        Node,
+        null=True,
+        blank=True,
+        help_text="The related node with this block (block type: static only).",
+    )
+    menu_item = TreeForeignKey(
+        MenuItem,
+        null=True,
+        blank=True,
+        help_text="The related parent menu item related (block type: menu only).",
+    )
+    signal = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text=('The signal name to trigger for a '
+                   '<a href="https://github.com/Wtower/django-ninecms#views" target="_blank">custom view</a> '
+                   '(block type: signal only).'),
+    )
 
     def __str__(self):
         """ Get title based on block type
@@ -231,9 +276,19 @@ class ContentBlock(models.Model):
 class PageLayoutElement(models.Model):
     """ Page Layout Element Model: a set of these records define the layout for each page type """
     page_type = models.ForeignKey(PageType)
-    region = models.CharField(max_length=50, db_index=True)
+    region = models.CharField(
+        max_length=50,
+        db_index=True,
+        help_text=('A hard coded region name that is rendered in template index and also used in '
+                   '<a href="https://github.com/Wtower/django-ninecms#theme-suggestions" target="_blank">'
+                   'theme suggestions</a>.'),
+    )
     block = models.ForeignKey(ContentBlock)
-    weight = models.IntegerField(default=0, db_index=True)
+    weight = models.IntegerField(
+        default=0,
+        db_index=True,
+        help_text="Elements with greater number in the same region sink to the bottom of the page.",
+    )
     hidden = models.BooleanField(default=False, db_index=True)
 
     def __str__(self):
