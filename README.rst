@@ -115,17 +115,17 @@ There is also a project that can be used as an
    - Add the following to the ``requirements.txt`` file::
 
        Django==1.9.0
-       django-ninecms>=0.5.2
+       django-ninecms>=0.5.3
 
    - And optionally::
 
-       coverage==4.0.2
+       coverage==4.0.3
        django-admin-bootstrapped==2.5.6
        django-admin-bootstrapped-plus>=0.1.1
        django-bootstrap3==6.2.2
        django-debug-toolbar==1.4.0
        mysqlclient==1.3.7
-       newrelic==2.58.0.43
+       newrelic==2.58.2.45
        python3-memcached==1.51
        sqlparse==0.1.18
 
