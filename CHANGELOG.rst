@@ -2,6 +2,17 @@
 CHANGELOG
 =========
 
+Development: v0.5.4
+-------------------
+
+Estimated release date:  Mon Jan 11 2016
+
+Update date:  Wed Dec 9 2015
+
+All changes
+
+- Fixed regression in #11 and bumped version to 0.5.3.1 for PyPi.
+
 v0.5.3
 ------
 
