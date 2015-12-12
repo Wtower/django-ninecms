@@ -22,3 +22,13 @@ def get_full_path(path, language, bookmark=''):
     if language and settings.I18N_URLS:  # pragma: nocover
         path = '/' + language + path
     return path
+
+
+def get_clean_url(url):
+    """ Get a url without the language part, if i18n urls are defined
+    :param url: a string with the url to clean
+    :return: a string with the cleaned url
+    """
+    url = url.strip('/')
+    url = '/' if not url else url
+    return '/'.join(url.split('/')[1:]) if settings.I18N_URLS else url

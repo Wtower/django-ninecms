@@ -10,6 +10,7 @@ from django.conf import settings
 from django.template import Context
 from ninecms.utils.media import image_style as util_image
 from ninecms.utils.transliterate import upper_no_intonation as util_upper
+from ninecms.utils.nodes import get_clean_url
 from ninecms.utils import status
 
 
@@ -133,10 +134,7 @@ def active_trail(menu, url):
     :param url: the current url to check against for the active path (should be request.path)
     :return: a recordset of all active menu ancestors
     """
-    url = url.strip('/')
-    url = '/' if not url else url
-    url = '/'.join(url.split('/')[1:]) if settings.I18N_URLS else url
-    return menu.filter(path=url).get_ancestors(include_self=True)
+    return menu.filter(path=get_clean_url(url)).get_ancestors(include_self=True)
 
 
 @register.filter
@@ -169,7 +167,8 @@ def check_path_active(node_path, request_path):
     :param request_path: the request path
     :return: boolean
     """
-    return node_path == request_path or node_path == request_path.strip('/')
+    url = get_clean_url(request_path)
+    return node_path == url or node_path == url.strip('/')
 
 @register.inclusion_tag('ninecms/glyphicon.html')
 def glyphicon(icon):
