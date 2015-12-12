@@ -128,11 +128,14 @@ def upper_no_intonation(s):
 def active_trail(menu, url):
     """ Get the active menu item based on url provided, and all of its ancestors
     To be used to check each individual node's path if in this list so to obtain the active trail
+    Also remove language part from url if i18n urls are enabled
     :param menu: the parent menu
     :param url: the current url to check against for the active path (should be request.path)
     :return: a recordset of all active menu ancestors
     """
-    url = '/' if not url.strip('/') else url.strip('/')
+    url = url.strip('/')
+    url = '/' if not url else url
+    url = '/'.join(url.split('/')[1:]) if settings.I18N_URLS else url
     return menu.filter(path=url).get_ancestors(include_self=True)
 
 
