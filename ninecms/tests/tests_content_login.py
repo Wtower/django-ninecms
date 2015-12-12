@@ -261,8 +261,16 @@ class ContentLoginTests(TestCase):
             '<a href="%s">login</a>' % reverse('admin:ninecms_contentblock_change', args=(1,)),
             html=True
         )
-        self.assertContains(response, '<th scope="col" class="column-elements"><span>Page types</span></th>', html=True)
-        self.assertContains(response, '<a href="/admin/ninecms/pagelayoutelement/2">Front Page</a>', html=True)
+        self.assertContains(
+            response,
+            '<th scope="col" class="column-elements"><span>Page types</span></th>',
+            html=True
+        )
+        self.assertContains(
+            response,
+            '<a href="%s">Front Page</a>' % reverse('admin:ninecms_pagetype_change', args=(2,)),
+            html=True
+        )
 
     """ Logout """
     def test_logout_view(self):
