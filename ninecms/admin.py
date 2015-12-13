@@ -27,6 +27,7 @@ class PageTypeAdmin(admin.ModelAdmin):
     list_editable = ('description', 'url_pattern')
     search_fields = ['name']
     inlines = [PageLayoutElementInline]
+    save_as = True
 
     # noinspection PyMethodMayBeStatic
     def operations(self, obj):
