@@ -88,7 +88,7 @@ The following packages are optional/recommended:
 
 - Until a new django-mptt version is released, use Django 1.8.7, or install mptt from git to avoid `mptt issue #402`_::
 
-      pip install git+https://github.com/django-mptt/django-mptt.git
+      pip install git+https://github.com/django-mptt/django-mptt.git@fcc868dd238a59f2bed04871f62fae95ee09d243
 
 .. _mptt issue #402: https://github.com/django-mptt/django-mptt/pull/402
 
