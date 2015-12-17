@@ -5,6 +5,8 @@
 {% comment %}
 
 Block template for menu in header region
+The menu is expected to be the children of a menu item, of a menu block.
+
 Author: George Karakostas
 Copyright: Copyright 2015, George Karakostas
 Licence: BSD-3
@@ -12,13 +14,14 @@ Email: gkarak@9-dev.com
 
 {% endcomment %}
 <ul class="nav navbar-nav navbar-right menu">
+    {# active_trail: expected to be in the form: ['' (menu root), 'Page X', 'Page X.Y'] #}
     {% with active_trail=menu|active_trail:request.path|flatten:'path' %}
         {% recursetree menu %}
             {% if node.is_leaf_node %}
                 {% if not node.disabled %}
                     {% if node.language == LANGUAGE_CODE or node.language == '' %}
                         {% if node.path %}
-                            <li class="{% if node.path in active_trail %}active-trail {% endif %}{% if node.full_path|check_path_active:request.path %}active{% endif %}">
+                            <li class="{% if node.path in active_trail %}active-trail {% endif %}{% if node.path|check_path_active:request.path %}active{% endif %}">
                                 <a href="{{ node.full_path }}">
                                     {{ node.title }}
                                     {% if node.path|check_path_active:request.path %}<span class="sr-only">(current)</span>{% endif %}
@@ -32,7 +35,7 @@ Email: gkarak@9-dev.com
                     {% endif %}
                 {% endif %}
             {% else %}
-                <li class="dropdown {% if node.path in active_trail %}active-trail {% endif %}{% if node.full_path|check_path_active:request.path %}active{% endif %}">
+                <li class="dropdown {% if node.path in active_trail %}active-trail {% endif %}{% if node.path|check_path_active:request.path %}active{% endif %}">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                         {{ node.title }}<span class="caret"></span>
                     </a>
