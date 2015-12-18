@@ -96,7 +96,6 @@ class NodeAdmin(admin.ModelAdmin):
     form = forms.ContentNodeEditForm
     # fieldsets returned from overridden get_fieldsets method below
     inlines = [ImageInline, FileInline, VideoInline, NodeRevisionInline]
-    save_as = True
 
     def operations(self, obj):
         """ Return a custom column with 9cms operations view, edit
