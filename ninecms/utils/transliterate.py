@@ -18,8 +18,8 @@ def transliterate(s, filename=False, to_lower=False):
     """
     mapping = {
         'el': (
-            'αβγδεζηικλμνξοπρστυφωΑΒΓΔΕΖΗΙΚΛΜΝΞΟΠΡΣΤΥΦΩάέίήύόώϊϋΐΰς',
-            'abgdeziiklmnxoprstyfoABGDEZIIKLMNXOPRSTYFOaeiiyooiyiys',
+            'αβγδεζηικλμνξοπρστυφωΑΒΓΔΕΖΗΙΚΛΜΝΞΟΠΡΣΤΥΦΩάέίήύόώϊϋΐΰςΆΈΊΉΎΌΏ',
+            'abgdeziiklmnxoprstyfoABGDEZIIKLMNXOPRSTYFOaeiiyooiyiysAEIIYOO',
         ),
         'rs': (
             'абвгдезијклмнопрстуфхцАБВГДЕЗИЈКЛМНОПРСТУФХЦ',
