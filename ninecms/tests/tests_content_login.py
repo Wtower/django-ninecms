@@ -281,6 +281,16 @@ class ContentLoginTests(TestCase):
             '<a href="%s">Front Page</a>+' % reverse('admin:ninecms_pagetype_change', args=(self.node_rev_front.pk,))
         )
 
+    def test_admin_menu_item_add_page(self):
+        """ Test that menu item add page renders properly
+        :return: None
+        """
+        response = self.client.get(reverse('admin:ninecms_menuitem_add'))
+        self.assertContains(response, '<label for="id_parent">')
+        self.assertContains(response, '<label class="required" for="id_weight">')
+        self.assertContains(response, '<label for="id_language">')
+        self.assertContains(response, '<label for="id_path">')
+
     """ Logout """
     def test_logout_view(self):
         """ Test that logout form renders properly
