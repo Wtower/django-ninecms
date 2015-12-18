@@ -5,6 +5,7 @@ __licence__ = 'BSD-3'
 __email__ = 'gkarak@9-dev.com'
 
 from django.contrib import admin, messages
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.conf.urls import url
 from django.core.exceptions import PermissionDenied
@@ -245,11 +246,22 @@ class NodeAdmin(admin.ModelAdmin):
         return qs.filter(page_type__id__in=types.values_list('id'))
 
     def get_form(self, request, obj=None, **kwargs):
+        """ Override form to pass the current user
+        :param request: the request object
+        :param obj: the current node if any
+        :param kwargs: keyword arguments
+        :return: overridden form
+        """
         form = super(NodeAdmin, self).get_form(request, obj, **kwargs)
         form.current_user = request.user
         return form
 
     def get_fieldsets(self, request, obj=None):
+        """ Provide different fieldsets depending on user level
+        :param request: the request object
+        :param obj: the current node if any
+        :return: a dictionary of fieldsets
+        """
         if request.user.is_superuser:
             return (
                 ("Node", {'fields': ('page_type', 'language', 'alias', 'title')}),
@@ -261,7 +273,7 @@ class NodeAdmin(admin.ModelAdmin):
             return (
                 ("Node", {'fields': ('page_type', 'language', 'title')}),
                 ("Body", {'fields': ('highlight', 'summary', 'body', 'link')}),
-                ("Node management", {'fields': ('status', 'promote', 'sticky',
+                ("Node management", {'fields': ('status', 'promote', 'sticky', 'user',
                                                 'created', 'original_translation', 'weight')}),
             )
 
@@ -274,6 +286,7 @@ class NodeAdmin(admin.ModelAdmin):
 
     def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
         """ Override queryset of page types field to respect permissions
+        Restrict users field for non-superusers to same user
         :param db_field: the database field name
         :param request: the request object
         :param kwargs: keyword arguments such as the queryset
@@ -284,6 +297,8 @@ class NodeAdmin(admin.ModelAdmin):
             if len(page_types) < 1 and not request.user.is_superuser:
                 raise PermissionDenied
             kwargs['queryset'] = page_types
+        elif db_field.name == 'user' and not request.user.is_superuser:
+            kwargs['queryset'] = User.objects.filter(pk=request.user.pk)
         return super(NodeAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 
