@@ -28,6 +28,7 @@ class PageTypeAdmin(admin.ModelAdmin):
     list_editable = ('description', 'url_pattern')
     search_fields = ['name']
     inlines = [PageLayoutElementInline]
+    save_as = True
 
     def elements(self, obj):
         """ Return a custom column with blocks in the page type
@@ -111,7 +112,6 @@ class NodeAdmin(admin.ModelAdmin):
     form = forms.ContentNodeEditForm
     # fieldsets returned from overridden get_fieldsets method below
     inlines = [ImageInline, FileInline, VideoInline, NodeRevisionInline]
-    save_as = True
 
     def operations(self, obj):
         """ Return a custom column with 9cms operations view, edit
