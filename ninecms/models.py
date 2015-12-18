@@ -9,6 +9,8 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.dateformat import DateFormat
 from django.conf import settings
+from django.conf import global_settings
+from django.utils.translation import ugettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
 from ninecms.utils.nodes import get_full_path
 from ninecms.utils.media import image_path_file_name, file_path_file_name, validate_file_ext, video_path_file_name, \
@@ -26,27 +28,30 @@ class PageType(models.Model):
     name = models.CharField(
         max_length=100,
         unique=True,
-        help_text="Specify a unique page type name. A machine name is recommended if to be used in code.",
+        verbose_name=_("name"),
+        help_text=_("Specify a unique page type name. A machine name is recommended if to be used in code."),
     )
     description = models.CharField(
         max_length=255,
-        help_text="Describe the page type.",
+        verbose_name=_("description"),
+        help_text=_("Describe the page type."),
     )
     guidelines = models.CharField(
         max_length=255,
         blank=True,
-        help_text="Provide content submission guidelines for this page type.",
+        verbose_name=_("guidelines"),
+        help_text=_("Provide content submission guidelines for this page type."),
     )
     template = models.CharField(
         max_length=255,
         blank=True,
-        help_text="Custom template name (deprecated).",
+        help_text=_("Custom template name (deprecated)."),
     )
     url_pattern = models.CharField(
         max_length=255,
         blank=True,
-        help_text=('Default pattern for page type, if no alias is specified in node edit. '
-                   '<a href="https://github.com/Wtower/django-ninecms#url-aliases" target="_blank">More info</a>.'),
+        help_text=_('Default pattern for page type, if no alias is specified in node edit. '
+                    '<a href="https://github.com/Wtower/django-ninecms#url-aliases" target="_blank">More info</a>.'),
     )
 
     def __str__(self):
@@ -60,31 +65,34 @@ class PageType(models.Model):
         ordering = ['id']
         # object-specific guardian permissions
         permissions = (
-            ('add_node_pagetype', "Add node of a specific page type"),
-            ('change_node_pagetype', "Change node of a specific page type"),
-            ('delete_node_pagetype', "Delete node of a specific page type"),
+            ('add_node_pagetype', _("Add node of a specific page type")),
+            ('change_node_pagetype', _("Change node of a specific page type")),
+            ('delete_node_pagetype', _("Delete node of a specific page type")),
         )
+        verbose_name = _("page type")
+        verbose_name_plural = _("page types")
 
 
 class Node(models.Model):
     """ Node Model: basic content record """
-    page_type = models.ForeignKey(PageType)
-    language = models.CharField(max_length=2, blank=True, choices=settings.LANGUAGES)
-    title = models.CharField(max_length=255)
-    user = models.ForeignKey(User)
-    status = models.BooleanField(default=1)
-    promote = models.BooleanField(default=0)
-    sticky = models.BooleanField(default=0)
-    created = models.DateTimeField(default=timezone.now)
-    changed = models.DateTimeField(auto_now=True)
-    original_translation = models.ForeignKey('self', null=True, blank=True, related_name="Translations")
-    summary = models.TextField(blank=True)
-    body = models.TextField(blank=True)
-    highlight = models.CharField(max_length=255, blank=True)
-    link = models.URLField(max_length=255, blank=True)
-    weight = models.IntegerField(default=0)
-    alias = models.CharField(max_length=255, blank=True, db_index=True)
-    redirect = models.BooleanField(default=0)
+    page_type = models.ForeignKey(PageType, verbose_name=_("page type"))
+    language = models.CharField(max_length=2, blank=True, choices=global_settings.LANGUAGES, verbose_name=_("language"))
+    title = models.CharField(max_length=255, verbose_name=_("title"))
+    user = models.ForeignKey(User, verbose_name=_("user"))
+    status = models.BooleanField(default=1, verbose_name=_("published"))
+    promote = models.BooleanField(default=0, verbose_name=_("promoted"))
+    sticky = models.BooleanField(default=0, verbose_name=_("sticky"))
+    created = models.DateTimeField(default=timezone.now, verbose_name=_("date created"))
+    changed = models.DateTimeField(auto_now=True, verbose_name=_("date changed"))
+    original_translation = models.ForeignKey('self', null=True, blank=True, related_name="Translations",
+                                             verbose_name=_("original translation"))
+    summary = models.TextField(blank=True, verbose_name=_("summary"))
+    body = models.TextField(blank=True, verbose_name=_("body"))
+    highlight = models.CharField(max_length=255, blank=True, verbose_name=_("highlight"))
+    link = models.URLField(max_length=255, blank=True, verbose_name=_("link"))
+    weight = models.IntegerField(default=0, verbose_name=_("order weight"))
+    alias = models.CharField(max_length=255, blank=True, db_index=True, verbose_name=_("alias"))
+    redirect = models.BooleanField(default=0, verbose_name=_("redirect"))
 
     def __str__(self):
         """ Get model name
@@ -144,31 +152,38 @@ class Node(models.Model):
     class Meta:
         """ Model meta """
         permissions = (
-            ('use_full_html', "Can use Full HTML in node body and summary"),
-            ('view_unpublished', "Can view unpublished content"),
+            ('use_full_html', _("Can use Full HTML in node body and summary")),
+            ('view_unpublished', _("Can view unpublished content")),
         )
+        verbose_name = _("node")
+        verbose_name_plural = _("nodes")
 
 
 class NodeRevision(models.Model):
     """ Node Revision Model: Basic content archive, Drupal style """
-    node = models.ForeignKey(Node)
-    user = models.ForeignKey(User)
-    log_entry = models.CharField(max_length=255, blank=True)
-    created = models.DateTimeField(auto_now_add=True)
-    title = models.CharField(max_length=255)
-    status = models.BooleanField(default=1)
-    promote = models.BooleanField(default=0)
-    sticky = models.BooleanField(default=0)
-    summary = models.TextField(blank=True)
-    body = models.TextField(blank=True)
-    highlight = models.CharField(max_length=255, blank=True)
-    link = models.URLField(max_length=255, blank=True)
+    node = models.ForeignKey(Node, verbose_name=_("node"))
+    user = models.ForeignKey(User, verbose_name=_("user"))
+    log_entry = models.CharField(max_length=255, blank=True, verbose_name=_("log entry"))
+    created = models.DateTimeField(auto_now_add=True, verbose_name=_("date created"))
+    title = models.CharField(max_length=255, verbose_name=_("title"))
+    status = models.BooleanField(default=1, verbose_name=_("published"))
+    promote = models.BooleanField(default=0, verbose_name=_("promoted"))
+    sticky = models.BooleanField(default=0, verbose_name=_("sticky"))
+    summary = models.TextField(blank=True, verbose_name=_("summary"))
+    body = models.TextField(blank=True, verbose_name=_("body"))
+    highlight = models.CharField(max_length=255, blank=True, verbose_name=_("highlight"))
+    link = models.URLField(max_length=255, blank=True, verbose_name=_("link"))
 
     def __str__(self):
         """ Get model name
         :return: model name
         """
         return self.title
+
+    class Meta:
+        """ Model meta """
+        verbose_name = _("node revision")
+        verbose_name_plural = _("node revisions")
 
 """
 Menu System
@@ -177,12 +192,12 @@ Menu System
 
 class MenuItem(MPTTModel):
     """ Menu Item Model: menu tree item in a single tree, paths can be empty for parents """
-    parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
-    weight = models.IntegerField(default=0, db_index=True)
-    language = models.CharField(max_length=2, blank=True, choices=settings.LANGUAGES)
-    path = models.CharField(max_length=255, blank=True)
-    title = models.CharField(max_length=255)
-    disabled = models.BooleanField(default=False)
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children', verbose_name=_("parent menu"))
+    weight = models.IntegerField(default=0, db_index=True, verbose_name=_("order weight"))
+    language = models.CharField(max_length=2, blank=True, choices=global_settings.LANGUAGES, verbose_name=_("language"))
+    path = models.CharField(max_length=255, blank=True, verbose_name=_("path"))
+    title = models.CharField(max_length=255, verbose_name=_("title"))
+    disabled = models.BooleanField(default=False, verbose_name=_("disabled"))
 
     def __str__(self):
         """ Get model name
@@ -211,6 +226,11 @@ class MenuItem(MPTTModel):
         """ Set order when inserting items for mptt """
         order_insertion_by = ['weight']
 
+    class Meta:
+        """ Model meta """
+        verbose_name = _("menu item")
+        verbose_name_plural = _("menu items")
+
 """
 Block System
 """
@@ -219,45 +239,48 @@ Block System
 class ContentBlock(models.Model):
     """ Content Block Model: basic block instance which can be used in several page layouts """
     BLOCK_TYPES = (
-        ('static', "Static: link to node"),
-        ('menu', "Menu: render a menu or submenu"),
-        ('signal', "Signal: call site-specific custom render"),
-        ('language', "Language: switch menu"),
-        ('user-menu', "User menu: render a menu with login/register and logout links"),
-        ('login', "Login: render login form"),
-        ('search', "Search: render search form"),
-        ('search-results', "Search: render search results"),
-        ('contact', "Contact: render contact form"),
+        ('static', _("Static: link to node")),
+        ('menu', _("Menu: render a menu or submenu")),
+        ('signal', _("Signal: call site-specific custom render")),
+        ('language', _("Language: switch menu")),
+        ('user-menu', _("User menu: render a menu with login/register and logout links")),
+        ('login', _("Login: render login form")),
+        ('search', _("Search: render search form")),
+        ('search-results', _("Search: render search results")),
+        ('contact', _("Contact: render contact form")),
     )
     type = models.CharField(
         max_length=50,
         choices=BLOCK_TYPES,
         default='static',
-        help_text="How to render the block.",
+        verbose_name=_("type"),
+        help_text=_("How to render the block."),
     )
     classes = models.CharField(
         max_length=255,
         blank=True,
-        help_text="Additional CSS classes to append to block.",
+        help_text=_("Additional CSS classes to append to block."),
     )
     node = models.ForeignKey(
         Node,
         null=True,
         blank=True,
-        help_text="The related node with this block (block type: static only).",
+        verbose_name=_("node"),
+        help_text=_("The related node with this block (block type: static only)."),
     )
     menu_item = TreeForeignKey(
         MenuItem,
         null=True,
         blank=True,
-        help_text="The related parent menu item related (block type: menu only).",
+        verbose_name=_("menu item"),
+        help_text=_("The related parent menu item related (block type: menu only)."),
     )
     signal = models.CharField(
         max_length=100,
         blank=True,
-        help_text=('The signal name to trigger for a '
-                   '<a href="https://github.com/Wtower/django-ninecms#views" target="_blank">custom view</a> '
-                   '(block type: signal only).'),
+        help_text=_('The signal name to trigger for a '
+                    '<a href="https://github.com/Wtower/django-ninecms#views" target="_blank">custom view</a> '
+                    '(block type: signal only).'),
     )
 
     def __str__(self):
@@ -272,30 +295,42 @@ class ContentBlock(models.Model):
             return '-'.join((self.type, str(self.signal)))
         return self.type
 
+    class Meta:
+        """ Model meta """
+        verbose_name = _("content block")
+        verbose_name_plural = _("content blocks")
+
 
 class PageLayoutElement(models.Model):
     """ Page Layout Element Model: a set of these records define the layout for each page type """
-    page_type = models.ForeignKey(PageType)
+    page_type = models.ForeignKey(PageType, verbose_name=_("page type"))
     region = models.CharField(
         max_length=50,
         db_index=True,
-        help_text=('A hard coded region name that is rendered in template index and also used in '
-                   '<a href="https://github.com/Wtower/django-ninecms#theme-suggestions" target="_blank">'
-                   'theme suggestions</a>.'),
+        verbose_name=_("region"),
+        help_text=_('A hard coded region name that is rendered in template index and also used in '
+                    '<a href="https://github.com/Wtower/django-ninecms#theme-suggestions" target="_blank">'
+                    'theme suggestions</a>.'),
     )
-    block = models.ForeignKey(ContentBlock)
+    block = models.ForeignKey(ContentBlock, verbose_name=_("content block"))
     weight = models.IntegerField(
         default=0,
         db_index=True,
-        help_text="Elements with greater number in the same region sink to the bottom of the page.",
+        verbose_name=_("order weight"),
+        help_text=_("Elements with greater number in the same region sink to the bottom of the page."),
     )
-    hidden = models.BooleanField(default=False, db_index=True)
+    hidden = models.BooleanField(default=False, db_index=True, verbose_name=_("hidden"))
 
     def __str__(self):
         """ Get model name
         :return: model name
         """
         return ' '.join((str(self.page_type), self.region))
+
+    class Meta:
+        """ Model meta """
+        verbose_name = _("page layout element")
+        verbose_name_plural = _("page layout elements")
 
 """
 Media System
@@ -304,9 +339,9 @@ Media System
 
 class Media(models.Model):
     """ Media Model: abstract model for media, one node-many images relationship """
-    node = models.ForeignKey(Node)
-    title = models.CharField(max_length=255, blank=True)
-    group = models.CharField(max_length=50, blank=True)
+    node = models.ForeignKey(Node, verbose_name=_("node"))
+    title = models.CharField(max_length=255, blank=True, verbose_name=_("title"))
+    group = models.CharField(max_length=50, blank=True, verbose_name=_("group"))
 
     def __str__(self):
         """ Get model name
@@ -321,12 +356,23 @@ class Media(models.Model):
 
 class Image(Media):
     """ Image Model: the basic image record """
-    image = models.ImageField(upload_to=image_path_file_name, max_length=255)
+    image = models.ImageField(upload_to=image_path_file_name, max_length=255, verbose_name=_("image"))
+
+    class Meta:
+        """ Model meta """
+        verbose_name = _("image")
+        verbose_name_plural = _("images")
 
 
 class File(Media):
     """ File Model: a file field """
-    file = models.FileField(upload_to=file_path_file_name, max_length=255, validators=[validate_file_ext])
+    file = models.FileField(upload_to=file_path_file_name, max_length=255, validators=[validate_file_ext],
+                            verbose_name=_("file"))
+
+    class Meta:
+        """ Model meta """
+        verbose_name = _("file")
+        verbose_name_plural = _("files")
 
 
 class Video(Media):
@@ -350,11 +396,12 @@ Taxonomy System
 
 class TaxonomyTerm(MPTTModel):
     """ Taxonomy term model: the basic term record, m2m relationship with nodes """
-    parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
-    name = models.CharField(max_length=50)
-    weight = models.IntegerField(default=0, db_index=True)
-    description_node = models.ForeignKey(Node, null=True, blank=True, related_name='term_described')
-    nodes = models.ManyToManyField(Node, blank=True, related_name='terms')
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children', verbose_name=_("parent term"))
+    name = models.CharField(max_length=50, verbose_name=_("name"))
+    weight = models.IntegerField(default=0, db_index=True, verbose_name=_("order weight"))
+    description_node = models.ForeignKey(Node, null=True, blank=True, related_name='term_described',
+                                         verbose_name=_("description node"))
+    nodes = models.ManyToManyField(Node, blank=True, related_name='terms', verbose_name=_("nodes"))
 
     def __str__(self):
         """ Get model name
@@ -365,3 +412,8 @@ class TaxonomyTerm(MPTTModel):
     class MPTTMeta:
         """ Set order when inserting items for mptt """
         order_insertion_by = ['weight']
+
+    class Meta:
+        """ Model meta """
+        verbose_name = _("taxonomy term")
+        verbose_name_plural = _("taxonomy terms")

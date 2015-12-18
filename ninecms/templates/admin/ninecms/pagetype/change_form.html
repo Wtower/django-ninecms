@@ -10,6 +10,6 @@ Email: gkarak@9-dev.com
 {% endcomment %}
 
 {% block object-tools-items %}
-    <li><a href="{% url 'admin:ninecms_pagetype_perms' original.pk %}">Permissions</a></li>
+    <li><a href="{% url 'admin:ninecms_pagetype_perms' original.pk %}">{% trans "Permissions" %}</a></li>
     {{ block.super }}
 {% endblock %}

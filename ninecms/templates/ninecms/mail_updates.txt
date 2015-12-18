@@ -1,3 +1,4 @@
+{% load i18n %}
 {% comment %}
 Mail template for contact
 Author: George Karakostas
@@ -5,10 +6,10 @@ Copyright: Copyright 2015, George Karakostas
 Licence: BSD-3
 Email: gkarak@9-dev.com
 {% endcomment %}
-There are security updates available for your web site.
-To ensure the security of your server, you should update.
-The following updates are available:
+{% trans "There are security updates available for your web site" %}.
+{% trans "To ensure the security of your server, you should update" %}.
+{% trans "The following updates are available" %}:
 
 {% for update in updates %}{{ update }}
 {% endfor %}
-See the status page for more information.
+{% trans "See the status page for more information" %}.
