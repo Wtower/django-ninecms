@@ -85,6 +85,8 @@ class ContentLoginSimpleTests(TestCase):
         """ Test that renders properly /admin/ninecms/node/<node_id>/
         Get the basic page to test image as well
         Also test fields exclusive to superuser
+        Check that user field populates only with current user
+        Notice that here the field is not selected as there is a different user for this node, not present in queryset
         :return: None
         """
         response = self.client.get(reverse('admin:ninecms_node_change', args=(self.node_rev_basic.node_id,)),
@@ -99,12 +101,17 @@ class ContentLoginSimpleTests(TestCase):
                                        'value="%s">' % self.node_rev_basic.node.title), html=True)
         self.assertNotContains(response, '<label for="id_alias">Alias:</label>', html=True)
         self.assertNotContains(response, '<label class="vCheckboxLabel" for="id_redirect">Redirect</label>', html=True)
-        self.assertNotContains(response, '<label class="required" for="id_user">User:</label>', html=True)
+        self.assertContains(response, ('<select class="form-control form-control-inline" id="id_user" name="user" '
+                                       'title=""><option value="">---------</option>'
+                                       '<option value="%d">%s</option>'
+                                       '</select>' % (self.simple_user.pk, self.simple_user.username)), html=True)
 
     def test_admin_node_add_page(self):
         """ Test that renders properly /admin/ninecms/node/add/
         Also test fields exclusive to superuser
         Also test initial data
+        Check that user field populates only with current user
+        Notice that here the user field is selected by form initial data
         :return: None
         """
         response = self.client.get(reverse('admin:ninecms_node_add'))
@@ -115,7 +122,10 @@ class ContentLoginSimpleTests(TestCase):
         response = self.client.get(reverse('admin:ninecms_node_add'))
         self.assertNotContains(response, '<label for="id_alias">Alias:</label>', html=True)
         self.assertNotContains(response, '<label class="vCheckboxLabel" for="id_redirect">Redirect</label>', html=True)
-        self.assertNotContains(response, '<label class="required" for="id_user">User:</label>', html=True)
+        self.assertContains(response, ('<select class="form-control form-control-inline" id="id_user" name="user" '
+                                       'title=""><option value="">---------</option>'
+                                       '<option value="%d" selected="selected">%s</option>'
+                                       '</select>' % (self.simple_user.pk, self.simple_user.username)), html=True)
         self.assertContains(response, ('<input checked="checked" class="" id="id_status" name="status" type="checkbox" '
                                        'value="1">'), html=True)
         self.assertContains(response, '<input class="" id="id_promote" name="promote" type="checkbox">', html=True)
