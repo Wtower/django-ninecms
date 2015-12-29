@@ -17,4 +17,3 @@ User-agent: *
 Crawl-delay: 10
 # Paths
 Disallow: /admin/
-Disallow: /grappelli/

@@ -9,14 +9,14 @@ Licence: BSD-3
 Email: gkarak@9-dev.com
 {% endcomment %}
 
-{% block title %}Edit permissions for page type {{ page_type.name }}{% endblock %}
+{% block title %}{% trans "Edit permissions for page type" %} {{ page_type.name }}{% endblock %}
 
 {% if not is_popup %}
     {% block breadcrumbs %}
         <ul class="breadcrumb">
             <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
-            <li><a href="{% url 'admin:index' %}ninecms/">Nine Cms</a></li>
-            <li><a href="{% url 'admin:index' %}ninecms/pagetype">Page types</a></li>
+            <li><a href="{% url 'admin:app_list' 'ninecms' %}">Nine CMS</a></li>
+            <li><a href="{% url 'admin:ninecms_pagetype_changelist' %}">{% trans "Page types" %}</a></li>
             <li>{{ page_type.description }}</li>
         </ul>
     {% endblock %}
@@ -25,10 +25,10 @@ Email: gkarak@9-dev.com
 {% block object-tools %}
     {% if not is_popup %}
         <div id="content-navbar-collapse" class="navbar-collapse collapse">
-            <span class="navbar-brand">Edit permissions for page type</span>
+            <span class="navbar-brand">{% trans "Edit permissions for page type" %}</span>
             <ul class="nav navbar-nav navbar-right">
                 {% block object-tools-items %}
-                    <li><a href="{% url 'admin:ninecms_pagetype_change' page_type.pk %}">Edit</a></li>
+                    <li><a href="{% url 'admin:ninecms_pagetype_change' page_type.pk %}">{% trans "Edit" %}</a></li>
                 {% endblock %}
             </ul>
         </div>
@@ -39,7 +39,8 @@ Email: gkarak@9-dev.com
     <form action="{% url 'admin:ninecms_pagetype_perms' page_type.id %}" method="post">
         {% csrf_token %}
         <div class="permissions-form">
-            {% fieldset "Permissions" %}
+            {% trans "Permissions" as permissions_label %}
+            {% fieldset permissions_label %}
                 <div class="row">
                     <div class="col-xs-4">{% field permissions_form.add_node %}</div>
                     <div class="col-xs-4">{% field permissions_form.change_node %}</div>
@@ -51,7 +52,9 @@ Email: gkarak@9-dev.com
             {% endfieldset %}
         </div>
         <div class="form-actions">
-            <div class="pull-right"><input type="submit" value="Save" class="btn btn-primary default"></div>
+            <div class="pull-right">
+                <button type="submit" value="Save" class="btn btn-primary default">{% trans "Save" %}</button>
+            </div>
         </div>
     </form>
 {% endblock content %}

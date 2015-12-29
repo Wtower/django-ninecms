@@ -50,8 +50,6 @@ class NodeView(View):
             classes += ' logged-in'
         if request.user.is_superuser:
             classes += ' superuser'
-        if request.user.has_perm('ninecms.access_toolbar'):
-            classes += ' toolbar'
         return classes
 
     def session_pop(self, request, key, default):

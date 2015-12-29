@@ -115,7 +115,7 @@ class ContentLoginTests(TestCase):
         self.assertContains(response, '<div class="node-image-inline thumbnail">')
         self.assertContains(response, '<label for="id_alias">Alias:</label>', html=True)
         self.assertContains(response, '<label class="vCheckboxLabel" for="id_redirect">Redirect</label>', html=True)
-        self.assertContains(response, '<label class="required" for="id_user">User:</label>', html=True)
+        self.assertContains(response, '<label class="required" for="id_user">')
 
     def test_admin_node_add_page(self):
         """ Test that renders properly /admin/ninecms/node/add/
@@ -126,7 +126,7 @@ class ContentLoginTests(TestCase):
         response = self.client.get(reverse('admin:ninecms_node_add'))
         self.assertContains(response, '<label for="id_alias">Alias:</label>', html=True)
         self.assertContains(response, '<label class="vCheckboxLabel" for="id_redirect">Redirect</label>', html=True)
-        self.assertContains(response, '<label class="required" for="id_user">User:</label>', html=True)
+        self.assertContains(response, '<label class="required" for="id_user">')
         self.assertContains(response, '<option value="1" selected="selected">admin</option>', html=True)
         self.assertContains(response, ('<input checked="checked" class="" id="id_status" name="status" type="checkbox" '
                                        'value="1">'), html=True)
@@ -280,6 +280,16 @@ class ContentLoginTests(TestCase):
             response,
             '<a href="%s">Front Page</a>+' % reverse('admin:ninecms_pagetype_change', args=(self.node_rev_front.pk,))
         )
+
+    def test_admin_menu_item_add_page(self):
+        """ Test that menu item add page renders properly
+        :return: None
+        """
+        response = self.client.get(reverse('admin:ninecms_menuitem_add'))
+        self.assertContains(response, '<label for="id_parent">')
+        self.assertContains(response, '<label class="required" for="id_weight">')
+        self.assertContains(response, '<label for="id_language">')
+        self.assertContains(response, '<label for="id_path">')
 
     """ Logout """
     def test_logout_view(self):

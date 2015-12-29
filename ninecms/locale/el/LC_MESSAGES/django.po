@@ -1,0 +1,625 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-12-18 16:00+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: admin.py:49 admin.py:117
+msgid "edit"
+msgstr ""
+
+#: admin.py:50
+msgid "permissions"
+msgstr ""
+
+#: admin.py:116
+msgid "view"
+msgstr ""
+
+#: admin.py:128
+#, python-format
+msgid "%d nodes successfully updated as published."
+msgstr ""
+
+#: admin.py:129
+msgid "Mark selected nodes status as published"
+msgstr ""
+
+#: admin.py:138
+#, python-format
+msgid "%d nodes successfully updated as not published."
+msgstr ""
+
+#: admin.py:139
+msgid "Mark selected nodes status as not published"
+msgstr ""
+
+#: admin.py:148
+#, python-format
+msgid "%d nodes successfully updated as promoted."
+msgstr ""
+
+#: admin.py:149
+msgid "Mark selected nodes as promoted"
+msgstr ""
+
+#: admin.py:158
+#, python-format
+msgid "%d nodes successfully updated as not promoted."
+msgstr ""
+
+#: admin.py:159
+msgid "Mark selected nodes as not promoted"
+msgstr ""
+
+#: admin.py:168
+#, python-format
+msgid "%d nodes successfully updated as sticky."
+msgstr ""
+
+#: admin.py:169
+msgid "Mark selected nodes as sticky"
+msgstr ""
+
+#: admin.py:178
+#, python-format
+msgid "%d nodes successfully updated as not sticky."
+msgstr ""
+
+#: admin.py:179
+msgid "Mark selected nodes as not sticky"
+msgstr ""
+
+#: admin.py:190
+#, python-format
+msgid "%d nodes successfully updated."
+msgstr ""
+
+#: admin.py:191
+msgid "Reset url alias for all selected nodes"
+msgstr ""
+
+#: admin.py:336 templates/admin/ninecms/pagetype/perms_form.html:19
+msgid "Page types"
+msgstr ""
+
+#: admin.py:344
+msgid "9cms administration"
+msgstr ""
+
+#: forms.py:94
+msgid "Your name"
+msgstr ""
+
+#: forms.py:99
+msgid "Your email"
+msgstr ""
+
+#: forms.py:122
+msgid "Username"
+msgstr ""
+
+#: forms.py:123
+msgid "Password"
+msgstr ""
+
+#: forms.py:128
+msgid "Search"
+msgstr ""
+
+#: management/commands/check_updates.py:34
+msgid "New updates available"
+msgstr ""
+
+#: models.py:30 models.py:399
+msgid "name"
+msgstr ""
+
+#: models.py:31
+msgid ""
+"Specify a unique page type name. A machine name is recommended if to be used "
+"in code."
+msgstr ""
+
+#: models.py:35
+msgid "description"
+msgstr ""
+
+#: models.py:36
+msgid "Describe the page type."
+msgstr ""
+
+#: models.py:41
+msgid "guidelines"
+msgstr ""
+
+#: models.py:42
+msgid "Provide content submission guidelines for this page type."
+msgstr ""
+
+#: models.py:47
+msgid "Custom template name (deprecated)."
+msgstr ""
+
+#: models.py:52
+msgid ""
+"Default pattern for page type, if no alias is specified in node edit. <a "
+"href=\"https://github.com/Wtower/django-ninecms#url-aliases\" target=\"_blank"
+"\">More info</a>."
+msgstr ""
+
+#: models.py:67
+msgid "Add node of a specific page type"
+msgstr ""
+
+#: models.py:68
+msgid "Change node of a specific page type"
+msgstr ""
+
+#: models.py:69
+msgid "Delete node of a specific page type"
+msgstr ""
+
+#: models.py:71 models.py:77 models.py:305
+msgid "page type"
+msgstr ""
+
+#: models.py:72
+msgid "page types"
+msgstr ""
+
+#: models.py:78 models.py:196
+msgid "language"
+msgstr ""
+
+#: models.py:79 models.py:167 models.py:198 models.py:342
+msgid "title"
+msgstr ""
+
+#: models.py:80 models.py:164
+msgid "user"
+msgstr ""
+
+#: models.py:81 models.py:168
+msgid "published"
+msgstr ""
+
+#: models.py:82 models.py:169
+msgid "promoted"
+msgstr ""
+
+#: models.py:83 models.py:170
+msgid "sticky"
+msgstr ""
+
+#: models.py:84 models.py:166
+msgid "date created"
+msgstr ""
+
+#: models.py:85
+msgid "date changed"
+msgstr ""
+
+#: models.py:87
+msgid "original translation"
+msgstr ""
+
+#: models.py:88 models.py:171
+msgid "summary"
+msgstr ""
+
+#: models.py:89 models.py:172
+msgid "body"
+msgstr ""
+
+#: models.py:90 models.py:173
+msgid "highlight"
+msgstr ""
+
+#: models.py:91 models.py:174
+msgid "link"
+msgstr ""
+
+#: models.py:92 models.py:195 models.py:318 models.py:400
+msgid "order weight"
+msgstr ""
+
+#: models.py:93
+msgid "alias"
+msgstr ""
+
+#: models.py:94
+msgid "redirect"
+msgstr ""
+
+#: models.py:154
+msgid "Can use Full HTML in node body and summary"
+msgstr ""
+
+#: models.py:155
+msgid "Can view unpublished content"
+msgstr ""
+
+#: models.py:157 models.py:163 models.py:267 models.py:341
+msgid "node"
+msgstr ""
+
+#: models.py:158 models.py:403
+msgid "nodes"
+msgstr ""
+
+#: models.py:165
+msgid "log entry"
+msgstr ""
+
+#: models.py:184
+msgid "node revision"
+msgstr ""
+
+#: models.py:185
+msgid "node revisions"
+msgstr ""
+
+#: models.py:194
+msgid "parent menu"
+msgstr ""
+
+#: models.py:197
+msgid "path"
+msgstr ""
+
+#: models.py:199
+msgid "disabled"
+msgstr ""
+
+#: models.py:230 models.py:274
+msgid "menu item"
+msgstr ""
+
+#: models.py:231
+msgid "menu items"
+msgstr ""
+
+#: models.py:241
+msgid "Static: link to node"
+msgstr ""
+
+#: models.py:242
+msgid "Menu: render a menu or submenu"
+msgstr ""
+
+#: models.py:243
+msgid "Signal: call site-specific custom render"
+msgstr ""
+
+#: models.py:244
+msgid "Language: switch menu"
+msgstr ""
+
+#: models.py:245
+msgid "User menu: render a menu with login/register and logout links"
+msgstr ""
+
+#: models.py:246
+msgid "Login: render login form"
+msgstr ""
+
+#: models.py:247
+msgid "Search: render search form"
+msgstr ""
+
+#: models.py:248
+msgid "Search: render search results"
+msgstr ""
+
+#: models.py:249
+msgid "Contact: render contact form"
+msgstr ""
+
+#: models.py:255
+msgid "type"
+msgstr ""
+
+#: models.py:256
+msgid "How to render the block."
+msgstr ""
+
+#: models.py:261
+msgid "Additional CSS classes to append to block."
+msgstr ""
+
+#: models.py:268
+msgid "The related node with this block (block type: static only)."
+msgstr ""
+
+#: models.py:275
+msgid "The related parent menu item related (block type: menu only)."
+msgstr ""
+
+#: models.py:280
+msgid ""
+"The signal name to trigger for a <a href=\"https://github.com/Wtower/django-"
+"ninecms#views\" target=\"_blank\">custom view</a> (block type: signal only)."
+msgstr ""
+
+#: models.py:299 models.py:314
+msgid "content block"
+msgstr ""
+
+#: models.py:300
+msgid "content blocks"
+msgstr ""
+
+#: models.py:309
+msgid "region"
+msgstr ""
+
+#: models.py:310
+msgid ""
+"A hard coded region name that is rendered in template index and also used in "
+"<a href=\"https://github.com/Wtower/django-ninecms#theme-suggestions\" "
+"target=\"_blank\">theme suggestions</a>."
+msgstr ""
+
+#: models.py:319
+msgid ""
+"Elements with greater number in the same region sink to the bottom of the "
+"page."
+msgstr ""
+
+#: models.py:321
+msgid "hidden"
+msgstr ""
+
+#: models.py:331
+msgid "page layout element"
+msgstr ""
+
+#: models.py:332
+msgid "page layout elements"
+msgstr ""
+
+#: models.py:343
+msgid "group"
+msgstr ""
+
+#: models.py:358 models.py:362
+msgid "image"
+msgstr ""
+
+#: models.py:363
+msgid "images"
+msgstr ""
+
+#: models.py:369 models.py:373
+msgid "file"
+msgstr ""
+
+#: models.py:374
+msgid "files"
+msgstr ""
+
+#: models.py:398
+msgid "parent term"
+msgstr ""
+
+#: models.py:402
+msgid "description node"
+msgstr ""
+
+#: models.py:417
+msgid "taxonomy term"
+msgstr ""
+
+#: models.py:418
+msgid "taxonomy terms"
+msgstr ""
+
+#: templates/admin/ninecms/image/stacked.html:29
+#: templates/admin/ninecms/index.html:293
+msgid "Change"
+msgstr ""
+
+#: templates/admin/ninecms/image/stacked.html:37
+msgid "View on site"
+msgstr ""
+
+#: templates/admin/ninecms/image/stacked.html:126
+#, python-format
+msgid "Add another %(verbose_name)s"
+msgstr ""
+
+#: templates/admin/ninecms/image/stacked.html:129
+msgid "Remove"
+msgstr ""
+
+#: templates/admin/ninecms/index.html:20
+#: templates/admin/ninecms/pagetype/perms_form.html:17
+msgid "Home"
+msgstr ""
+
+#: templates/admin/ninecms/index.html:30
+msgid "Applications"
+msgstr ""
+
+#: templates/admin/ninecms/index.html:54
+msgid "Utilities"
+msgstr ""
+
+#: templates/admin/ninecms/index.html:60
+msgid "Clear cache"
+msgstr ""
+
+#: templates/admin/ninecms/index.html:69
+msgid "Rebuild menu"
+msgstr ""
+
+#: templates/admin/ninecms/index.html:129
+msgid "9cms version"
+msgstr ""
+
+#: templates/admin/ninecms/index.html:139
+msgid "Updates"
+msgstr ""
+
+#: templates/admin/ninecms/index.html:159
+msgid "Django check"
+msgstr ""
+
+#: templates/admin/ninecms/index.html:199
+#: templates/admin/ninecms/pagetype/change_form.html:13
+#: templates/admin/ninecms/pagetype/perms_form.html:42
+msgid "Permissions"
+msgstr ""
+
+#: templates/admin/ninecms/index.html:219
+msgid "Image library"
+msgstr ""
+
+#: templates/admin/ninecms/index.html:272
+#, python-format
+msgid "Models available in the %(name)s application."
+msgstr ""
+
+#: templates/admin/ninecms/index.html:288
+msgid "Add"
+msgstr ""
+
+#: templates/admin/ninecms/index.html:305
+msgid "You don't have permission to edit anything."
+msgstr ""
+
+#: templates/admin/ninecms/index.html:311
+msgid "Packages"
+msgstr ""
+
+#: templates/admin/ninecms/index.html:326
+msgid "Permission check"
+msgstr ""
+
+#: templates/admin/ninecms/pagetype/perms_form.html:12
+#: templates/admin/ninecms/pagetype/perms_form.html:28
+msgid "Edit permissions for page type"
+msgstr ""
+
+#: templates/admin/ninecms/pagetype/perms_form.html:31
+msgid "Edit"
+msgstr ""
+
+#: templates/admin/ninecms/pagetype/perms_form.html:56
+msgid "Save"
+msgstr ""
+
+#: templates/ninecms/block_contact.html:11
+msgid "Contact"
+msgstr ""
+
+#: templates/ninecms/block_contact.html:21
+msgid "Send"
+msgstr ""
+
+#: templates/ninecms/block_login.html:14 templates/ninecms/block_login.html:22
+#: templates/ninecms/block_user_menu.html:11
+msgid "Login"
+msgstr ""
+
+#: templates/ninecms/block_login.html:25
+msgid "Create new account"
+msgstr ""
+
+#: templates/ninecms/block_login.html:26
+msgid "Recover password"
+msgstr ""
+
+#: templates/ninecms/block_user_menu.html:12
+msgid "Register"
+msgstr ""
+
+#: templates/ninecms/mail_contact.txt:9
+msgid "sent a message using the contact form"
+msgstr ""
+
+#: templates/ninecms/mail_updates.txt:9
+msgid "There are security updates available for your web site"
+msgstr ""
+
+#: templates/ninecms/mail_updates.txt:10
+msgid "To ensure the security of your server, you should update"
+msgstr ""
+
+#: templates/ninecms/mail_updates.txt:11
+msgid "The following updates are available"
+msgstr ""
+
+#: templates/ninecms/mail_updates.txt:15
+msgid "See the status page for more information"
+msgstr ""
+
+#: views.py:102
+msgid "Contact form message has NOT been sent. Invalid header found."
+msgstr ""
+
+#: views.py:104
+msgid "A message has been sent to the site using the contact form."
+msgstr ""
+
+#: views.py:106
+msgid ""
+"Contact form message has NOT been sent. Please fill in all contact form "
+"fields."
+msgstr ""
+
+#: views.py:126
+#, python-format
+msgid "Login successful for %s."
+msgstr ""
+
+#: views.py:128
+msgid ""
+"The account is disabled. Please use the contact form for more information."
+msgstr ""
+
+#: views.py:131
+msgid ""
+"Unfortunately the username or password are not correct. If you have "
+"forgotten your password use the link below the form to recover it."
+msgstr ""
+
+#: views.py:135
+msgid "Please fill in all login form fields."
+msgstr ""
+
+#: views.py:152
+msgid "Logout successful."
+msgstr ""
+
+#: views.py:191
+#, python-format
+msgid "Content type '%s' has been updated."
+msgstr ""
+
+#: views.py:194
+msgid "Content type has not been updated. Please check the form for errors."
+msgstr ""
+
+#: views.py:222
+msgid "Menu has been rebuilt."
+msgstr ""
+
+#: views.py:225
+msgid "Cache has been cleared."
+msgstr ""
