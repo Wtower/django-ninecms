@@ -11,7 +11,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 setup(
     name='django-ninecms',
     version=ninecms.__version__,
-    description="Nine CMS is a simple Django app to manage content.",
+    description="Nine CMS is a Django app to manage content.",
     long_description=README,
     url='https://github.com/Wtower/django-ninecms/',
     author='George Karakostas',

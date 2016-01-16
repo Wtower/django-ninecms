@@ -2,7 +2,7 @@
 NineCMS
 =======
 
-Nine CMS is a simple Django app to manage content. Users can create content and publish it to various paths.
+Nine CMS is a Django app to manage content. Users can create content and publish it to paths.
 
 Detailed documentation soon to be published.
 
@@ -63,13 +63,12 @@ Features
 Dependencies
 ------------
 
-It is intented to keep the number of external dependencies as low as possible, if no significant reason is necessary.
 The following are needed:
 
 - Python (3.4+)
 - Django (1.7+, 1.9 recommended): Web framework
-- django-guardian (1.3+): provide per-page-type permissions
-- django-mptt (0.7.4): provide trees for tags and menus
+- django-guardian (1.4+): provide per-page-type permissions
+- django-mptt (0.8+): provide trees for tags and menus
 - bleach (1.4+): bleach-sanitize user HTML
 - Pillow (3+): create different sizes for user images
 - pytz (2015+): handle user time zones
@@ -84,13 +83,7 @@ The following packages are optional/recommended:
 - newrelic: or any other monitoring tool
 - python3-memcached: for memory caching
 
-`:warning:` Django 1.9 notices:
-
-- Until a new django-mptt version is released, use Django 1.8.7, or install mptt from git to avoid `mptt issue #402`_::
-
-      pip install git+https://github.com/django-mptt/django-mptt.git@fcc868dd238a59f2bed04871f62fae95ee09d243
-
-.. _mptt issue #402: https://github.com/django-mptt/django-mptt/pull/402
+Django 1.9 notices:
 
 - Getting ``RemovedInDjango110Warning: render() must be called with a dict, not a Context.`` to a couple of places.
   Many other apps get similar warnings. Looking for solution without offending Django <1.9.
@@ -114,20 +107,20 @@ There is also a project that can be used as an
 
    - Add the following to the ``requirements.txt`` file::
 
-       Django==1.9.0
-       django-ninecms>=0.5.3
+       Django>=1.9.0
+       django-ninecms>=0.5.4
 
    - And optionally::
 
-       coverage==4.0.3
-       django-admin-bootstrapped==2.5.6
+       coverage>=4.0.3
+       django-admin-bootstrapped>=2.5.6
        django-admin-bootstrapped-plus>=0.1.1
-       django-bootstrap3==6.2.2
-       django-debug-toolbar==1.4.0
-       mysqlclient==1.3.7
-       newrelic==2.58.2.45
-       python3-memcached==1.51
-       sqlparse==0.1.18
+       django-bootstrap3>=6.2.2
+       django-debug-toolbar>=1.4.0
+       mysqlclient>=1.3.7
+       newrelic>=2.58.2.45
+       python3-memcached>=1.51
+       sqlparse>=0.1.18
 
    - Then run::
 
@@ -624,11 +617,8 @@ Important points
 ----------------
 
 - If i18n urls: menu items for internal pages should always have language [v0.3.1a]
-- Theme suggestions [v0.4.4b]
 - Search page requires a search results block in page type and 'search' alias, requires not Sqlite [v0.4.4b]
-- When serializing related field using ``table__field`` notation, always add ``select_related`` to query prior calling
-  serialize [v0.4.7b]
-- Add LANGUAGES in settings_test when I18N_URLS (see aluminium( [v0.4.7b]
+- Add LANGUAGES in settings_test when I18N_URLS [v0.4.7b]
 
 Footnote
 --------
