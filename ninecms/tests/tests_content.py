@@ -14,17 +14,15 @@ from django.contrib.auth.models import User
 from django.utils import translation
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.db import ProgrammingError
-from ninecms.models import Node, image_path_file_name, file_path_file_name, video_path_file_name, TaxonomyTerm, PageType
+from ninecms.models import Node, image_path_file_name, file_path_file_name, video_path_file_name, PageType
 from ninecms.utils.transliterate import transliterate
-from ninecms.utils.serialize import ExtJsonSerializer
 from django.utils.dateformat import DateFormat
 from ninecms.forms import ContactForm, SearchForm
 from ninecms.templatetags import ninecms_extras
 from ninecms.tests.setup import create_front, create_basic, create_menu, create_block_static, create_block_menu, \
     create_block_signal_terms, create_block_simple, create_page, create_block_signal_video, create_image, create_file, \
     create_video, create_terms, assert_front, assert_basic, create_user, assert_image, data_contact, get_front_title, \
-    data_login, url_with_lang, serialize
+    data_login, url_with_lang
 
 
 class ContentTests(TestCase):
@@ -101,28 +99,6 @@ class ContentTests(TestCase):
         self.assertEqual(transliterate('Ξεσκεπάζω την ψυχοφθόρα βδελυγμία%.doc', True, True),
                          'xeskepazo_tin_psychofthora_bdelygmia.doc')
         self.assertEqual(ninecms_extras.upper_no_intonation("Σχετικά"), "ΣΧΕΤΙΚΑ")
-
-    def test_node_util_serialize(self):
-        """ Test serializer with an object with simple field, related field, foreign key field, m2m field, prop
-        :return: None
-        """
-        # assert ok
-        nodes = Node.objects.select_related('page_type').all()
-        data = serialize(nodes)
-        self.assertIn('"model": "ninecms.node"', data)
-        self.assertIn('"pk": 1', data)
-        self.assertIn('"fields": {', data)
-        self.assertIn('"page_type": "front"', data)
-        self.assertIn('"user": 1', data)
-        self.assertIn('"get_absolute_url": "/"', data)
-        self.assertIn('"title": "%s"' % get_front_title(), data)
-        # assert not ok
-        nodes = Node.objects.all()
-        self.assertRaises(ProgrammingError, serialize, nodes)
-        # assert many to many
-        terms = TaxonomyTerm.objects.all()
-        data = ExtJsonSerializer().serialize(terms, fields=['nodes'])
-        self.assertIn('"nodes": []', data)
 
     def test_node_view_with_front(self):
         """ Test node view for front page

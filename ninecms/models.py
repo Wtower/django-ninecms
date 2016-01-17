@@ -8,7 +8,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.dateformat import DateFormat
-from django.conf import settings
 from django.conf import global_settings
 from django.utils.translation import ugettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
