@@ -1,0 +1,32 @@
+{% load mptt_tags %}
+{% load ninecms_extras %}
+{% comment %}
+
+Block template for menu as breadcrumbs
+The menu is expected to be the children of a menu item, of a menu block.
+
+Author: George Karakostas
+Copyright: Copyright 2015, George Karakostas
+Licence: BSD-3
+Email: gkarak@9-dev.com
+
+{% endcomment %}
+<ul class="breadcrumb">
+    {# active_trail: expected to be in the form: [<'Site map'>, <'Front'>, <'Page 1'>], therefore slice the first #}
+    {% with active_trail=menu|active_trail:request.path|slice:'1:' %}
+        {% for node in active_trail %}
+            {# if this item is THE active item #}
+            {% if not node.path|check_path_active:request.path %}
+                <li>
+                    {% if not node.disabled and node.path %}
+                        <a href="{{ node.full_path }}">{{ node.title }}</a>
+                    {% else %}
+                        {{ node.title }}
+                    {% endif %}
+                </li>
+            {% else %}
+                <li class="active">{{ node.title }}</li>
+            {% endif %}
+        {% endfor %}
+    {% endwith %}
+</ul>

@@ -1,3 +1,4 @@
+{% load i18n %}
 {% comment %}
 Block template for user menu
 Author: George Karakostas
@@ -7,8 +8,8 @@ Email: gkarak@9-dev.com
 {% endcomment %}
 <ul class="menu user-menu">
     {% if not user.is_authenticated %}
-        <li><a href="#{# /user/login #}">Login</a></li>
-        <li><a href="#{# /user/register #}">Register</a></li>
+        <li><a href="#{# /user/login #}">{% trans "Login" %}</a></li>
+        <li><a href="#{# /user/register #}">{% trans "Register" %}</a></li>
     {% else %}
         <li>{% include 'ninecms/form_logout.html' %}</li>
     {% endif %}

@@ -5,9 +5,12 @@ __licence__ = 'BSD-3'
 __email__ = 'gkarak@9-dev.com'
 
 from django.contrib import admin, messages
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.conf import settings
 from django.conf.urls import url
 from django.core.exceptions import PermissionDenied
+from django.utils.translation import ugettext as _
 from mptt.admin import MPTTModelAdmin
 # noinspection PyPackageRequirements
 from guardian.shortcuts import get_objects_for_user
@@ -20,23 +23,32 @@ class PageLayoutElementInline(admin.StackedInline):
     extra = 0
 
 
+# noinspection PyMethodMayBeStatic
 @admin.register(models.PageType)
 class PageTypeAdmin(admin.ModelAdmin):
     """ Get a list of Page Types """
-    list_display = ('name', 'description', 'url_pattern', 'operations')
+    list_display = ('name', 'description', 'url_pattern', 'elements', 'operations')
     list_editable = ('description', 'url_pattern')
     search_fields = ['name']
     inlines = [PageLayoutElementInline]
+    save_as = True
 
-    # noinspection PyMethodMayBeStatic
+    def elements(self, obj):
+        """ Return a custom column with blocks in the page type
+        :param obj: a page type object
+        :return: column output
+        """
+        return obj.pagelayoutelement_set.count()
+    elements.short_description = "Blocks"
+
     def operations(self, obj):
         """ Return a custom column with operations edit, perms
         :param obj: a node object
         :return: column output
         """
         return ' | '.join((
-            '<a href="%s">edit</a>' % reverse('admin:ninecms_pagetype_change', args=(obj.id,)),
-            '<a href="%s">permissions</a>' % reverse('admin:ninecms_pagetype_perms', args=(obj.id,)),
+            '<a href="%s">%s</a>' % (reverse('admin:ninecms_pagetype_change', args=(obj.id,)), _("edit")),
+            '<a href="%s">%s</a>' % (reverse('admin:ninecms_pagetype_perms', args=(obj.id,)), _("permissions")),
         ))
     operations.allow_tags = True
 
@@ -95,7 +107,6 @@ class NodeAdmin(admin.ModelAdmin):
     form = forms.ContentNodeEditForm
     # fieldsets returned from overridden get_fieldsets method below
     inlines = [ImageInline, FileInline, VideoInline, NodeRevisionInline]
-    save_as = True
 
     def operations(self, obj):
         """ Return a custom column with 9cms operations view, edit
@@ -103,8 +114,8 @@ class NodeAdmin(admin.ModelAdmin):
         :return: column output
         """
         return ' | '.join((
-            '<a href="%s" target="_blank">view</a>' % obj.get_absolute_url(),
-            '<a href="%s">edit</a>' % reverse('admin:ninecms_node_change', args=(obj.id,)),
+            '<a href="%s" target="_blank">%s</a>' % (obj.get_absolute_url(), _("view")),
+            '<a href="%s">%s</a>' % (reverse('admin:ninecms_node_change', args=(obj.id,)), _("edit")),
         ))
     operations.allow_tags = True
 
@@ -115,8 +126,8 @@ class NodeAdmin(admin.ModelAdmin):
         :return: None
         """
         r = queryset.update(status=True)
-        messages.success(request, "%d nodes successfully updated as published." % r)
-    node_publish.short_description = "Mark selected nodes status as published"
+        messages.success(request, _("%d nodes successfully updated as published.") % r)
+    node_publish.short_description = _("Mark selected nodes status as published")
 
     def node_unpublish(self, request, queryset):
         """ Mark all selected nodes as unpublished setting status False
@@ -125,8 +136,8 @@ class NodeAdmin(admin.ModelAdmin):
         :return: None
         """
         r = queryset.update(status=False)
-        messages.success(request, "%d nodes successfully updated as not published." % r)
-    node_unpublish.short_description = "Mark selected nodes status as not published"
+        messages.success(request, _("%d nodes successfully updated as not published.") % r)
+    node_unpublish.short_description = _("Mark selected nodes status as not published")
 
     def node_promote(self, request, queryset):
         """ Mark all selected nodes as promoted setting promote True
@@ -135,8 +146,8 @@ class NodeAdmin(admin.ModelAdmin):
         :return: None
         """
         r = queryset.update(promote=True)
-        messages.success(request, "%d nodes successfully updated as promoted." % r)
-    node_promote.short_description = "Mark selected nodes as promoted"
+        messages.success(request, _("%d nodes successfully updated as promoted.") % r)
+    node_promote.short_description = _("Mark selected nodes as promoted")
 
     def node_demote(self, request, queryset):
         """ Mark all selected nodes as not promoted setting promote False
@@ -145,8 +156,8 @@ class NodeAdmin(admin.ModelAdmin):
         :return: None
         """
         r = queryset.update(promote=False)
-        messages.success(request, "%d nodes successfully updated as not promoted." % r)
-    node_demote.short_description = "Mark selected nodes as not promoted"
+        messages.success(request, _("%d nodes successfully updated as not promoted.") % r)
+    node_demote.short_description = _("Mark selected nodes as not promoted")
 
     def node_sticky(self, request, queryset):
         """ Mark all selected nodes as sticky setting True
@@ -155,8 +166,8 @@ class NodeAdmin(admin.ModelAdmin):
         :return: None
         """
         r = queryset.update(sticky=True)
-        messages.success(request, "%d nodes successfully updated as sticky." % r)
-    node_sticky.short_description = "Mark selected nodes as sticky"
+        messages.success(request, _("%d nodes successfully updated as sticky.") % r)
+    node_sticky.short_description = _("Mark selected nodes as sticky")
 
     def node_unsticky(self, request, queryset):
         """ Mark all selected nodes as not sticky setting False
@@ -165,8 +176,8 @@ class NodeAdmin(admin.ModelAdmin):
         :return: None
         """
         r = queryset.update(sticky=False)
-        messages.success(request, "%d nodes successfully updated as not sticky." % r)
-    node_unsticky.short_description = "Mark selected nodes as not sticky"
+        messages.success(request, _("%d nodes successfully updated as not sticky.") % r)
+    node_unsticky.short_description = _("Mark selected nodes as not sticky")
 
     def node_reset_alias(self, request, queryset):
         """ Reset url alias for all selected nodes
@@ -177,8 +188,8 @@ class NodeAdmin(admin.ModelAdmin):
         for node in queryset:
             node.alias = ''
             node.save()
-        messages.success(request, "%d nodes successfully updated." % len(queryset))
-    node_reset_alias.short_description = "Reset url alias for all selected nodes"
+        messages.success(request, _("%d nodes successfully updated.") % len(queryset))
+    node_reset_alias.short_description = _("Reset url alias for all selected nodes")
 
     def check_perm(self, request, obj, perm):
         """ Check if a user has permission on the Node
@@ -229,11 +240,22 @@ class NodeAdmin(admin.ModelAdmin):
         return qs.filter(page_type__id__in=types.values_list('id'))
 
     def get_form(self, request, obj=None, **kwargs):
+        """ Override form to pass the current user
+        :param request: the request object
+        :param obj: the current node if any
+        :param kwargs: keyword arguments
+        :return: overridden form
+        """
         form = super(NodeAdmin, self).get_form(request, obj, **kwargs)
         form.current_user = request.user
         return form
 
     def get_fieldsets(self, request, obj=None):
+        """ Provide different fieldsets depending on user level
+        :param request: the request object
+        :param obj: the current node if any
+        :return: a dictionary of fieldsets
+        """
         if request.user.is_superuser:
             return (
                 ("Node", {'fields': ('page_type', 'language', 'alias', 'title')}),
@@ -245,7 +267,7 @@ class NodeAdmin(admin.ModelAdmin):
             return (
                 ("Node", {'fields': ('page_type', 'language', 'title')}),
                 ("Body", {'fields': ('highlight', 'summary', 'body', 'link')}),
-                ("Node management", {'fields': ('status', 'promote', 'sticky',
+                ("Node management", {'fields': ('status', 'promote', 'sticky', 'user',
                                                 'created', 'original_translation', 'weight')}),
             )
 
@@ -258,6 +280,7 @@ class NodeAdmin(admin.ModelAdmin):
 
     def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
         """ Override queryset of page types field to respect permissions
+        Restrict users field for non-superusers to same user
         :param db_field: the database field name
         :param request: the request object
         :param kwargs: keyword arguments such as the queryset
@@ -268,7 +291,20 @@ class NodeAdmin(admin.ModelAdmin):
             if len(page_types) < 1 and not request.user.is_superuser:
                 raise PermissionDenied
             kwargs['queryset'] = page_types
+        elif db_field.name == 'user' and not request.user.is_superuser:
+            kwargs['queryset'] = User.objects.filter(pk=request.user.pk)
         return super(NodeAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def formfield_for_choice_field(self, db_field, request=None, **kwargs):
+        """ Override choices of languages field to respect settings
+        :param db_field: the database field name
+        :param request: the request object
+        :param kwargs: keyword arguments such as the queryset
+        :return: parent method return
+        """
+        if db_field.name == 'language':
+            kwargs['choices'] = (('', '---------'),) + settings.LANGUAGES
+        return super(NodeAdmin, self).formfield_for_choice_field(db_field, request, **kwargs)
 
 
 @admin.register(models.MenuItem)
@@ -276,6 +312,17 @@ class MenuItemAdmin(MPTTModelAdmin):
     """ Get a list of Menu Items """
     list_display = ('title', 'language', 'path', 'disabled', 'weight')
     search_fields = ['path', 'title']
+
+    def formfield_for_choice_field(self, db_field, request=None, **kwargs):
+        """ Override choices of languages field to respect settings
+        :param db_field: the database field name
+        :param request: the request object
+        :param kwargs: keyword arguments such as the queryset
+        :return: parent method return
+        """
+        if db_field.name == 'language':
+            kwargs['choices'] = (('', '---------'),) + settings.LANGUAGES
+        return super(MenuItemAdmin, self).formfield_for_choice_field(db_field, request, **kwargs)
 
 
 # noinspection PyMethodMayBeStatic
@@ -294,15 +341,22 @@ class ContentBlockAdmin(admin.ModelAdmin):
 
     def elements(self, obj):
         """ Return a custom column with page types in which each block is an element
+        If page type is immediately repeated (same block more than once in one page type), add '+' instead
         :param obj: a block object
         :return: column output
         """
         r = []
+        prev = 0
         for element in obj.pagelayoutelement_set.all():
-            r.append('<a href="/admin/ninecms/pagelayoutelement/%d">%s</a>' % (element.id, element.page_type))
+            if element.page_type.id != prev:
+                r.append('<a href="%s">%s</a>' % (
+                    reverse('admin:ninecms_pagetype_change', args=(element.page_type.id,)), element.page_type))
+            else:
+                r[-1] += '+'
+            prev = element.page_type.id
         return ', '.join(r)
     elements.allow_tags = True
-    elements.short_description = "Page types"
+    elements.short_description = _("Page types")
 
 
 @admin.register(models.TaxonomyTerm)
@@ -310,6 +364,6 @@ class TaxonomyTermAdmin(MPTTModelAdmin):
     """ Get a list of Taxonomy Terms """
     list_display = ('name', 'description_node', 'weight')
 
-admin.site.site_header = "9cms administration"
+admin.site.site_header = _("9cms administration")
 admin.site.site_title = "9cms"
 admin.site.index_template = 'admin/ninecms/index.html'

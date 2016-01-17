@@ -1,4 +1,4 @@
-{% load ninecms_extras %}
+{% load i18n ninecms_extras %}
 {% comment %}
 
 Block template for login
@@ -11,7 +11,7 @@ Email: gkarak@9-dev.com
 {% if not user.is_authenticated %}
     <div class="login-form container padding-vertical-80">
         <div class="row header">
-            <div class="col-md-10 col-md-offset-1"><div class="title"><h2>Login</h2></div></div>
+            <div class="col-md-10 col-md-offset-1"><div class="title"><h2>{% trans "Login" %}</h2></div></div>
         </div>
         <form action="{% url 'ninecms:login' %}" method="post">
             {% csrf_token %}
@@ -19,11 +19,11 @@ Email: gkarak@9-dev.com
             {% field form.username %}
             {% field form.password %}
             <input id="id_redirect" name="redirect" type="hidden" value="ninecms:index">
-            <input type="submit" value="Login" class="btn btn-primary btn-lg">
+            <button type="submit" value="Login" class="btn btn-primary btn-lg">{% trans "Login" %}</button>
         </form>
         <hr>
-        <p><a href="#{# /user/register #}">Create new account</a></p>
-        <p><a href="#{# /user/password #}">Recover password</a></p>
+        <p><a href="#{# /user/register #}">{% trans "Create new account" %}</a></p>
+        <p><a href="#{# /user/password #}">{% trans "Recover password" %}</a></p>
     </div>
 {% else %}
     <div class="logout-form container padding-vertical-80">

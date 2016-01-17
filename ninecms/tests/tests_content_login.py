@@ -18,7 +18,7 @@ from guardian.models import GroupObjectPermission
 from ninecms.forms import ContentNodeEditForm, ImageForm, FileForm, VideoForm
 from ninecms.tests.setup import create_front, create_basic, create_user, create_image, create_block_simple, \
     get_front_title, assert_front, data_login, data_node, get_basic_title, create_video, create_file
-from ninecms.models import PageType, Node
+from ninecms.models import PageType, Node, PageLayoutElement
 import os
 
 
@@ -39,7 +39,13 @@ class ContentLoginTests(TestCase):
         cls.simple_group = Group.objects.create(name='editor')
         cls.img = create_image()
         cls.element_login = create_block_simple(cls.node_rev_front.node.page_type, 'login')
-        cls.element_login = create_block_simple(cls.node_rev_front.node.page_type, 'user-menu')
+        cls.element_user_menu = create_block_simple(cls.node_rev_front.node.page_type, 'user-menu')
+        # add a second user menu element in same page type
+        PageLayoutElement(
+            page_type=cls.node_rev_front.node.page_type,
+            region='footer',
+            block=cls.element_user_menu.block,
+            weight=0).save()
 
     def setUp(self):
         """ Setup each test: login
@@ -109,7 +115,7 @@ class ContentLoginTests(TestCase):
         self.assertContains(response, '<div class="node-image-inline thumbnail">')
         self.assertContains(response, '<label for="id_alias">Alias:</label>', html=True)
         self.assertContains(response, '<label class="vCheckboxLabel" for="id_redirect">Redirect</label>', html=True)
-        self.assertContains(response, '<label class="required" for="id_user">User:</label>', html=True)
+        self.assertContains(response, '<label class="required" for="id_user">')
 
     def test_admin_node_add_page(self):
         """ Test that renders properly /admin/ninecms/node/add/
@@ -120,7 +126,7 @@ class ContentLoginTests(TestCase):
         response = self.client.get(reverse('admin:ninecms_node_add'))
         self.assertContains(response, '<label for="id_alias">Alias:</label>', html=True)
         self.assertContains(response, '<label class="vCheckboxLabel" for="id_redirect">Redirect</label>', html=True)
-        self.assertContains(response, '<label class="required" for="id_user">User:</label>', html=True)
+        self.assertContains(response, '<label class="required" for="id_user">')
         self.assertContains(response, '<option value="1" selected="selected">admin</option>', html=True)
         self.assertContains(response, ('<input checked="checked" class="" id="id_status" name="status" type="checkbox" '
                                        'value="1">'), html=True)
@@ -253,16 +259,37 @@ class ContentLoginTests(TestCase):
         )
         self.assertContains(
             response,
-            '<a href="%s">user-menu</a>' % reverse('admin:ninecms_contentblock_change', args=(2,)),
+            '<a href="%s">user-menu</a>' % reverse(
+                'admin:ninecms_contentblock_change',
+                args=(self.element_user_menu.pk,)),
             html=True
         )
         self.assertContains(
             response,
-            '<a href="%s">login</a>' % reverse('admin:ninecms_contentblock_change', args=(1,)),
+            '<a href="%s">login</a>' % reverse(
+                'admin:ninecms_contentblock_change',
+                args=(self.element_login.pk,)),
             html=True
         )
-        self.assertContains(response, '<th scope="col" class="column-elements"><span>Page types</span></th>', html=True)
-        self.assertContains(response, '<a href="/admin/ninecms/pagelayoutelement/2">Front Page</a>', html=True)
+        self.assertContains(
+            response,
+            '<th scope="col" class="column-elements"><span>Page types</span></th>',
+            html=True
+        )
+        self.assertContains(
+            response,
+            '<a href="%s">Front Page</a>+' % reverse('admin:ninecms_pagetype_change', args=(self.node_rev_front.pk,))
+        )
+
+    def test_admin_menu_item_add_page(self):
+        """ Test that menu item add page renders properly
+        :return: None
+        """
+        response = self.client.get(reverse('admin:ninecms_menuitem_add'))
+        self.assertContains(response, '<label for="id_parent">')
+        self.assertContains(response, '<label class="required" for="id_weight">')
+        self.assertContains(response, '<label for="id_language">')
+        self.assertContains(response, '<label for="id_path">')
 
     """ Logout """
     def test_logout_view(self):

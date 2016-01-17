@@ -7,6 +7,7 @@ __email__ = 'gkarak@9-dev.com'
 from django import forms
 from django.forms.models import inlineformset_factory
 from django.contrib.auth.models import Group
+from django.utils.translation import ugettext_lazy as _
 from ninecms.models import Node, Image, File, Video
 from ninecms.utils.sanitize import sanitize, ModelSanitizeForm
 
@@ -88,8 +89,16 @@ class RedirectForm(forms.Form):
 
 class ContactForm(RedirectForm):
     """ Contact form """
-    sender_name = forms.CharField(max_length=100, label="Your name", widget=forms.TextInput(attrs=RedirectForm.attr))
-    sender_email = forms.EmailField(max_length=100, label="Your email", widget=forms.TextInput(attrs=RedirectForm.attr))
+    sender_name = forms.CharField(
+        max_length=100,
+        label=_("Your name"),
+        widget=forms.TextInput(attrs=RedirectForm.attr)
+    )
+    sender_email = forms.EmailField(
+        max_length=100,
+        label=_("Your email"),
+        widget=forms.TextInput(attrs=RedirectForm.attr)
+    )
     subject = forms.CharField(max_length=255, widget=forms.TextInput(attrs=RedirectForm.attr))
     message = forms.CharField(widget=forms.Textarea(attrs=RedirectForm.attr))
 
@@ -110,13 +119,13 @@ class ContactForm(RedirectForm):
 
 class LoginForm(RedirectForm):
     """ Login form """
-    username = forms.CharField(max_length=255, label="Username", widget=forms.TextInput(attrs=RedirectForm.attr))
-    password = forms.CharField(max_length=255, label="Password", widget=forms.PasswordInput(attrs=RedirectForm.attr))
+    username = forms.CharField(max_length=255, label=_("Username"), widget=forms.TextInput(attrs=RedirectForm.attr))
+    password = forms.CharField(max_length=255, label=_("Password"), widget=forms.PasswordInput(attrs=RedirectForm.attr))
 
 
 class SearchForm(forms.Form):
     """ Search form """
-    q = forms.CharField(max_length=255, label="Search", widget=forms.TextInput(attrs={'class': 'form-control'}))
+    q = forms.CharField(max_length=255, label=_("Search"), widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     def clean(self):
         """ Override clean function to sanitize data

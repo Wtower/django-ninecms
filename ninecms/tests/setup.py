@@ -24,7 +24,6 @@ from subprocess import call, check_output
 import os
 from ninecms.models import PageType, Node, NodeRevision, MenuItem, ContentBlock, PageLayoutElement, Image, \
     TaxonomyTerm, File, Video, validate_file_ext, validate_video_ext
-from ninecms.utils.serialize import ExtJsonSerializer
 
 """ Global setup functions """
 """ Node System """
@@ -407,12 +406,3 @@ def url_with_lang(url):
     if 1 < len(settings.LANGUAGES) < 80:  # pragma: nocover
         prefix = '/' + settings.LANGUAGE_CODE
     return prefix + url
-
-
-def serialize(nodes):
-    """ Serialize a queryset of nodes to JSON using 9cms serializer
-    Helper function to be used with self.assertRaises
-    :param nodes: the queryset to serialize
-    :return: JSON data
-    """
-    return ExtJsonSerializer().serialize(nodes, fields=['title', 'page_type__name', 'user'], props=['get_absolute_url'])

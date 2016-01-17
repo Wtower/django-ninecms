@@ -13,6 +13,7 @@ from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
+from django.utils.translation import ugettext as _
 from ninecms.utils.render import NodeView
 from ninecms.utils.perms import get_perms, set_perms
 from ninecms.utils import status
@@ -98,11 +99,11 @@ class ContactView(View):
             try:
                 mail_managers(form.cleaned_data['subject'], t.render(c))
             except BadHeaderError:  # pragma: no cover
-                messages.error(request, "Contact form message has NOT been sent. Invalid header found.")
+                messages.error(request, _("Contact form message has NOT been sent. Invalid header found."))
             else:
-                messages.success(request, "A message has been sent to the site using the contact form.")
+                messages.success(request, _("A message has been sent to the site using the contact form."))
             return redirect(form.cleaned_data['redirect'])
-        messages.warning(request, "Contact form message has NOT been sent. Please fill in all contact form fields.")
+        messages.warning(request, _("Contact form message has NOT been sent. Please fill in all contact form fields."))
         request.session['contact_form_post'] = request.POST
         return redirect(form.cleaned_data['redirect'])
 
@@ -122,16 +123,16 @@ class LoginView(View):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    messages.success(request, "Login successful for %s." % user.username)
+                    messages.success(request, _("Login successful for %s.") % user.username)
                 else:
-                    msg = "The account is disabled. Please use the contact form if you wish to have more information."
+                    msg = _("The account is disabled. Please use the contact form for more information.")
                     messages.warning(request, msg)
             else:
-                msg = "Unfortunately the username or password are not correct. " \
-                      "If you have forgotten your password use the link below the form to recover it."
+                msg = _("Unfortunately the username or password are not correct. "
+                        "If you have forgotten your password use the link below the form to recover it.")
                 messages.warning(request, msg)
         else:
-            messages.warning(request, "Please fill in all login form fields.")
+            messages.warning(request, _("Please fill in all login form fields."))
             request.session['login_form_post'] = request.POST
         return redirect(form.cleaned_data['redirect'])
 
@@ -148,7 +149,7 @@ class LogoutView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             logout(request)
-            messages.success(request, "Logout successful.")
+            messages.success(request, _("Logout successful."))
         return redirect(form.cleaned_data['redirect'])
 
 
@@ -187,10 +188,10 @@ class ContentTypePermsView(View):
                                       'guardian.change_groupobjectpermission',
                                       'guardian.delete_groupobjectpermission')):
                 set_perms(page_type, list(permissions_form.fields.keys()), '_pagetype', permissions_form.cleaned_data)
-            messages.success(request, "Content type '%s' has been updated." % page_type.name)
+            messages.success(request, _("Content type '%s' has been updated.") % page_type.name)
             return redirect('admin:ninecms_pagetype_changelist')
         else:  # pragma: nocover
-            messages.warning(request, "Content type has not been updated. Please check the form for errors.")
+            messages.warning(request, _("Content type has not been updated. Please check the form for errors."))
             return render(request, 'admin/ninecms/pagetype/perms_form.html', {
                 'permissions_form': permissions_form,
                 'groups': groups,
@@ -218,8 +219,8 @@ class StatusView(View):
         if 'menu-rebuild' in request.POST:
             # noinspection PyUnresolvedReferences
             MenuItem.objects.rebuild()
-            messages.success(request, "Menu has been rebuilt.")
+            messages.success(request, _("Menu has been rebuilt."))
         if 'clear-cache' in request.POST:
             status.cache_clear()
-            messages.success(request, "Cache has been cleared.")
+            messages.success(request, _("Cache has been cleared."))
         return redirect('admin:index')

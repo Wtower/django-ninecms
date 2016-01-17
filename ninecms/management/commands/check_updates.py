@@ -8,6 +8,7 @@ from django.core.management import BaseCommand
 from django.core.cache import caches
 from django.core.mail import mail_admins
 from django.template import loader, Context
+from django.utils.translation import ugettext as _
 from ninecms.utils.status import Capturing
 # noinspection PyPackageRequirements
 import pip
@@ -30,4 +31,4 @@ class Command(BaseCommand):
         else:  # pragma: nocover
             cache.set('updates', updates, 7 * 24 * 60 * 60)  # 1wk
             t = loader.get_template('ninecms/mail_updates.txt')
-            mail_admins("New updates available", t.render(Context({'updates': updates})))
+            mail_admins(_("New updates available"), t.render(Context({'updates': updates})))

@@ -50,8 +50,6 @@ class NodeView(View):
             classes += ' logged-in'
         if request.user.is_superuser:
             classes += ' superuser'
-        if request.user.has_perm('ninecms.access_toolbar'):
-            classes += ' toolbar'
         return classes
 
     def session_pop(self, request, key, default):
@@ -133,7 +131,7 @@ class NodeView(View):
             # signal (view) render
             elif element.block.type == 'signal':
                 signal = element.block.signal
-                responses = block_signal.send(sender=self.__class__, view=signal, request=request)
+                responses = block_signal.send(sender=self.__class__, view=signal, node=node, request=request)
                 responses = list(filter(lambda response: response[1] is not None, responses))
                 if responses:
                     resp = responses[-1][1]

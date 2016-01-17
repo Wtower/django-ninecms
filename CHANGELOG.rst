@@ -2,15 +2,46 @@
 CHANGELOG
 =========
 
-Development: v0.5.4
--------------------
+v0.5.4
+------
 
-Estimated release date:  Mon Jan 11 2016
+Date:  Sat Jan 16 2016
 
-Update date:  Wed Dec 9 2015
+What's new
+
+- Added internationalisation
+- Added system checks to 9cms
 
 All changes
 
+- Update styles
+- Fix transliterate for greek capital intonated vowels.
+- Amended tests (coverage 100%)
+- Internationalised 9cms
+
+  - Migration, greek locale
+  - Added translatable text to python and templates
+  - Added verbose translatable names to models
+  - Added global settings languages for model choices to allow migrations not to get affected by various
+    projects languages setting
+  - Restricted language choices in admin layer
+
+- Fix integrity error when creating node as not super user: no default user in node user field
+- Admin improvement
+- Disable node clone because of Django bug
+- Updates
+- Allow page type to be cloned.
+- Added breadcrumbs template
+- Fixed regression with issue #8
+- Fix menu active trail, add breadcrumbs template
+
+  - Created small utility function to get url without language.
+  - In active trail template tag, remove language part from url if i18n urls are enabled
+  - Previously, if language in url, the query would not work well.
+  - Fixes issue with not recognising active trail.
+
+- If page type is immediately repeated (same block more than once in one page type), add '+' instead
+- Added context to signals by providing the node object in display.
 - Fixed regression in #11 and bumped version to 0.5.3.1 for PyPi.
 
 v0.5.3
@@ -46,11 +77,6 @@ All changes
 - Added class to index.html to improve navigation in inspector
 - Added reference to django-ninecms-starter on readme
 - Improved documentation
-
-**:warning: Changes that require manual migration actions:**
-
-- Replace ``node.path`` with ``node.full_path`` when checking if ``active`` path in derived
-  ``block_menu_header.html`` templates (Nov 29)
 
 v0.5.2
 ------
