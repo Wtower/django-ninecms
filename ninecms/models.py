@@ -41,11 +41,6 @@ class PageType(models.Model):
         verbose_name=_("guidelines"),
         help_text=_("Provide content submission guidelines for this page type."),
     )
-    template = models.CharField(
-        max_length=255,
-        blank=True,
-        help_text=_("Custom template name (deprecated)."),
-    )
     url_pattern = models.CharField(
         max_length=255,
         blank=True,
@@ -114,14 +109,6 @@ class Node(models.Model):
         :return: full redirect path string
         """
         return get_full_path(self.link, self.language)
-
-    def get_alias_template(self):
-        """ Get a template name suggestion based on alias
-        :return: string with template name
-        """
-        if self.alias:
-            return self.alias.replace('/', '_')
-        return 'node_%d' % self.id
 
     def save(self, *args, **kwargs):
         """ Override save method to format alias
@@ -237,6 +224,15 @@ Block System
 
 class ContentBlock(models.Model):
     """ Content Block Model: basic block instance which can be used in several page layouts """
+    name = models.CharField(
+        max_length=100,
+        # @todo temp: change null and unique in migrate 14 after having a default
+        null=True,
+        # unique=True,
+        verbose_name=_("name"),
+        # @todo run make translate
+        help_text=_("Specify a unique block machine name."),
+    )
     BLOCK_TYPES = (
         ('static', _("Static: link to node")),
         ('menu', _("Menu: render a menu or submenu")),
@@ -281,18 +277,18 @@ class ContentBlock(models.Model):
                     '<a href="https://github.com/Wtower/django-ninecms#views" target="_blank">custom view</a> '
                     '(block type: signal only).'),
     )
+    page_types = models.ManyToManyField(
+        PageType,
+        blank=True,
+        related_name='blocks',
+        verbose_name=_("page types"),
+    )
 
     def __str__(self):
-        """ Get title based on block type
-        :return: model title
+        """ Get block name
+        :return: name
         """
-        if self.type == 'static':
-            return '-'.join((self.type, str(self.node)))
-        elif self.type == 'menu':
-            return '-'.join((self.type, str(self.menu_item)))
-        elif self.type == 'signal':
-            return '-'.join((self.type, str(self.signal)))
-        return self.type
+        return self.name
 
     class Meta:
         """ Model meta """
@@ -300,6 +296,7 @@ class ContentBlock(models.Model):
         verbose_name_plural = _("content blocks")
 
 
+# @todo remove model in migration 14
 class PageLayoutElement(models.Model):
     """ Page Layout Element Model: a set of these records define the layout for each page type """
     page_type = models.ForeignKey(PageType, verbose_name=_("page type"))

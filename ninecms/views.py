@@ -74,8 +74,8 @@ class IndexView(NodeView):
         try:
             node = self.get_node_by_alias('/', request)
         except IndexError:
-            messages.error(request, "No front page has been created yet.")
-            return render(request, 'ninecms/index.html')
+            messages.warning(request, "No front page has been created yet.")
+            return redirect('admin:index')
         return render(request, 'ninecms/index.html', self.page_render(node, request))
 
 

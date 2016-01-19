@@ -22,12 +22,14 @@ Email: gkarak@9-dev.com
                 <a class="navbar-brand site-name" href="/">{% include 'ninecms/site-name.html' %}</a>
             </div>
             <div class="collapse navbar-collapse" id="header-inner">
-                {{ header|safe }}
+                {% block header %}
+                    {% include 'ninecms/block_menu_header.html' with menu=menu_main %}
+                {% endblock %}
             </div>
         </div>
     </nav>
     <div id="featured" class="container">
-        {{ featured|safe }}
+        {% block featured %}{% endblock %}
     </div>
     <div id="content" class="container">
         <div class="page-header">
@@ -35,19 +37,7 @@ Email: gkarak@9-dev.com
         </div>
         {% include 'ninecms/messages.html' %}
         <div class="page-content row">
-            {% if sidebar_first %}
-                <div class="col-md-4">{{ sidebar_first|safe }}</div>
-                <div class="col-md-8">{{ content|safe }}</div>
-            {% elif sidebar_second %}
-                <div class="col-md-8">{{ content|safe }}</div>
-                <div class="col-md-4">{{ sidebar_second|safe }}</div>
-            {% elif sidebar_first and sidebar_second %}
-                <div class="col-md-4">{{ sidebar_first|safe }}</div>
-                <div class="col-md-4">{{ content|safe }}</div>
-                <div class="col-md-4">{{ sidebar_second|safe }}</div>
-            {% else %}
-                <div class="col-md-12">{{ content|safe }}</div>
-            {% endif %}
+            {% block main %}{% endblock %}
         </div>
         {% if node.terms.all %}
             <p>Tags</p>
@@ -59,11 +49,11 @@ Email: gkarak@9-dev.com
         {% endif %}
     </div>
 
-    {{ content_below|safe }}
+    {% block content_below %}{% endblock %}
 
     <div id="footer">
         <div class="container">
-            {{ footer|safe }}
+            {% block footer %}{% endblock %}
         </div>
     </div>
 {% endblock content %}

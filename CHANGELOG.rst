@@ -2,6 +2,48 @@
 CHANGELOG
 =========
 
+Future: v0.6.1
+--------------
+
+Estimated release date:  Wed Mar 16 2016
+
+Update date:  Mon Jan 18 2016
+
+Planned changes
+
+- Add migration 14
+
+  - remove PageLayoutElements model
+  - make ContenBlock name unique not null
+
+Development: v0.6.0
+-------------------
+
+Estimated release date:  Tue Feb 16 2016
+
+Update date:  Mon Jan 18 2016
+
+Planned changes
+
+- Improve page rendering
+
+  - remove theme suggestions
+  - use template blocks and only provide proper context
+  - deprecate page layout elements
+
+- Admin: add m2m related fields on both ends:
+
+  - page types / blocks
+  - nodes / terms
+
+- Use django-bower: remove libraries, ckeditor, test ckeditor config with bower package
+- Use django-pipeline
+- Use pyjade templating
+
+What's new
+
+All changes
+
 v0.5.4
 ------
 

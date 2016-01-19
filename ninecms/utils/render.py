@@ -6,9 +6,8 @@ __email__ = 'gkarak@9-dev.com'
 
 from django.conf import settings
 from django.views.generic import View
-from django.template import loader
 from django.db.models import Q
-from ninecms.models import Node, PageLayoutElement
+from ninecms.models import Node
 from ninecms.signals import block_signal
 from ninecms.forms import ContactForm, LoginForm, SearchForm
 
@@ -61,27 +60,6 @@ class NodeView(View):
         """
         return request.session.pop(key) if key in request.session else default
 
-    def block_render(self, template, region, specific, request, context_name, context_value, block_classes=''):
-        """ Render a block given a specific template
-        Template name priorities: template_region_specific, template_specific, template_region, template
-        :param template: block template
-        :param region: the region of the block in order to provide specific template, if any
-        :param specific: the id of the specific content in order to provide specific template, if any
-        :param request: request object
-        :param context_name: the name of the context
-        :param context_value: the value for the context name
-        :return: rendered block string for page render
-        """
-        region = str(region).replace(' ', '_')
-        specific = str(specific).replace(' ', '_')
-        t = loader.select_template((
-            'ninecms/' + '_'.join(filter(None, (template, region, specific))) + '.html',
-            'ninecms/' + '_'.join(filter(None, (template, specific))) + '.html',
-            'ninecms/' + '_'.join(filter(None, (template, region))) + '.html',
-            'ninecms/' + template + '.html',
-        ))
-        return t.render({context_name: context_value, 'classes': block_classes}, request)
-
     def page_render(self, node, request):
         """ Construct the page context
         Render all blocks in a node page
@@ -96,67 +74,45 @@ class NodeView(View):
             'title': title,
             'classes': self.construct_classes((node.page_type.name, 'content', status), request),
             'node': node,
-            'content': self.block_render('block_content', node.page_type.name, node.id, request, 'node', node),
             'author': settings.SITE_AUTHOR,
             'keywords': settings.SITE_KEYWORDS,
         }
 
         # get all elements (block instances) for this page type and append to page context
-        elements = PageLayoutElement.objects\
-            .select_related('block')\
-            .select_related('block__node')\
-            .select_related('block__menu_item')\
-            .prefetch_related('block__node__image_set')\
-            .filter(page_type=node.page_type_id)\
-            .filter(hidden=False)\
-            .order_by('region', 'weight', 'id')
-        for element in elements:
-            # if this region is not in the rendered page then add an empty string
-            reg = element.region
-            classes = element.block.classes
-            if reg not in page:
-                page[reg] = ''
+        # conveniently structure blocks to be able to access by name instead of looping in template
+        for element in node.page_type.blocks.all():
+            reg = str(element)
             # static node render
-            if element.block.type == 'static':
-                static_node = element.block.node
-                if static_node.language in (request.LANGUAGE_CODE, '') and static_node.status == 1:
-                    template = static_node.get_alias_template()
-                    page[reg] += self.block_render('block_static', reg, template, request, 'node', static_node, classes)
+            if element.type == 'static':
+                if element.node.language in (request.LANGUAGE_CODE, '') and element.node.status == 1:
+                    page[reg] = element.node
             # menu render
-            elif element.block.type == 'menu':
-                menu = element.block.menu_item
-                if menu.language in (request.LANGUAGE_CODE, '') and menu.disabled == 0:
-                    descendants = menu.get_descendants()
-                    page[reg] += self.block_render('block_menu', reg, menu.id, request, 'menu', descendants, classes)
+            elif element.type == 'menu':
+                if element.menu_item.language in (request.LANGUAGE_CODE, '') and element.menu_item.disabled == 0:
+                    page[reg] = element.menu_item.get_descendants()
             # signal (view) render
-            elif element.block.type == 'signal':
-                signal = element.block.signal
-                responses = block_signal.send(sender=self.__class__, view=signal, node=node, request=request)
+            elif element.type == 'signal':
+                responses = block_signal.send(sender=self.__class__, view=element.signal, node=node, request=request)
                 responses = list(filter(lambda response: response[1] is not None, responses))
                 if responses:
-                    resp = responses[-1][1]
-                    page[reg] += self.block_render('block_signal', reg, signal, request, 'content', resp, classes)
+                    page[reg] = responses[-1][1]
             # contact form render
-            elif element.block.type == 'contact':
-                form = ContactForm(self.session_pop(request, 'contact_form_post', None), initial=request.GET)
-                page[reg] += self.block_render('block_contact', reg, None, request, 'form', form, classes)
+            elif element.type == 'contact':
+                page[reg] = ContactForm(self.session_pop(request, 'contact_form_post', None), initial=request.GET)
             # language menu render
-            elif element.block.type == 'language':
-                labels = settings.LANGUAGE_MENU_LABELS
-                page[reg] += self.block_render('block_language', reg, None, request, 'labels', labels, classes)
+            elif element.type == 'language':
+                page[reg] = settings.LANGUAGE_MENU_LABELS
             # login
-            elif element.block.type == 'login':
-                form = LoginForm(self.session_pop(request, 'login_form_post', None))
-                page[reg] += self.block_render('block_login', reg, None, request, 'form', form, classes)
+            elif element.type == 'login':
+                page[reg] = LoginForm(self.session_pop(request, 'login_form_post', None))
             # user menu
-            elif element.block.type == 'user-menu':
-                page[reg] += self.block_render('block_user_menu', reg, None, request, 'user-menu', None, classes)
+            elif element.type == 'user-menu':
+                page[reg] = True
             # search form
-            elif element.block.type == 'search':
-                form = SearchForm(request.GET)
-                page[reg] += self.block_render('block_search', reg, None, request, 'form', form, classes)
+            elif element.type == 'search':
+                page[reg] = SearchForm(request.GET)
             # search results
-            elif element.block.type == 'search-results':
+            elif element.type == 'search-results':
                 form = SearchForm(request.GET)
                 form.is_valid()
                 results = None
@@ -165,5 +121,5 @@ class NodeView(View):
                     results = Node.objects.filter(Q(title__icontains=q) | Q(body__icontains=q) |
                                                   Q(summary__icontains=q) | Q(highlight__icontains=q))
                     results = {'q': q, 'nodes': results}
-                page[reg] += self.block_render('block_search_results', reg, None, request, 'results', results, classes)
+                page[reg] = results
         return page
