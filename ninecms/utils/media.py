@@ -106,6 +106,7 @@ def delete_all(filename):
     for file in find_all(filename):
         os.remove(file)
 
+
 def image_style(image, style):
     """ Return the url of different image style
     Construct appropriately if not exist
@@ -116,23 +117,31 @@ def image_style(image, style):
      - thumbnail-upscale: create a thumbnail that is upscaled if smaller
      - thumbnail-crop: create a thumbnail that is cropped to the exact dimension
 
-    Assumptions
-    - Works only for Linux OS; double slashes are anyway ignored
-    - MEDIA_URL is local (url is in form MEDIA_URL.. (eg /media/..) and this is in BASE_DIR
-      Anyway if in remote, how to create images
-
-    :param url: An image url
+    :param image: ImageFieldFile
     :param style: Specify style to return image
     :return: image url of specified style
     """
     if not image:  # pragma: nocover
         return image
+    # original url full: /media/ninecms/basic/image/test.png
     url = image.url
-    img_path_file_name = settings.BASE_DIR + url
-    style_url_path = '/'.join((os.path.dirname(url), style))
-    style_url = '/'.join((style_url_path, os.path.basename(url)))
-    style_path = settings.BASE_DIR + style_url_path
-    style_path_file_name = settings.BASE_DIR + style_url
+    # original url without file: /media/ninecms/basic/image
+    url_path = '/'.join(url.split('/')[:-1])
+    # original path full: ~/ninecms/media/ninecms/basic/image/test.png
+    img_path_file_name = str(image.file)
+    # original file: test.png
+    img_file_name = os.path.basename(img_path_file_name)
+
+    # style url without file: /media/ninecms/basic/image/large
+    style_url_path = '/'.join((url_path, style))
+    # style url full: /media/ninecms/basic/image/large/test.png
+    style_url = '/'.join((style_url_path, img_file_name))
+    # style path without file: ~/ninecms/media/ninecms/basic/image/large
+    style_path = os.path.join(os.path.dirname(img_path_file_name), style)
+    # style path full: ~/ninecms/media/ninecms/basic/image/large/test.png
+    style_path_file_name = os.path.join(style_path, img_file_name)
+
+    # the style dict
     style_def = settings.IMAGE_STYLES[style]
 
     if not os.path.exists(style_path_file_name):
