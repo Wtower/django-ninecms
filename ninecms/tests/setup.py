@@ -343,10 +343,11 @@ def assert_image(test_case, response, img, size, style):
     :return: None
     """
     url = img.image.url
-    style_url_path = '/'.join((os.path.dirname(url), style))
-    style_url = '/'.join((style_url_path, os.path.basename(url)))
-    style_path = settings.BASE_DIR + style_url_path
-    style_path_file_name = settings.BASE_DIR + style_url
+    # @todo the following fails, change image_style too
+    style_url_path = os.path.join(os.path.dirname(url), style)
+    style_url = os.path.join(style_url_path, os.path.basename(url))
+    style_path = os.path.join(settings.MEDIA_ROOT, style_url_path)
+    style_path_file_name = os.path.join(settings.MEDIA_ROOT, style_url)
     if bool(response):  # pragma: nocover
         test_case.assertContains(response, '<img src="' + style_url + '">', html=True)
     test_case.assertEqual(str(check_output(['identify', style_path_file_name])).split(' ')[2], size)

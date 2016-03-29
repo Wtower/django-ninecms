@@ -106,7 +106,7 @@ def delete_all(filename):
     for file in find_all(filename):
         os.remove(file)
 
-def image_style(url, style):
+def image_style(image, style):
     """ Return the url of different image style
     Construct appropriately if not exist
     See 9cms-crop.odt
@@ -125,8 +125,9 @@ def image_style(url, style):
     :param style: Specify style to return image
     :return: image url of specified style
     """
-    if not url:  # pragma: nocover
-        return url
+    if not image:  # pragma: nocover
+        return image
+    url = image.url
     img_path_file_name = settings.BASE_DIR + url
     style_url_path = '/'.join((os.path.dirname(url), style))
     style_url = '/'.join((style_url_path, os.path.basename(url)))
