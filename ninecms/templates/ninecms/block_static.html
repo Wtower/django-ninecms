@@ -12,7 +12,7 @@ Email: gkarak@9-dev.com
         <div class="imageset">
             {% for img in node.image_set.all %}
                 <div class="image thumbnail">
-                    <img src="{{ img.image.url|image_style:'large' }}" alt="{{ img.title }}">
+                    <img src="{{ img.image|image_style:'large' }}" alt="{{ img.title }}">
                 </div>
             {% endfor %}
         </div>

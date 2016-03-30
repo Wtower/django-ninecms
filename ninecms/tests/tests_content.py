@@ -85,9 +85,6 @@ class ContentTests(TestCase):
         self.assertEqual(self.node_rev_front.node.get_absolute_url(), '/')
         self.assertEqual(self.node_rev_basic.node.get_absolute_url(), '/about/')
         self.assertEqual('/cms/content/' in Node.objects.filter(title="Video 1")[0].get_absolute_url(), True)
-        self.assertEqual(self.node_rev_basic.node.get_alias_template(), 'about')
-        template = 'node_%d' % self.node_rev_basic_no_alias.node.id
-        self.assertEqual(self.node_rev_basic_no_alias.node.get_alias_template(), template)
 
     def test_node_util_methods(self):
         """ Test utility methods
@@ -306,28 +303,28 @@ class ContentTests(TestCase):
         """ Test thumbnail-upscale
         :return: None
         """
-        ninecms_extras.image_style(self.img.image.url, 'thumbnail_upscale')
+        ninecms_extras.image_style(self.img.image, 'thumbnail_upscale')
         assert_image(self, None, self.img, '150x150', 'thumbnail_upscale')
 
     def test_image_style_thumbnail_with_large(self):
         """ Test thumbnail with large image
         :return: None
         """
-        ninecms_extras.image_style(self.img_big.image.url, 'thumbnail')
+        ninecms_extras.image_style(self.img_big.image, 'thumbnail')
         assert_image(self, None, self.img_big, '150x73', 'thumbnail')
 
     def test_image_style_crop_thumbnail(self):
         """ Test crop-thumbnail with large image
         :return: None
         """
-        ninecms_extras.image_style(self.img_big.image.url, 'blog_style')
+        ninecms_extras.image_style(self.img_big.image, 'blog_style')
         assert_image(self, None, self.img_big, '350x226', 'blog_style')
 
     def test_image_style_crop_thumbnail_portrait(self):
         """ Test crop-thumbnail with large image portrait
         :return: None
         """
-        ninecms_extras.image_style(self.img_big_portrait.image.url, 'blog_style')
+        ninecms_extras.image_style(self.img_big_portrait.image, 'blog_style')
         assert_image(self, None, self.img_big_portrait, '350x226', 'blog_style')
 
     """ Taxonomy System """

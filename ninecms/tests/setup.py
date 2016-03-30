@@ -259,7 +259,7 @@ def create_block_static(page_type, node):
     :param node: what this block will contain
     :return: the page layout element
     """
-    block, created = ContentBlock.objects.get_or_create(type='static', node=node)
+    block, created = ContentBlock.objects.get_or_create(name='static', type='static', node=node)
     return create_element(page_type, block)
 
 
@@ -269,7 +269,7 @@ def create_block_menu(page_type, menu):
     :param menu: what this block will contain
     :return: the page layout element
     """
-    block, created = ContentBlock.objects.get_or_create(type='menu', menu_item=menu)
+    block, created = ContentBlock.objects.get_or_create(name='menu', type='menu', menu_item=menu)
     return create_element(page_type, block)
 
 
@@ -278,7 +278,7 @@ def create_block_signal_terms(page_type):
     :param page_type: where this block will be rendered
     :return: the page layout element
     """
-    block, created = ContentBlock.objects.get_or_create(type='signal', signal='terms')
+    block, created = ContentBlock.objects.get_or_create(name='signal-terms', type='signal', signal='terms')
     return create_element(page_type, block)
 
 
@@ -287,7 +287,7 @@ def create_block_signal_video(page_type):
     :param page_type: where this block will be rendered
     :return: the page layout element
     """
-    block, created = ContentBlock.objects.get_or_create(type='signal', signal='random video node')
+    block, created = ContentBlock.objects.get_or_create(name='signal-video', type='signal', signal='random video node')
     return create_element(page_type, block)
 
 
@@ -296,7 +296,7 @@ def create_block_simple(page_type, block_type):
     :param page_type: where this block will be rendered
     :return: the page layout element
     """
-    block, created = ContentBlock.objects.get_or_create(type=block_type)
+    block, created = ContentBlock.objects.get_or_create(name=block_type, type=block_type)
     return create_element(page_type, block)
 
 """ Media System """
@@ -342,11 +342,25 @@ def assert_image(test_case, response, img, size, style):
     :param style: the image style to test
     :return: None
     """
+    image = img.image
+    # original url full: /media/ninecms/basic/image/test.png
     url = img.image.url
-    style_url_path = '/'.join((os.path.dirname(url), style))
-    style_url = '/'.join((style_url_path, os.path.basename(url)))
-    style_path = settings.BASE_DIR + style_url_path
-    style_path_file_name = settings.BASE_DIR + style_url
+    # original url without file: /media/ninecms/basic/image
+    url_path = '/'.join(url.split('/')[:-1])
+    # original path full: ~/ninecms/media/ninecms/basic/image/test.png
+    img_path_file_name = str(image.file)
+    # original file: test.png
+    img_file_name = os.path.basename(img_path_file_name)
+
+    # style url without file: /media/ninecms/basic/image/large
+    style_url_path = '/'.join((url_path, style))
+    # style url full: /media/ninecms/basic/image/large/test.png
+    style_url = '/'.join((style_url_path, img_file_name))
+    # style path without file: ~/ninecms/media/ninecms/basic/image/large
+    style_path = os.path.join(os.path.dirname(img_path_file_name), style)
+    # style path full: ~/ninecms/media/ninecms/basic/image/large/test.png
+    style_path_file_name = os.path.join(style_path, img_file_name)
+
     if bool(response):  # pragma: nocover
         test_case.assertContains(response, '<img src="' + style_url + '">', html=True)
     test_case.assertEqual(str(check_output(['identify', style_path_file_name])).split(' ')[2], size)

@@ -36,8 +36,11 @@ coverage.xml
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio
 .idea/
 
+### Fish vf
+.venv
+
 ### Django
-media/
+tests/media/ninecms/basic/image/*/
 
 # Libraries
 ninecms/static/ninecms/bootstrap/
