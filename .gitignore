@@ -40,7 +40,7 @@ coverage.xml
 .venv
 
 ### Django
-media/
+tests/media/ninecms/basic/image/*/
 
 # Libraries
 ninecms/static/ninecms/bootstrap/
