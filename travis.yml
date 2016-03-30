@@ -1,0 +1,15 @@
+# http://docs.travis-ci.com/user/languages/python/
+
+language: python
+python:
+    - 3.3
+    - 3.4
+    - 3.5
+
+install:
+    pip install -r requirements.txt
+
+script:
+    python manage.py test
+
+sudo: false
