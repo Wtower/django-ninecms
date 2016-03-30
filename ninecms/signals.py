@@ -46,5 +46,3 @@ def render_view(**kwargs):
     """
     if kwargs['view'] == 'terms':
         return TaxonomyTerm.objects.all()
-    elif kwargs['view'] == 'random video node':
-        return Node.objects.filter(page_type__name='video').prefetch_related('video_set').order_by('?').first()

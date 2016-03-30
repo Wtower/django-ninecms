@@ -259,13 +259,6 @@ class ContentTests(TestCase):
         menu_item_disabled.disabled = False
         menu_item_disabled.save()
 
-    def test_node_view_block_signal_video(self):
-        """ Test signal block for random video
-        :return: None
-        """
-        response = assert_front(self, reverse('ninecms:index'))
-        self.assertContains(response, '<video')
-
     def test_node_view_block_language(self):
         """ Test block for language menu
         :return: None
