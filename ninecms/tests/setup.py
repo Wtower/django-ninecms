@@ -259,7 +259,7 @@ def create_block_static(page_type, node):
     :param node: what this block will contain
     :return: the page layout element
     """
-    block, created = ContentBlock.objects.get_or_create(name='static', type='static', node=node)
+    block, created = ContentBlock.objects.get_or_create(name='static-About', type='static', node=node)
     return create_element(page_type, block)
 
 
@@ -269,7 +269,7 @@ def create_block_menu(page_type, menu):
     :param menu: what this block will contain
     :return: the page layout element
     """
-    block, created = ContentBlock.objects.get_or_create(name='menu', type='menu', menu_item=menu)
+    block, created = ContentBlock.objects.get_or_create(name='menu-Main Menu', type='menu', menu_item=menu)
     return create_element(page_type, block)
 
 

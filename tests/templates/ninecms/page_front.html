@@ -1,0 +1,24 @@
+{% extends 'ninecms/index.html' %}
+
+{% comment %}
+Template override for tests
+Front page
+Render various content necessary to test adequately all blocks
+{% endcomment %}
+
+{% block main %}
+    {% include 'ninecms/block_contact.html' %}
+    {% include 'ninecms/block_login.html' %}
+    {% include 'ninecms/block_user_menu.html' %}
+    {% include 'ninecms/block_language.html' %}
+    {% include 'ninecms/block_menu.html' with menu=menu_main %}
+
+    {% if node.terms.all %}
+        <p>Tags</p>
+        <ul>
+            {% for term in node.terms.all %}
+                <li>{{ term.name }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

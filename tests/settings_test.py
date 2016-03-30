@@ -12,6 +12,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+PASSWORD_HASHERS = (
+    'django.contrib.auth.hashers.MD5PasswordHasher',
+)
+
 # @todo after tests work 100%, remove unnecessary settings
 
 # Application definition
@@ -47,7 +51,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            # os.path.join(BASE_DIR,  'templates'),
+            os.path.join(BASE_DIR, 'tests', 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -83,7 +87,7 @@ LANGUAGE_CODE = 'en'
 
 LANGUAGES = (
     ('en', 'English'),
-    # ('el', 'Greek'),
+    ('el', 'Greek'),
 )
 
 TIME_ZONE = 'UTC'
@@ -190,3 +194,10 @@ ANONYMOUS_USER_ID = -1
 
 # noinspection PyUnresolvedReferences
 from ninecms.settings import *
+
+IMAGE_STYLES.update({
+    'thumbnail-upscale': {
+        'type': 'thumbnail-upscale',
+        'size': (150, 150)
+    },
+})
