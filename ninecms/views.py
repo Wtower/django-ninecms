@@ -36,7 +36,7 @@ class ContentNodeView(NodeView):
             return redirect('ninecms:alias', url_alias=(node.alias + '/'), permanent=True)
         if not node.status and not request.user.has_perm('ninecms.view_unpublished'):
             raise PermissionDenied
-        return render(request, 'ninecms/index.html', self.page_render(node, request))
+        return self.render(node, request)
 
 
 class AliasView(NodeView):
@@ -59,7 +59,7 @@ class AliasView(NodeView):
                 raise PermissionDenied
             if node.redirect:
                 return redirect(node.get_redirect_path(), permanent=True)
-            return render(request, 'ninecms/index.html', self.page_render(node, request))
+            return self.render(node, request)
         else:
             return redirect('ninecms:alias', url_alias=(kwargs['url_alias'] + '/'), permanent=True)
 
@@ -76,7 +76,7 @@ class IndexView(NodeView):
         except IndexError:
             messages.warning(request, "No front page has been created yet.")
             return redirect('admin:index')
-        return render(request, 'ninecms/index.html', self.page_render(node, request))
+        return self.render(node, request)
 
 
 class ContactView(View):

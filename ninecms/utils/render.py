@@ -7,6 +7,8 @@ __email__ = 'gkarak@9-dev.com'
 from django.conf import settings
 from django.views.generic import View
 from django.db.models import Q
+from django.http import HttpResponse
+from django.template import loader
 from ninecms.models import Node
 from ninecms.signals import block_signal
 from ninecms.forms import ContactForm, LoginForm, SearchForm
@@ -60,12 +62,12 @@ class NodeView(View):
         """
         return request.session.pop(key) if key in request.session else default
 
-    def page_render(self, node, request):
+    def construct_context(self, node, request):
         """ Construct the page context
         Render all blocks in a node page
         :param node: the node requested
         :param request: the request object
-        :return: rendered page string for context
+        :return: context dictionary
         """
         # construct the page context
         title = node.title if node.title == settings.SITE_NAME else ' | '.join((node.title, settings.SITE_NAME))
@@ -123,3 +125,19 @@ class NodeView(View):
                     results = {'q': q, 'nodes': results}
                 page[reg] = results
         return page
+
+    def render(self, node, request):
+        """
+        Render shortcut function
+        Select the proper template based on page type and construct context
+        :param node: the node requested
+        :param request: the request object
+        :return: rendered http response
+        """
+        page_type_name = node.page_type.name.replace(' ', '_').lower()
+        t = loader.select_template((
+            'ninecms/page_%s.html' % page_type_name,
+            'ninecms/%s.html' % page_type_name,
+            'ninecms/index.html',
+        ))
+        return HttpResponse(t.render(self.construct_context(node, request), request))

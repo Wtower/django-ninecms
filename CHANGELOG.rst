@@ -16,6 +16,10 @@ Planned changes
   - remove PageLayoutElements model
   - make ContenBlock name unique not null
 
+**:warning: Changes that require manual migration actions:**
+
+- Upgrade to v0.6.0 prior to upgrading to future versions #45
+
 Development: v0.6.0
 -------------------
 
