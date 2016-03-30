@@ -259,7 +259,7 @@ def create_block_static(page_type, node):
     :param node: what this block will contain
     :return: the page layout element
     """
-    block, created = ContentBlock.objects.get_or_create(type='static', node=node)
+    block, created = ContentBlock.objects.get_or_create(name='static', type='static', node=node)
     return create_element(page_type, block)
 
 
@@ -269,7 +269,7 @@ def create_block_menu(page_type, menu):
     :param menu: what this block will contain
     :return: the page layout element
     """
-    block, created = ContentBlock.objects.get_or_create(type='menu', menu_item=menu)
+    block, created = ContentBlock.objects.get_or_create(name='menu', type='menu', menu_item=menu)
     return create_element(page_type, block)
 
 
@@ -278,7 +278,7 @@ def create_block_signal_terms(page_type):
     :param page_type: where this block will be rendered
     :return: the page layout element
     """
-    block, created = ContentBlock.objects.get_or_create(type='signal', signal='terms')
+    block, created = ContentBlock.objects.get_or_create(name='signal-terms', type='signal', signal='terms')
     return create_element(page_type, block)
 
 
@@ -287,7 +287,7 @@ def create_block_signal_video(page_type):
     :param page_type: where this block will be rendered
     :return: the page layout element
     """
-    block, created = ContentBlock.objects.get_or_create(type='signal', signal='random video node')
+    block, created = ContentBlock.objects.get_or_create(name='signal-video', type='signal', signal='random video node')
     return create_element(page_type, block)
 
 
@@ -296,7 +296,7 @@ def create_block_simple(page_type, block_type):
     :param page_type: where this block will be rendered
     :return: the page layout element
     """
-    block, created = ContentBlock.objects.get_or_create(type=block_type)
+    block, created = ContentBlock.objects.get_or_create(name=block_type, type=block_type)
     return create_element(page_type, block)
 
 """ Media System """

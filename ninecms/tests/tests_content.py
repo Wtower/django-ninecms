@@ -85,9 +85,6 @@ class ContentTests(TestCase):
         self.assertEqual(self.node_rev_front.node.get_absolute_url(), '/')
         self.assertEqual(self.node_rev_basic.node.get_absolute_url(), '/about/')
         self.assertEqual('/cms/content/' in Node.objects.filter(title="Video 1")[0].get_absolute_url(), True)
-        self.assertEqual(self.node_rev_basic.node.get_alias_template(), 'about')
-        template = 'node_%d' % self.node_rev_basic_no_alias.node.id
-        self.assertEqual(self.node_rev_basic_no_alias.node.get_alias_template(), template)
 
     def test_node_util_methods(self):
         """ Test utility methods
