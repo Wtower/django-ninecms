@@ -288,7 +288,7 @@ class ContentBlock(models.Model):
         """ Get block name
         :return: name
         """
-        return self.name
+        return self.name.replace(' ', '_').replace('-', '_').lower()
 
     class Meta:
         """ Model meta """

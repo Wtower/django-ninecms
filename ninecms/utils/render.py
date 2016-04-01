@@ -82,39 +82,39 @@ class NodeView(View):
 
         # get all elements (block instances) for this page type and append to page context
         # conveniently structure blocks to be able to access by name instead of looping in template
-        for element in node.page_type.blocks.all():
-            reg = str(element)
+        for block in node.page_type.blocks.all():
+            reg = str(block)
             # static node render
-            if element.type == 'static':
-                if element.node.language in (request.LANGUAGE_CODE, '') and element.node.status == 1:
-                    page[reg] = element.node
+            if block.type == 'static':
+                if block.node.language in (request.LANGUAGE_CODE, '') and block.node.status == 1:
+                    page[reg] = block.node
             # menu render
-            elif element.type == 'menu':
-                if element.menu_item.language in (request.LANGUAGE_CODE, '') and element.menu_item.disabled == 0:
-                    page[reg] = element.menu_item.get_descendants()
+            elif block.type == 'menu':
+                if block.menu_item.language in (request.LANGUAGE_CODE, '') and block.menu_item.disabled == 0:
+                    page[reg] = block.menu_item.get_descendants()
             # signal (view) render
-            elif element.type == 'signal':
-                responses = block_signal.send(sender=self.__class__, view=element.signal, node=node, request=request)
+            elif block.type == 'signal':
+                responses = block_signal.send(sender=self.__class__, view=block.signal, node=node, request=request)
                 responses = list(filter(lambda response: response[1] is not None, responses))
                 if responses:
                     page[reg] = responses[-1][1]
             # contact form render
-            elif element.type == 'contact':
+            elif block.type == 'contact':
                 page[reg] = ContactForm(self.session_pop(request, 'contact_form_post', None), initial=request.GET)
             # language menu render
-            elif element.type == 'language':
+            elif block.type == 'language':
                 page[reg] = settings.LANGUAGE_MENU_LABELS
             # login
-            elif element.type == 'login':
+            elif block.type == 'login':
                 page[reg] = LoginForm(self.session_pop(request, 'login_form_post', None))
             # user menu
-            elif element.type == 'user-menu':
+            elif block.type == 'user-menu':
                 page[reg] = True
             # search form
-            elif element.type == 'search':
+            elif block.type == 'search':
                 page[reg] = SearchForm(request.GET)
             # search results
-            elif element.type == 'search-results':
+            elif block.type == 'search-results':
                 form = SearchForm(request.GET)
                 form.is_valid()
                 results = None
