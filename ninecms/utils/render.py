@@ -9,6 +9,7 @@ from django.views.generic import View
 from django.db.models import Q
 from django.http import HttpResponse
 from django.template import loader
+from django.utils.text import slugify
 from ninecms.models import Node
 from ninecms.signals import block_signal
 from ninecms.forms import ContactForm, LoginForm, SearchForm
@@ -39,13 +40,13 @@ class NodeView(View):
             .select_related('page_type')\
             .order_by('-language', 'id')[0]
 
-    def construct_classes(self, page_name, request):
+    def construct_classes(self, type_classes, request):
         """ Construct default body classes for a page
-        :param page_name: an individual page type name
+        :param type_classes: an individual page type name
         :param request: the request object
         :return: a classes string
         """
-        classes = ' '.join(list('page-' + i.replace(' ', '-') for i in page_name))
+        classes = ' '.join(list('page-' + slugify(c) for c in type_classes))
         classes += ' i18n-' + request.LANGUAGE_CODE
         if request.user.is_authenticated():
             classes += ' logged-in'
@@ -83,7 +84,7 @@ class NodeView(View):
         # get all elements (block instances) for this page type and append to page context
         # conveniently structure blocks to be able to access by name instead of looping in template
         for block in node.page_type.blocks.all():
-            reg = str(block)
+            reg = slugify(block.name).replace('-', '_')
             # static node render
             if block.type == 'static':
                 if block.node.language in (request.LANGUAGE_CODE, '') and block.node.status == 1:
@@ -134,7 +135,7 @@ class NodeView(View):
         :param request: the request object
         :return: rendered http response
         """
-        page_type_name = node.page_type.name.replace(' ', '_').lower()
+        page_type_name = slugify(node.page_type.name).replace('-', '_')
         t = loader.select_template((
             'ninecms/page_%s.html' % page_type_name,
             'ninecms/%s.html' % page_type_name,
