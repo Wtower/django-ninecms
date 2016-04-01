@@ -38,13 +38,13 @@ class ContentLoginTests(TestCase):
         cls.admin = create_user()
         cls.simple_group = Group.objects.create(name='editor')
         cls.img = create_image()
-        cls.element_login = create_block_simple(cls.node_rev_front.node.page_type, 'login')
-        cls.element_user_menu = create_block_simple(cls.node_rev_front.node.page_type, 'user-menu')
+        cls.block_login = create_block_simple(cls.node_rev_front.node.page_type, 'login')
+        cls.block_user_menu = create_block_simple(cls.node_rev_front.node.page_type, 'user-menu')
         # add a second user menu element in same page type
         PageLayoutElement(
             page_type=cls.node_rev_front.node.page_type,
             region='footer',
-            block=cls.element_user_menu.block,
+            block=cls.block_user_menu,
             weight=0).save()
 
     def setUp(self):
@@ -261,14 +261,14 @@ class ContentLoginTests(TestCase):
             response,
             '<a href="%s">user-menu</a>' % reverse(
                 'admin:ninecms_contentblock_change',
-                args=(self.element_user_menu.pk,)),
+                args=(self.block_user_menu.pk,)),
             html=True
         )
         self.assertContains(
             response,
             '<a href="%s">login</a>' % reverse(
                 'admin:ninecms_contentblock_change',
-                args=(self.element_login.pk,)),
+                args=(self.block_login.pk,)),
             html=True
         )
         self.assertContains(

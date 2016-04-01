@@ -242,17 +242,6 @@ def assert_menu(test_case, response, language=settings.LANGUAGE_CODE):
 """ Block System """
 
 
-def create_element(page_type, block):
-    """ Create a page layout element for a block
-    :param page_type: where this block will be rendered
-    :param block: the block of the element
-    :return: the page layout element
-    """
-    element, created = PageLayoutElement.objects.get_or_create(page_type=page_type, region='header', block=block,
-                                                               weight=0)
-    return element
-
-
 def create_block_static(page_type, node):
     """ Create a static block
     :param page_type: where this block will be rendered
@@ -260,7 +249,8 @@ def create_block_static(page_type, node):
     :return: the page layout element
     """
     block, created = ContentBlock.objects.get_or_create(name='static-About', type='static', node=node)
-    return create_element(page_type, block)
+    block.page_types.add(page_type)
+    return block
 
 
 def create_block_menu(page_type, menu):
@@ -270,7 +260,8 @@ def create_block_menu(page_type, menu):
     :return: the page layout element
     """
     block, created = ContentBlock.objects.get_or_create(name='menu-Main Menu', type='menu', menu_item=menu)
-    return create_element(page_type, block)
+    block.page_types.add(page_type)
+    return block
 
 
 def create_block_signal_terms(page_type):
@@ -279,16 +270,8 @@ def create_block_signal_terms(page_type):
     :return: the page layout element
     """
     block, created = ContentBlock.objects.get_or_create(name='signal-terms', type='signal', signal='terms')
-    return create_element(page_type, block)
-
-
-def create_block_signal_video(page_type):
-    """ Create a signal block for random video node
-    :param page_type: where this block will be rendered
-    :return: the page layout element
-    """
-    block, created = ContentBlock.objects.get_or_create(name='signal-video', type='signal', signal='random video node')
-    return create_element(page_type, block)
+    block.page_types.add(page_type)
+    return block
 
 
 def create_block_simple(page_type, block_type):
@@ -297,7 +280,8 @@ def create_block_simple(page_type, block_type):
     :return: the page layout element
     """
     block, created = ContentBlock.objects.get_or_create(name=block_type, type=block_type)
-    return create_element(page_type, block)
+    block.page_types.add(page_type)
+    return block
 
 """ Media System """
 
