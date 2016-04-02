@@ -22,7 +22,7 @@ from django.utils import timezone, translation
 from django.conf import settings
 from subprocess import call, check_output
 import os
-from ninecms.models import PageType, Node, NodeRevision, MenuItem, ContentBlock, PageLayoutElement, Image, \
+from ninecms.models import PageType, Node, NodeRevision, MenuItem, ContentBlock, Image, \
     TaxonomyTerm, File, Video, validate_file_ext, validate_video_ext
 
 """ Global setup functions """
@@ -105,8 +105,8 @@ def assert_no_front(test_case):
     :return: None
     """
     translation.activate(settings.LANGUAGE_CODE)
-    response = test_case.client.get(reverse('ninecms:index'))
-    test_case.assertContains(response, "No front page")
+    response = test_case.client.get(reverse('ninecms:index'), follow=True)
+    test_case.assertRedirects(response, '/admin/login/?next=/admin/')
 
 
 def assert_front(test_case, path, language=settings.LANGUAGE_CODE, title=""):
@@ -248,7 +248,7 @@ def create_block_static(page_type, node):
     :param node: what this block will contain
     :return: the page layout element
     """
-    block, created = ContentBlock.objects.get_or_create(name='static-About', type='static', node=node)
+    block, created = ContentBlock.objects.get_or_create(name='static-%s' % node.title, type='static', node=node)
     block.page_types.add(page_type)
     return block
 
