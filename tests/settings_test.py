@@ -16,7 +16,6 @@ PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.MD5PasswordHasher',
 )
 
-# @todo after tests work 100%, remove unnecessary settings
 
 # Application definition
 
@@ -104,10 +103,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# TEMPLATE_DIRS = (
-#     os.path.join(BASE_DIR,  'templates'),
-# )
-
 
 # Media
 
@@ -181,7 +176,7 @@ ANONYMOUS_USER_ID = -1
 
 # Django admin
 
-# DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'
+DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'
 
 # MESSAGE_TAGS = {
 #     messages.SUCCESS: 'alert-success success',
