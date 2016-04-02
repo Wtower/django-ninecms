@@ -6,7 +6,7 @@ __email__ = 'gkarak@9-dev.com'
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import View
-from django.template import loader, RequestContext
+from django.template import loader
 from django.http import Http404
 from django.core.mail import mail_managers, BadHeaderError
 from django.core.exceptions import PermissionDenied
@@ -91,11 +91,11 @@ class ContactView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             t = loader.get_template('ninecms/mail_contact.txt')
-            c = RequestContext(request, {
+            c = {
                 'sender_name': form.cleaned_data['sender_name'],
                 'sender_email': form.cleaned_data['sender_email'],
                 'message': form.cleaned_data['message'],
-            })
+            }
             try:
                 mail_managers(form.cleaned_data['subject'], t.render(c))
             except BadHeaderError:  # pragma: no cover
