@@ -22,7 +22,7 @@ from django.utils import timezone, translation
 from django.conf import settings
 from subprocess import call, check_output
 import os
-from ninecms.models import PageType, Node, NodeRevision, MenuItem, ContentBlock, PageLayoutElement, Image, \
+from ninecms.models import PageType, Node, NodeRevision, MenuItem, ContentBlock, Image, \
     TaxonomyTerm, File, Video, validate_file_ext, validate_video_ext
 
 """ Global setup functions """
@@ -105,8 +105,8 @@ def assert_no_front(test_case):
     :return: None
     """
     translation.activate(settings.LANGUAGE_CODE)
-    response = test_case.client.get(reverse('ninecms:index'))
-    test_case.assertContains(response, "No front page")
+    response = test_case.client.get(reverse('ninecms:index'), follow=True)
+    test_case.assertRedirects(response, '/admin/login/?next=/admin/')
 
 
 def assert_front(test_case, path, language=settings.LANGUAGE_CODE, title=""):
@@ -242,25 +242,15 @@ def assert_menu(test_case, response, language=settings.LANGUAGE_CODE):
 """ Block System """
 
 
-def create_element(page_type, block):
-    """ Create a page layout element for a block
-    :param page_type: where this block will be rendered
-    :param block: the block of the element
-    :return: the page layout element
-    """
-    element, created = PageLayoutElement.objects.get_or_create(page_type=page_type, region='header', block=block,
-                                                               weight=0)
-    return element
-
-
 def create_block_static(page_type, node):
     """ Create a static block
     :param page_type: where this block will be rendered
     :param node: what this block will contain
     :return: the page layout element
     """
-    block, created = ContentBlock.objects.get_or_create(type='static', node=node)
-    return create_element(page_type, block)
+    block, created = ContentBlock.objects.get_or_create(name='static-%s' % node.title, type='static', node=node)
+    block.page_types.add(page_type)
+    return block
 
 
 def create_block_menu(page_type, menu):
@@ -269,8 +259,9 @@ def create_block_menu(page_type, menu):
     :param menu: what this block will contain
     :return: the page layout element
     """
-    block, created = ContentBlock.objects.get_or_create(type='menu', menu_item=menu)
-    return create_element(page_type, block)
+    block, created = ContentBlock.objects.get_or_create(name='menu-Main Menu', type='menu', menu_item=menu)
+    block.page_types.add(page_type)
+    return block
 
 
 def create_block_signal_terms(page_type):
@@ -278,17 +269,9 @@ def create_block_signal_terms(page_type):
     :param page_type: where this block will be rendered
     :return: the page layout element
     """
-    block, created = ContentBlock.objects.get_or_create(type='signal', signal='terms')
-    return create_element(page_type, block)
-
-
-def create_block_signal_video(page_type):
-    """ Create a signal block for random video node
-    :param page_type: where this block will be rendered
-    :return: the page layout element
-    """
-    block, created = ContentBlock.objects.get_or_create(type='signal', signal='random video node')
-    return create_element(page_type, block)
+    block, created = ContentBlock.objects.get_or_create(name='signal-terms', type='signal', signal='terms')
+    block.page_types.add(page_type)
+    return block
 
 
 def create_block_simple(page_type, block_type):
@@ -296,8 +279,9 @@ def create_block_simple(page_type, block_type):
     :param page_type: where this block will be rendered
     :return: the page layout element
     """
-    block, created = ContentBlock.objects.get_or_create(type=block_type)
-    return create_element(page_type, block)
+    block, created = ContentBlock.objects.get_or_create(name=block_type, type=block_type)
+    block.page_types.add(page_type)
+    return block
 
 """ Media System """
 
@@ -342,11 +326,25 @@ def assert_image(test_case, response, img, size, style):
     :param style: the image style to test
     :return: None
     """
+    image = img.image
+    # original url full: /media/ninecms/basic/image/test.png
     url = img.image.url
-    style_url_path = '/'.join((os.path.dirname(url), style))
-    style_url = '/'.join((style_url_path, os.path.basename(url)))
-    style_path = settings.BASE_DIR + style_url_path
-    style_path_file_name = settings.BASE_DIR + style_url
+    # original url without file: /media/ninecms/basic/image
+    url_path = '/'.join(url.split('/')[:-1])
+    # original path full: ~/ninecms/media/ninecms/basic/image/test.png
+    img_path_file_name = str(image.file)
+    # original file: test.png
+    img_file_name = os.path.basename(img_path_file_name)
+
+    # style url without file: /media/ninecms/basic/image/large
+    style_url_path = '/'.join((url_path, style))
+    # style url full: /media/ninecms/basic/image/large/test.png
+    style_url = '/'.join((style_url_path, img_file_name))
+    # style path without file: ~/ninecms/media/ninecms/basic/image/large
+    style_path = os.path.join(os.path.dirname(img_path_file_name), style)
+    # style path full: ~/ninecms/media/ninecms/basic/image/large/test.png
+    style_path_file_name = os.path.join(style_path, img_file_name)
+
     if bool(response):  # pragma: nocover
         test_case.assertContains(response, '<img src="' + style_url + '">', html=True)
     test_case.assertEqual(str(check_output(['identify', style_path_file_name])).split(' ')[2], size)

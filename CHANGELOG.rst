@@ -2,6 +2,58 @@
 CHANGELOG
 =========
 
+Future: v0.6.1
+--------------
+
+Estimated release date:  May 16 2016
+
+Update date:  Wed Mar 30 2016
+
+Planned changes
+
+- Add migration 14 #46
+
+  - remove PageLayoutElements model
+  - make ContenBlock name unique not null
+
+**:warning: Changes that require manual migration actions:**
+
+- Upgrade to v0.6.0 prior to upgrading to future versions #45
+
+Development: v0.6.0
+-------------------
+
+Estimated release date:  Apr 16 2016
+
+Update date:  Wed Mar 30 2016
+
+Planned changes
+
+- Improve page rendering #45
+
+  - remove theme suggestions
+  - use template blocks and only provide proper context
+  - deprecate page layout elements
+  - remove front-end libraries #43
+
+- Admin: add m2m related fields on both ends:
+
+  - page types / blocks
+  - nodes / terms
+
+- Integrate tests #44
+- Use Python path functions in image styles #48
+- Fix #47 setup fails
+- Use Travis and Coveralls #35
+
+What's new
+
+All changes
+
+**:warning: Changes that require manual migration actions:**
+
+- Change all templates that use image styles to pass the actual ImageFieldFile rather than a url #48
+
 v0.5.4
 ------
 

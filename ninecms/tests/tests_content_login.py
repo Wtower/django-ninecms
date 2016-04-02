@@ -38,13 +38,13 @@ class ContentLoginTests(TestCase):
         cls.admin = create_user()
         cls.simple_group = Group.objects.create(name='editor')
         cls.img = create_image()
-        cls.element_login = create_block_simple(cls.node_rev_front.node.page_type, 'login')
-        cls.element_user_menu = create_block_simple(cls.node_rev_front.node.page_type, 'user-menu')
+        cls.block_login = create_block_simple(cls.node_rev_front.node.page_type, 'login')
+        cls.block_user_menu = create_block_simple(cls.node_rev_front.node.page_type, 'user-menu')
         # add a second user menu element in same page type
         PageLayoutElement(
             page_type=cls.node_rev_front.node.page_type,
             region='footer',
-            block=cls.element_user_menu.block,
+            block=cls.block_user_menu,
             weight=0).save()
 
     def setUp(self):
@@ -127,7 +127,7 @@ class ContentLoginTests(TestCase):
         self.assertContains(response, '<label for="id_alias">Alias:</label>', html=True)
         self.assertContains(response, '<label class="vCheckboxLabel" for="id_redirect">Redirect</label>', html=True)
         self.assertContains(response, '<label class="required" for="id_user">')
-        self.assertContains(response, '<option value="1" selected="selected">admin</option>', html=True)
+        self.assertContains(response, 'selected="selected">admin</option>')
         self.assertContains(response, ('<input checked="checked" class="" id="id_status" name="status" type="checkbox" '
                                        'value="1">'), html=True)
         self.assertContains(response, '<input class="" id="id_promote" name="promote" type="checkbox">', html=True)
@@ -254,31 +254,32 @@ class ContentLoginTests(TestCase):
         self.assertContains(response, "content block")
         self.assertContains(
             response,
-            '<th scope="col" class="column-description"><span>Description</span></th>',
+            '<th scope="col" class="sortable column-name"><a href="?o=1">Name</a></th>',
             html=True
         )
         self.assertContains(
             response,
             '<a href="%s">user-menu</a>' % reverse(
                 'admin:ninecms_contentblock_change',
-                args=(self.element_user_menu.pk,)),
+                args=(self.block_user_menu.pk,)),
             html=True
         )
         self.assertContains(
             response,
             '<a href="%s">login</a>' % reverse(
                 'admin:ninecms_contentblock_change',
-                args=(self.element_login.pk,)),
+                args=(self.block_login.pk,)),
             html=True
         )
         self.assertContains(
             response,
-            '<th scope="col" class="column-elements"><span>Page types</span></th>',
+            '<th scope="col"  class="column-page_types_list"><span>Page types</span></th>',
             html=True
         )
         self.assertContains(
             response,
-            '<a href="%s">Front Page</a>+' % reverse('admin:ninecms_pagetype_change', args=(self.node_rev_front.pk,))
+            '<a href="%s">Front Page</a>' % reverse('admin:ninecms_pagetype_change', args=(self.node_rev_front.pk,)),
+            html=True
         )
 
     def test_admin_menu_item_add_page(self):

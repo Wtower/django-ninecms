@@ -17,12 +17,6 @@ from guardian.shortcuts import get_objects_for_user
 from ninecms import models, forms, views
 
 
-class PageLayoutElementInline(admin.StackedInline):
-    """ Page Layout Element stacked inline to be displayed in Page Types """
-    model = models.PageLayoutElement
-    extra = 0
-
-
 # noinspection PyMethodMayBeStatic
 @admin.register(models.PageType)
 class PageTypeAdmin(admin.ModelAdmin):
@@ -30,7 +24,7 @@ class PageTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'url_pattern', 'elements', 'operations')
     list_editable = ('description', 'url_pattern')
     search_fields = ['name']
-    inlines = [PageLayoutElementInline]
+    form = forms.PageTypeForm
     save_as = True
 
     def elements(self, obj):
@@ -262,6 +256,7 @@ class NodeAdmin(admin.ModelAdmin):
                 ("Body", {'fields': ('highlight', 'summary', 'body', 'link')}),
                 ("Node management", {'fields': ('status', 'promote', 'sticky', 'redirect', 'user',
                                                 'created', 'original_translation', 'weight')}),
+                ("Terms", {'fields': ('terms',)}),
             )
         else:
             return (
@@ -269,6 +264,7 @@ class NodeAdmin(admin.ModelAdmin):
                 ("Body", {'fields': ('highlight', 'summary', 'body', 'link')}),
                 ("Node management", {'fields': ('status', 'promote', 'sticky', 'user',
                                                 'created', 'original_translation', 'weight')}),
+                ("Terms", {'fields': ('terms',)}),
             )
 
     def get_changeform_initial_data(self, request):
@@ -329,17 +325,11 @@ class MenuItemAdmin(MPTTModelAdmin):
 @admin.register(models.ContentBlock)
 class ContentBlockAdmin(admin.ModelAdmin):
     """ Get a list of blocks """
-    list_display = ('description', 'type', 'node', 'menu_item', 'signal', 'elements')
+    list_display = ('name', 'type', 'node', 'menu_item', 'signal', 'page_types_list')
     list_filter = ['type']
+    filter_vertical = ('page_types', )
 
-    def description(self, obj):
-        """ Return a custom column with the block's description
-        :param obj: a block object
-        :return: column output
-        """
-        return str(obj)
-
-    def elements(self, obj):
+    def page_types_list(self, obj):
         """ Return a custom column with page types in which each block is an element
         If page type is immediately repeated (same block more than once in one page type), add '+' instead
         :param obj: a block object
@@ -347,22 +337,23 @@ class ContentBlockAdmin(admin.ModelAdmin):
         """
         r = []
         prev = 0
-        for element in obj.pagelayoutelement_set.all():
-            if element.page_type.id != prev:
+        for page_type in obj.page_types.all():
+            if page_type.id != prev:
                 r.append('<a href="%s">%s</a>' % (
-                    reverse('admin:ninecms_pagetype_change', args=(element.page_type.id,)), element.page_type))
+                    reverse('admin:ninecms_pagetype_change', args=(page_type.id,)), page_type))
             else:
                 r[-1] += '+'
-            prev = element.page_type.id
+            prev = page_type.id
         return ', '.join(r)
-    elements.allow_tags = True
-    elements.short_description = _("Page types")
+    page_types_list.allow_tags = True
+    page_types_list.short_description = _("Page types")
 
 
 @admin.register(models.TaxonomyTerm)
 class TaxonomyTermAdmin(MPTTModelAdmin):
     """ Get a list of Taxonomy Terms """
     list_display = ('name', 'description_node', 'weight')
+    filter_vertical = ('nodes', )
 
 admin.site.site_header = _("9cms administration")
 admin.site.site_title = "9cms"

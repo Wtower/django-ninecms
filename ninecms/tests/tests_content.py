@@ -20,7 +20,7 @@ from django.utils.dateformat import DateFormat
 from ninecms.forms import ContactForm, SearchForm
 from ninecms.templatetags import ninecms_extras
 from ninecms.tests.setup import create_front, create_basic, create_menu, create_block_static, create_block_menu, \
-    create_block_signal_terms, create_block_simple, create_page, create_block_signal_video, create_image, create_file, \
+    create_block_signal_terms, create_block_simple, create_page, create_image, create_file, \
     create_video, create_terms, assert_front, assert_basic, create_user, assert_image, data_contact, get_front_title, \
     data_login, url_with_lang
 
@@ -41,10 +41,10 @@ class ContentTests(TestCase):
         cls.node_rev_basic = create_basic('about')
         cls.menu = create_menu()
         # block system model tests
-        cls.element_static = create_block_static(cls.node_rev_front.node.page_type, cls.node_rev_basic.node)
-        cls.element_menu = create_block_menu(cls.node_rev_front.node.page_type, cls.menu)
-        cls.element_terms = create_block_signal_terms(cls.node_rev_front.node.page_type)
-        cls.element_generic = create_block_simple(cls.node_rev_front.node.page_type, 'generic')
+        cls.block_static = create_block_static(cls.node_rev_front.node.page_type, cls.node_rev_basic.node)
+        cls.block_menu = create_block_menu(cls.node_rev_front.node.page_type, cls.menu)
+        cls.block_terms = create_block_signal_terms(cls.node_rev_front.node.page_type)
+        cls.block_generic = create_block_simple(cls.node_rev_front.node.page_type, 'generic')
         # block system view tests
         for i in range(1, 5):
             node_revision_basic = create_basic('block/' + str(i), settings.LANGUAGE_CODE, 'About ' + str(i))
@@ -53,7 +53,6 @@ class ContentTests(TestCase):
                 node_revision_basic.node.save()
             create_block_static(cls.node_rev_front.node.page_type, node_revision_basic.node)
             create_page('video', "Video page", '', '', 'Video ' + str(i))
-        create_block_signal_video(cls.node_rev_front.node.page_type)
         create_block_simple(cls.node_rev_front.node.page_type, 'language')
         # Media system
         cls.img = create_image()
@@ -63,16 +62,16 @@ class ContentTests(TestCase):
         cls.video = create_video()
         # Taxonomy, Contact
         cls.term = create_terms(())
-        cls.element_contact = create_block_simple(cls.node_rev_front.node.page_type, 'contact')
+        cls.block_contact = create_block_simple(cls.node_rev_front.node.page_type, 'contact')
         # Extra model tests
         cls.node_rev_basic_no_alias = create_basic('')
         # login / user menu
-        cls.element_login = create_block_simple(cls.node_rev_front.node.page_type, 'login')
-        cls.element_user_menu = create_block_simple(cls.node_rev_front.node.page_type, 'user-menu')
+        cls.block_login = create_block_simple(cls.node_rev_front.node.page_type, 'login')
+        cls.block_user_menu = create_block_simple(cls.node_rev_front.node.page_type, 'user-menu')
         # search
-        cls.element_search = create_block_simple(cls.node_rev_front.node.page_type, 'search')
+        cls.block_search = create_block_simple(cls.node_rev_front.node.page_type, 'search')
         cls.node_rev_basic_search = create_basic('search')
-        cls.element_search_results = create_block_simple(cls.node_rev_basic_search.node.page_type, 'search-results')
+        cls.block_search_results = create_block_simple(cls.node_rev_basic_search.node.page_type, 'search-results')
 
     """ Node System """
     def test_node_model_methods(self):
@@ -85,9 +84,6 @@ class ContentTests(TestCase):
         self.assertEqual(self.node_rev_front.node.get_absolute_url(), '/')
         self.assertEqual(self.node_rev_basic.node.get_absolute_url(), '/about/')
         self.assertEqual('/cms/content/' in Node.objects.filter(title="Video 1")[0].get_absolute_url(), True)
-        self.assertEqual(self.node_rev_basic.node.get_alias_template(), 'about')
-        template = 'node_%d' % self.node_rev_basic_no_alias.node.id
-        self.assertEqual(self.node_rev_basic_no_alias.node.get_alias_template(), template)
 
     def test_node_util_methods(self):
         """ Test utility methods
@@ -191,30 +187,14 @@ class ContentTests(TestCase):
         self.assertEqual(str(self.menu), "Main Menu")
 
     """ Block System """
-    def test_model_methods_block_static(self):
-        """ Test model methods for static block
+    def test_model_methods_blocks(self):
+        """ Test model methods for blocks
         :return: None
         """
-        self.assertEqual(str(self.element_static), ' '.join((str(self.node_rev_front.node.page_type), 'header')))
-        self.assertEqual(str(self.element_static.block), '-'.join(('static', str(self.node_rev_basic.node.title))))
-
-    def test_model_methods_block_menu(self):
-        """ Test model methods for menu block
-        :return: None
-        """
-        self.assertEqual(str(self.element_menu.block), '-'.join(('menu', str(self.menu))))
-
-    def test_model_methods_block_signal(self):
-        """ Test model methods for signal block
-        :return: None
-        """
-        self.assertEqual(str(self.element_terms.block), 'signal-terms')
-
-    def test_model_methods_block_generic(self):
-        """ Test model methods for generic block
-        :return: None
-        """
-        self.assertEqual(str(self.element_generic.block), 'generic')
+        self.assertEqual(str(self.block_static), '-'.join(('static', str(self.node_rev_basic.node.title))))
+        self.assertEqual(str(self.block_menu), '-'.join(('menu', str(self.menu))))
+        self.assertEqual(str(self.block_terms), 'signal-terms')
+        self.assertEqual(str(self.block_generic), 'generic')
 
     def test_node_view_block_static(self):
         """ Test static block for front view
@@ -262,13 +242,6 @@ class ContentTests(TestCase):
         menu_item_disabled.disabled = False
         menu_item_disabled.save()
 
-    def test_node_view_block_signal_video(self):
-        """ Test signal block for random video
-        :return: None
-        """
-        response = assert_front(self, reverse('ninecms:index'))
-        self.assertContains(response, '<video')
-
     def test_node_view_block_language(self):
         """ Test block for language menu
         :return: None
@@ -306,28 +279,28 @@ class ContentTests(TestCase):
         """ Test thumbnail-upscale
         :return: None
         """
-        ninecms_extras.image_style(self.img.image.url, 'thumbnail_upscale')
+        ninecms_extras.image_style(self.img.image, 'thumbnail_upscale')
         assert_image(self, None, self.img, '150x150', 'thumbnail_upscale')
 
     def test_image_style_thumbnail_with_large(self):
         """ Test thumbnail with large image
         :return: None
         """
-        ninecms_extras.image_style(self.img_big.image.url, 'thumbnail')
+        ninecms_extras.image_style(self.img_big.image, 'thumbnail')
         assert_image(self, None, self.img_big, '150x73', 'thumbnail')
 
     def test_image_style_crop_thumbnail(self):
         """ Test crop-thumbnail with large image
         :return: None
         """
-        ninecms_extras.image_style(self.img_big.image.url, 'blog_style')
+        ninecms_extras.image_style(self.img_big.image, 'blog_style')
         assert_image(self, None, self.img_big, '350x226', 'blog_style')
 
     def test_image_style_crop_thumbnail_portrait(self):
         """ Test crop-thumbnail with large image portrait
         :return: None
         """
-        ninecms_extras.image_style(self.img_big_portrait.image.url, 'blog_style')
+        ninecms_extras.image_style(self.img_big_portrait.image, 'blog_style')
         assert_image(self, None, self.img_big_portrait, '350x226', 'blog_style')
 
     """ Taxonomy System """
