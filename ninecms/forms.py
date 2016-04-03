@@ -15,6 +15,9 @@ from ninecms.utils.sanitize import sanitize, ModelSanitizeForm
 
 class PageTypeForm(forms.ModelForm):
     """ Override default page type form to show related blocks
+    This shows both ends of m2m in admin
+    First add a custom ModelMultipleChoiceField
+    Remove the widget to not use the double list widget
     https://www.lasolution.be/blog/related-manytomanyfield-django-admin-site.html
     https://github.com/django/django/blob/master/django/contrib/admin/widgets.py#L24
     """
@@ -27,6 +30,7 @@ class PageTypeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         """ Initialize form
+        If this is an existing object, load related
         :param args
         :param kwargs
         :return: None
@@ -34,6 +38,7 @@ class PageTypeForm(forms.ModelForm):
         super(PageTypeForm, self).__init__(*args, **kwargs)
         if self.instance.pk:
             self.initial['blocks'] = self.instance.blocks.values_list('pk', flat=True)
+        # # Use the following to add an add new block icon
         # from django.db.models import ManyToManyRel
         # from django.contrib import admin
         # rel = ManyToManyRel(ContentBlock, PageType)
