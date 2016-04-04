@@ -11,54 +11,12 @@ from django.contrib.auth.models import Group
 from django.utils.translation import ugettext_lazy as _
 from ninecms.models import Node, Image, File, Video, ContentBlock, PageType, TaxonomyTerm
 from ninecms.utils.sanitize import sanitize, ModelSanitizeForm
+from ninecms.utils.manytomany import ManyToManyModelForm, ModelBiMultipleChoiceField
 
 
-class PageTypeForm(forms.ModelForm):
-    """ Override default page type form to show related blocks
-    This shows both ends of m2m in admin
-    First add a custom ModelMultipleChoiceField
-    Remove the widget to not use the double list widget
-    https://www.lasolution.be/blog/related-manytomanyfield-django-admin-site.html
-    https://github.com/django/django/blob/master/django/contrib/admin/widgets.py#L24
-    """
-    # @todo make parent generic class for reverse related m2m fields (use a new meta prop)
-    blocks = forms.ModelMultipleChoiceField(
-        ContentBlock.objects.all(),
-        widget=FilteredSelectMultiple("Blocks", True),
-        required=False,
-    )
-
-    def __init__(self, *args, **kwargs):
-        """ Initialize form
-        If this is an existing object, load related
-        :param args
-        :param kwargs
-        :return: None
-        """
-        super(PageTypeForm, self).__init__(*args, **kwargs)
-        if self.instance.pk:
-            self.initial['blocks'] = self.instance.blocks.values_list('pk', flat=True)
-        # # Use the following to add an add new block icon
-        # from django.db.models import ManyToManyRel
-        # from django.contrib import admin
-        # rel = ManyToManyRel(ContentBlock, PageType)
-        # self.fields['blocks'].widget = RelatedFieldWidgetWrapper(self.fields['blocks'].widget, rel, admin.site)
-
-    def save(self, *args, **kwargs):
-        """ Handle saving of related blocks
-        :param args
-        :param kwargs
-        :return: instance
-        """
-        instance = super(PageTypeForm, self).save(*args, **kwargs)
-        if instance.pk:
-            for block in instance.blocks.all():
-                if block not in self.cleaned_data['blocks']:
-                    instance.blocks.remove(block)
-            for block in self.cleaned_data['blocks']:
-                if block not in instance.blocks.all():
-                    instance.blocks.add(block)
-        return instance
+class PageTypeForm(ManyToManyModelForm):
+    """ Override default page type form to show related blocks """
+    blocks = ModelBiMultipleChoiceField(ContentBlock.objects.all(), double_list="Blocks")
 
     class Meta:
         """ Meta class """

@@ -272,6 +272,8 @@ class ContentLoginTests(TestCase):
         """
         response = self.client.get(reverse('admin:ninecms_pagetype_change',
                                            args=(self.node_rev_basic.node.page_type_id,)))
+        # with open('response.html', 'w') as out:
+        #     out.write(response.content.decode())
         self.assertContains(response, '<input class="form-control vTextField" id="id_name" maxlength="100" '
                                       'name="name" placeholder="Name"')
         self.assertContains(response, '<select multiple="multiple" class="selectfilterstacked" '
