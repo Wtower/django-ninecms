@@ -27,8 +27,9 @@ from django.conf import settings
 from guardian.models import GroupObjectPermission
 from ninecms.forms import ContentNodeEditForm, ImageForm, FileForm, VideoForm, PageTypeForm
 from ninecms.tests.setup import create_front, create_basic, create_user, create_image, create_block_simple, \
-    get_front_title, assert_front, data_login, data_node, get_basic_title, create_video, create_file, data_page_type
-from ninecms.models import PageType, Node, PageLayoutElement, ContentBlock
+    get_front_title, assert_front, data_login, data_node, get_basic_title, create_video, create_file, data_page_type, \
+    create_terms
+from ninecms.models import PageType, Node, PageLayoutElement, ContentBlock, TaxonomyTerm
 import os
 
 
@@ -164,6 +165,31 @@ class ContentLoginTests(TestCase):
         self.assertEqual(r, True)
         self.assertEqual(form.cleaned_data['body'],
                          '<div> </div>&lt;script&gt;alert("This is a test.");&lt;/script&gt;')
+
+    def test_content_node_edit_form_m2m_valid(self):
+        """ Test that a node form's reverse m2m is valid
+        :return: None
+        """
+        create_terms(())
+        # assign 2 tags
+        data = data_node(self.node_rev_front.node.page_type_id, self.admin)
+        data['terms'] = (1, 2)
+        form = ContentNodeEditForm(data=data, user=self.admin)
+        r = form.is_valid()
+        self.assertEqual(r, True)
+        self.assertEqual(list(form.cleaned_data['terms']), list(TaxonomyTerm.objects.all()))
+        form.save()
+        self.assertEqual(len(form.errors), 0)
+        self.assertEqual(len(form.instance.terms.all()), 2)
+
+        # remove 1 tag
+        data['terms'] = (1,)
+        form = ContentNodeEditForm(data=data, user=self.admin, instance=form.instance)
+        r = form.is_valid()
+        self.assertEqual(r, True)
+        form.save()
+        self.assertEqual(len(form.errors), 0)
+        self.assertEqual(len(form.instance.terms.all()), 1)
 
     def test_image_form_valid_sanitize(self):
         """ Test forms sanitize; Test image form

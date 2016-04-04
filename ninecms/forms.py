@@ -43,13 +43,9 @@ class ContentTypePermissionsForm(forms.Form):
     )
 
 
-class ContentNodeEditForm(forms.ModelForm):
+class ContentNodeEditForm(ManyToManyModelForm):
     """ Node edit or create form """
-    terms = forms.ModelMultipleChoiceField(
-        TaxonomyTerm.objects.all(),
-        widget=FilteredSelectMultiple("Terms", True),
-        required=False,
-    )
+    terms = ModelBiMultipleChoiceField(TaxonomyTerm.objects.all(), double_list="Terms")
 
     def __init__(self, *args, **kwargs):
         """ Get user object to check if has full_html permission
@@ -63,8 +59,6 @@ class ContentNodeEditForm(forms.ModelForm):
         except AttributeError:
             self.current_user = kwargs.pop('user', None)
         super(ContentNodeEditForm, self).__init__(*args, **kwargs)
-        if self.instance.pk:
-            self.initial['terms'] = self.instance.terms.values_list('pk', flat=True)
 
     def clean(self):
         """ Override clean form to bleach
@@ -79,22 +73,6 @@ class ContentNodeEditForm(forms.ModelForm):
             if field in cleaned_data:
                 cleaned_data[field] = sanitize(cleaned_data[field], full_html=full_html)
         return cleaned_data
-
-    def save(self, *args, **kwargs):
-        """ Handle saving of related terms
-        :param args
-        :param kwargs
-        :return: instance
-        """
-        instance = super(ContentNodeEditForm, self).save(*args, **kwargs)
-        if instance.pk:
-            for term in instance.terms.all():
-                if term not in self.cleaned_data['terms']:
-                    instance.terms.remove(term)
-            for term in self.cleaned_data['terms']:
-                if term not in instance.terms.all():
-                    instance.terms.add(term)
-        return instance
 
     class Meta:
         """ Form model and fields """

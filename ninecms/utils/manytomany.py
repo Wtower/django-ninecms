@@ -50,7 +50,7 @@ class ManyToManyModelForm(forms.ModelForm):
         # self.fields['blocks'].widget = RelatedFieldWidgetWrapper(self.fields['blocks'].widget, rel, admin.site)
 
     def save(self, *args, **kwargs):
-        """ Handle saving of related blocks
+        """ Handle saving of related
         :param args
         :param kwargs
         :return: instance
@@ -62,13 +62,14 @@ class ManyToManyModelForm(forms.ModelForm):
                 field = self.base_fields[field_name]
                 if type(field).__name__ == 'ModelBiMultipleChoiceField':
                     # the m2m records, eg if model field is `blocks`, this would be `instance.blocks.all()`
-                    records = getattr(self.instance, field_name).all()
+                    recordset = getattr(self.instance, field_name)
+                    records = recordset.all()
                     # remove records that have been removed in form
                     for record in records:
                         if record not in self.cleaned_data[field_name]:
-                            instance.blocks.remove(record)
+                            recordset.remove(record)
                     # add records that have been added in form
                     for record in self.cleaned_data[field_name]:
                         if record not in records:
-                            instance.blocks.add(record)
+                            recordset.add(record)
         return instance
