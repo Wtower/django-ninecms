@@ -321,7 +321,7 @@ class PageLayoutElement(models.Model):
         """ Get model name
         :return: model name
         """
-        return ' '.join((str(self.page_type), self.region))
+        return ' '.join((str(self.page_type), self.region))  # pragma: nocover
 
     class Meta:
         """ Model meta """

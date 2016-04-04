@@ -6,7 +6,6 @@ __email__ = 'gkarak@9-dev.com'
 
 from django import forms
 from django.forms.models import inlineformset_factory
-from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.auth.models import Group
 from django.utils.translation import ugettext_lazy as _
 from ninecms.models import Node, Image, File, Video, ContentBlock, PageType, TaxonomyTerm

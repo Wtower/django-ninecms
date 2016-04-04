@@ -6,7 +6,6 @@ __email__ = 'gkarak@9-dev.com'
 
 from django import template
 from django.template.defaultfilters import stringfilter
-from django.conf import settings
 from django.template import Context
 from ninecms.utils.media import image_style as util_image
 from ninecms.utils.transliterate import upper_no_intonation as util_upper
@@ -20,21 +19,11 @@ register = template.Library()
 @register.filter
 def image_style(image, style):
     """ Return the url of different image style
-    :param url: An image url
+    :param image: An image url
     :param style: Specify style to return image
     :return: image url of specified style
     """
     return util_image(image, style)
-
-
-@register.filter
-def library(name):
-    """ Check if a library is enabled in settings
-    Mutliple checks with | separator
-    :param name: the library name to check
-    :return: a boolean value
-    """
-    return any(x in name.split('|') for x in settings.LIBRARIES)
 
 
 class FieldsetNode(template.Node):  # pragma: nocover
