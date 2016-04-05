@@ -24,7 +24,7 @@ class Command(BaseCommand):
         :return: None
         """
         with Capturing() as updates:
-            pip.main(['list', '--outdated'])
+            pip.main(['list', '--outdated', '--retries', '1'])
         cache = caches['default']
         if not updates:  # pragma: nocover
             cache.delete('updates')

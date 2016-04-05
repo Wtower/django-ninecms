@@ -93,7 +93,7 @@ class NoContentTests(TestCase):
         """
         call_command('check_updates')
         with Capturing() as updates:
-            pip.main(['list', '--outdated'])
+            pip.main(['list', '--outdated', '--retries', '1'])
         # noinspection PyUnresolvedReferences
         n = len(mail.outbox)
         if not updates:
