@@ -32,7 +32,7 @@ def str_block(block):  # pragma: nocover
 # noinspection PyPep8Naming
 def provide_block_name_default(apps, schema_editor):
     """ Provide a default block name in order for the next migration to establish field unique
-    :param apps
+    :param apps: app registry
     :param schema_editor
     :return: None
     """
@@ -53,6 +53,18 @@ def transfer_elements(apps, schema_editor):
     PageLayoutElement = apps.get_model('ninecms', 'PageLayoutElement')
     for element in PageLayoutElement.objects.all():  # pragma: nocover
         element.block.page_types.add(element.page_type)
+
+
+# noinspection PyUnusedLocal
+def reverse(apps, schema_editor):  # pragma: nocover
+    """
+    Reverse the above operations
+    Nothing to do here, data in fields will be removed anyway
+    :param apps: app registry
+    :param schema_editor
+    :return: None
+    """
+    pass
 
 
 class Migration(migrations.Migration):
@@ -101,6 +113,6 @@ class Migration(migrations.Migration):
             model_name='pagetype',
             name='template',
         ),
-        migrations.RunPython(provide_block_name_default),
-        migrations.RunPython(transfer_elements),
+        migrations.RunPython(provide_block_name_default, reverse),
+        migrations.RunPython(transfer_elements, reverse),
     ]
