@@ -316,21 +316,6 @@ IMAGE_STYLES = {
 # Update image styles in project settings such as:
 # IMAGE_STYLES.update({})
 
-# Define external libraries to load
-LIBRARIES = (
-    'jQuery',  # 'jQuery_local',
-    'bootstrap',  # 'bootstrap_local',
-    'html5shiv_respond',
-    # 'angularjs',  # 'angularjs_local',
-    # 'lightbox2',
-    # 'masonry.pkdg',  # 'masonry.pkdg_local',
-    # 'video.js',  # 'video.js_local',
-    # 'waypoints',  # 'waypoints_local',
-    # 'iosslider',  # 'iosslider_local',
-    # 'wow',  # 'wow_local',
-    # 'owl',  # 'owl_local',
-)
-
 # Define characters to remove at transliteration
 TRANSLITERATE_REMOVE = '"\'`,:;|{[}]+=*&%^$#@!~()?<>'
 
