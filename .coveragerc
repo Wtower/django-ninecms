@@ -1,2 +1,2 @@
 [run]
-omit = */settings*.py
+omit = */settings*.py,setup.py,manage.py
