@@ -1,0 +1,2 @@
+[run]
+omit = */settings*.py,setup.py,manage.py

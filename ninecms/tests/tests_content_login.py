@@ -2,6 +2,16 @@
 Tests declaration for Nine CMS
 
 All tests assume settings.LANGUAGE_CODE is defined
+
+Sections index
+- Admin index
+- Nodes
+- Page types
+- Content blocks
+- Menus
+- Logout
+- Permissions
+- Status page
 """
 __author__ = 'George Karakostas'
 __copyright__ = 'Copyright 2015, George Karakostas'
@@ -15,10 +25,11 @@ from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 # noinspection PyPackageRequirements
 from guardian.models import GroupObjectPermission
-from ninecms.forms import ContentNodeEditForm, ImageForm, FileForm, VideoForm
+from ninecms.forms import ContentNodeEditForm, ImageForm, FileForm, VideoForm, PageTypeForm
 from ninecms.tests.setup import create_front, create_basic, create_user, create_image, create_block_simple, \
-    get_front_title, assert_front, data_login, data_node, get_basic_title, create_video, create_file
-from ninecms.models import PageType, Node, PageLayoutElement
+    get_front_title, assert_front, data_login, data_node, get_basic_title, create_video, create_file, data_page_type, \
+    create_terms
+from ninecms.models import PageType, Node, PageLayoutElement, ContentBlock, TaxonomyTerm
 import os
 
 
@@ -155,6 +166,31 @@ class ContentLoginTests(TestCase):
         self.assertEqual(form.cleaned_data['body'],
                          '<div> </div>&lt;script&gt;alert("This is a test.");&lt;/script&gt;')
 
+    def test_content_node_edit_form_m2m_valid(self):
+        """ Test that a node form's reverse m2m is valid
+        :return: None
+        """
+        create_terms(())
+        # assign 2 tags
+        data = data_node(self.node_rev_front.node.page_type_id, self.admin)
+        data['terms'] = (1, 2)
+        form = ContentNodeEditForm(data=data, user=self.admin)
+        r = form.is_valid()
+        self.assertEqual(r, True)
+        self.assertEqual(list(form.cleaned_data['terms']), list(TaxonomyTerm.objects.all()))
+        form.save()
+        self.assertEqual(len(form.errors), 0)
+        self.assertEqual(len(form.instance.terms.all()), 2)
+
+        # remove 1 tag
+        data['terms'] = (1,)
+        form = ContentNodeEditForm(data=data, user=self.admin, instance=form.instance)
+        r = form.is_valid()
+        self.assertEqual(r, True)
+        form.save()
+        self.assertEqual(len(form.errors), 0)
+        self.assertEqual(len(form.instance.terms.all()), 1)
+
     def test_image_form_valid_sanitize(self):
         """ Test forms sanitize; Test image form
         Form is invalid as it requires image filename etc.
@@ -246,6 +282,53 @@ class ContentLoginTests(TestCase):
         response = self.client.post(reverse('admin:ninecms_node_changelist'), data, follow=True)
         self.assertContains(response, "nodes successfully updated")
 
+    """ Page types """
+    def test_admin_page_type_changelist_page(self):
+        """ Test that page type changelist page renders properly
+        :return: None
+        """
+        response = self.client.get(reverse('admin:ninecms_pagetype_changelist'))
+        self.assertContains(response, '<th class="field-name"><a href="%s">%s</a></th>' % (
+            reverse('admin:ninecms_pagetype_change', args=(self.node_rev_basic.node.page_type_id,)),
+            self.node_rev_basic.node.page_type.name))
+
+    def test_admin_page_type_change_page(self):
+        """ Test that page type change page renders properly
+        :return: None
+        """
+        response = self.client.get(reverse('admin:ninecms_pagetype_change',
+                                           args=(self.node_rev_basic.node.page_type_id,)))
+        # with open('response.html', 'w') as out:
+        #     out.write(response.content.decode())
+        self.assertContains(response, '<input class="form-control vTextField" id="id_name" maxlength="100" '
+                                      'name="name" placeholder="Name"')
+        self.assertContains(response, '<select multiple="multiple" class="selectfilterstacked" '
+                                      'id="id_blocks" name="blocks" title="">')
+
+    def test_content_page_type_edit_form_valid(self):
+        """ Test that a form is valid
+        :return: None
+        """
+        # assign 2 blocks
+        data = data_page_type((1, 2))
+        form = PageTypeForm(data=data)
+        r = form.is_valid()
+        self.assertEqual(r, True)
+        self.assertEqual(list(form.cleaned_data['blocks']), list(ContentBlock.objects.all()))
+        form.save()
+        self.assertEqual(len(form.errors), 0)
+        self.assertEqual(len(form.instance.blocks.all()), 2)
+
+        # remove 1 block
+        data = data_page_type((1,))
+        form = PageTypeForm(data=data, instance=form.instance)
+        r = form.is_valid()
+        self.assertEqual(r, True)
+        form.save()
+        self.assertEqual(len(form.errors), 0)
+        self.assertEqual(len(form.instance.blocks.all()), 1)
+
+    """ Content blocks """
     def test_admin_content_block_page(self):
         """ Test that content block changelist page renders properly
         :return: None
@@ -282,6 +365,7 @@ class ContentLoginTests(TestCase):
             html=True
         )
 
+    """ Menus """
     def test_admin_menu_item_add_page(self):
         """ Test that menu item add page renders properly
         :return: None

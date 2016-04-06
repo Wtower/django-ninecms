@@ -198,6 +198,14 @@ def data_node(page_type_id, user):
         'video-INITIAL_FORMS': 0,
     }
 
+
+def data_page_type(blocks):
+    return {
+        'name': 'article',
+        'description': "News article",
+        'blocks': blocks,
+    }
+
 """ Menu System """
 
 

@@ -331,19 +331,13 @@ class ContentBlockAdmin(admin.ModelAdmin):
 
     def page_types_list(self, obj):
         """ Return a custom column with page types in which each block is an element
-        If page type is immediately repeated (same block more than once in one page type), add '+' instead
         :param obj: a block object
         :return: column output
         """
         r = []
-        prev = 0
         for page_type in obj.page_types.all():
-            if page_type.id != prev:
-                r.append('<a href="%s">%s</a>' % (
-                    reverse('admin:ninecms_pagetype_change', args=(page_type.id,)), page_type))
-            else:
-                r[-1] += '+'
-            prev = page_type.id
+            r.append(
+                '<a href="%s">%s</a>' % (reverse('admin:ninecms_pagetype_change', args=(page_type.id,)), page_type))
         return ', '.join(r)
     page_types_list.allow_tags = True
     page_types_list.short_description = _("Page types")
