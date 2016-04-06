@@ -1,4 +1,7 @@
 include LICENSE
 include README.rst
+include CONTRIBUTING.rst
+include CHANGELOG.rst
 recursive-include ninecms *
 recursive-include docs *
+recursive-include tests *

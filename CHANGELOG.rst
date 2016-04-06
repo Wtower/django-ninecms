@@ -2,12 +2,12 @@
 CHANGELOG
 =========
 
-Future: v0.6.1
---------------
+Development: v0.6.1
+-------------------
 
 Estimated release date:  May 16 2016
 
-Update date:  Wed Mar 30 2016
+Update date:  Apr 6 2016
 
 Planned changes
 
@@ -20,14 +20,12 @@ Planned changes
 
 - Upgrade to v0.6.0 prior to upgrading to future versions #45
 
-Development: v0.6.0
--------------------
+v0.6.0
+------
 
-Estimated release date:  Apr 16 2016
+Date:  Apr 6 2016
 
-Update date:  Wed Mar 30 2016
-
-Planned changes
+What's new
 
 - Improve page rendering #45
 
@@ -41,18 +39,19 @@ Planned changes
   - page types / blocks
   - nodes / terms
 
-- Integrate tests #44
+All changes
+
+- Integrate tests into django-ninecms repo #44
 - Use Python path functions in image styles #48
 - Fix #47 setup fails
 - Use Travis and Coveralls #35
 
-What's new
-
-All changes
-
 **:warning: Changes that require manual migration actions:**
 
-- Change all templates that use image styles to pass the actual ImageFieldFile rather than a url #48
+- Upgrade all templates
+
+  - Block rendering has changed, add relevant include statements according to readme instructions.
+  - Anywhere that image styles are used, pass the actual ImageFieldFile rather than a url #48
 
 v0.5.4
 ------
