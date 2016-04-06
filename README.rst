@@ -139,6 +139,13 @@ There is also a project that can be used as an
 
        $ pip install -r requirements.txt
 
+   - Download CKEditor (optionally) for rich text fields in admin:
+
+     - Download from http://ckeditor.com/builder
+     - Extract files under ``static/ninecms/ckeditor`` so that ``ckeditor.js`` is in this directory
+     - A recommended ``build-config.js`` file is bundled in the above directory
+     - Note: the django-ckeditor package requires a similar action too, so it is not used.
+
 3. Settings
 
    All relevant settings sample also exist in ninecms/settings.py as comment.

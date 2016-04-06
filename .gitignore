@@ -40,15 +40,16 @@ coverage.xml
 .venv
 
 ### Django
-tests/media/ninecms/basic/image/*/
+# Exclude all static files such as front-end libraries
+ninecms/static/ninecms/*
 
-# Libraries
-ninecms/static/ninecms/bootstrap/
-ninecms/static/ninecms/jquery/
-ninecms/static/ninecms/jquery.scrollTo/
-ninecms/static/ninecms/masonry/
-ninecms/static/ninecms/video-js/
-ninecms/static/ninecms/waypoints/
-ninecms/static/ninecms/owl-carousel/
-ninecms/static/ninecms/wow/
-ninecms/static/ninecms/angular.min.js
+# except ckeditor recommended build config
+!ninecms/static/ninecms/ckeditor/
+ninecms/static/ninecms/ckeditor/*
+!ninecms/static/ninecms/ckeditor/build-config.js
+
+# except NineCMS own images, js and css
+!ninecms/static/ninecms/images/
+!ninecms/static/ninecms/*.js
+!ninecms/static/ninecms/*.css
+tests/media/ninecms/basic/image/*/
