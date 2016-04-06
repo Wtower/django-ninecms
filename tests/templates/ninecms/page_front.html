@@ -1,0 +1,41 @@
+{% extends 'ninecms/index.html' %}
+
+{% comment %}
+Template override for tests
+Front page
+Render various content necessary to test adequately all blocks
+{% endcomment %}
+
+{% block main %}
+    {# tests_content #}
+    {% include 'ninecms/block_contact.html' %}
+    {% include 'ninecms/block_login.html' %}
+    {% include 'ninecms/block_user_menu.html' %}
+    {% include 'ninecms/block_language.html' %}
+    {% include 'ninecms/block_menu_header.html' with menu=menu_main_menu %}
+    {% include 'ninecms/block_static.html' with node=static_about_1 %}
+    {% include 'ninecms/block_static.html' with node=static_about_2 %}
+    {% include 'ninecms/block_static.html' with node=static_about_3 %}
+    {% include 'ninecms/block_static.html' with node=static_about_4 %}
+    {% include 'ninecms/block_signal_terms.html' with content=signal_terms %}
+    {% include 'ninecms/block_search.html' %}
+
+    {# tests_content_i18n #}
+    {% include 'ninecms/block_static.html' with node=static_1st_lang_0 %}
+    {% include 'ninecms/block_static.html' with node=static_2nd_lang_0 %}
+    {% include 'ninecms/block_static.html' with node=static_1st_lang_1 %}
+    {% include 'ninecms/block_static.html' with node=static_2nd_lang_1 %}
+    {% include 'ninecms/block_static.html' with node=static_1st_lang_2 %}
+    {% include 'ninecms/block_static.html' with node=static_2nd_lang_2 %}
+    {% include 'ninecms/block_static.html' with node=static_1st_lang_3 %}
+    {% include 'ninecms/block_static.html' with node=static_2nd_lang_3 %}
+
+    {% if node.terms.all %}
+        <p>Tags</p>
+        <ul>
+            {% for term in node.terms.all %}
+                <li>{{ term.name }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

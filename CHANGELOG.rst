@@ -2,6 +2,57 @@
 CHANGELOG
 =========
 
+Development: v0.6.1
+-------------------
+
+Estimated release date:  May 16 2016
+
+Update date:  Apr 6 2016
+
+Planned changes
+
+- Add migration 14 #46
+
+  - remove PageLayoutElements model
+  - make ContenBlock name unique not null
+
+**:warning: Changes that require manual migration actions:**
+
+- Upgrade to v0.6.0 prior to upgrading to future versions #45
+
+v0.6.0
+------
+
+Date:  Apr 6 2016
+
+What's new
+
+- Improve page rendering #45
+
+  - remove theme suggestions
+  - use template blocks and only provide proper context
+  - deprecate page layout elements
+  - remove front-end libraries #43
+
+- Admin: add m2m related fields on both ends:
+
+  - page types / blocks
+  - nodes / terms
+
+All changes
+
+- Integrate tests into django-ninecms repo #44
+- Use Python path functions in image styles #48
+- Fix #47 setup fails
+- Use Travis and Coveralls #35
+
+**:warning: Changes that require manual migration actions:**
+
+- Upgrade all templates
+
+  - Block rendering has changed, add relevant include statements according to readme instructions.
+  - Anywhere that image styles are used, pass the actual ImageFieldFile rather than a url #48
+
 v0.5.4
 ------
 

@@ -6,7 +6,7 @@ __email__ = 'gkarak@9-dev.com'
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import View
-from django.template import loader, RequestContext
+from django.template import loader
 from django.http import Http404
 from django.core.mail import mail_managers, BadHeaderError
 from django.core.exceptions import PermissionDenied
@@ -36,7 +36,7 @@ class ContentNodeView(NodeView):
             return redirect('ninecms:alias', url_alias=(node.alias + '/'), permanent=True)
         if not node.status and not request.user.has_perm('ninecms.view_unpublished'):
             raise PermissionDenied
-        return render(request, 'ninecms/index.html', self.page_render(node, request))
+        return self.render(node, request)
 
 
 class AliasView(NodeView):
@@ -59,7 +59,7 @@ class AliasView(NodeView):
                 raise PermissionDenied
             if node.redirect:
                 return redirect(node.get_redirect_path(), permanent=True)
-            return render(request, 'ninecms/index.html', self.page_render(node, request))
+            return self.render(node, request)
         else:
             return redirect('ninecms:alias', url_alias=(kwargs['url_alias'] + '/'), permanent=True)
 
@@ -74,9 +74,9 @@ class IndexView(NodeView):
         try:
             node = self.get_node_by_alias('/', request)
         except IndexError:
-            messages.error(request, "No front page has been created yet.")
-            return render(request, 'ninecms/index.html')
-        return render(request, 'ninecms/index.html', self.page_render(node, request))
+            messages.warning(request, "No front page has been created yet.")
+            return redirect('admin:index')
+        return self.render(node, request)
 
 
 class ContactView(View):
@@ -91,11 +91,11 @@ class ContactView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             t = loader.get_template('ninecms/mail_contact.txt')
-            c = RequestContext(request, {
+            c = {
                 'sender_name': form.cleaned_data['sender_name'],
                 'sender_email': form.cleaned_data['sender_email'],
                 'message': form.cleaned_data['message'],
-            })
+            }
             try:
                 mail_managers(form.cleaned_data['subject'], t.render(c))
             except BadHeaderError:  # pragma: no cover

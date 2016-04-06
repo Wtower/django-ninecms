@@ -1,0 +1,8 @@
+bleach~=1.4.2
+django-admin-bootstrapped~=2.5.7
+django-bootstrap3~=7.0.1
+Django~=1.9.4
+django-guardian~=1.4.2
+django-mptt~=0.8.3
+Pillow~=3.2.0
+pytz~=2016.3

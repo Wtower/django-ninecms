@@ -67,7 +67,7 @@ Email: gkarak@9-dev.com
                 <div class="col-md-2">
                     {% if inline_admin_form.form.image.value %}
                         <div class="node-image-inline thumbnail">
-                            <img src="{{ inline_admin_form.form.image.value|image_style_form:'thumbnail' }}">
+                            <img src="{{ inline_admin_form.form.image.value|image_style:'thumbnail' }}">
                         </div>
                     {% endif %}
                 </div>

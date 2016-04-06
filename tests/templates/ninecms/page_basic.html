@@ -1,0 +1,10 @@
+{% extends 'ninecms/index.html' %}
+
+{% comment %}
+Template override for tests
+Basic page
+{% endcomment %}
+
+{% block main %}
+    {% include 'ninecms/block_search_results.html' with results=search_results %}
+{% endblock %}

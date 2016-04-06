@@ -4,9 +4,25 @@ NineCMS
 
 Nine CMS is a Django app to manage content. Users can create content and publish it to paths.
 
-Detailed documentation soon to be published.
+.. image:: https://img.shields.io/travis/Wtower/django-ninecms/devel.svg
+    :target: https://travis-ci.org/Wtower/django-ninecms
+
+.. image:: https://img.shields.io/coveralls/Wtower/django-ninecms/devel.svg
+  :target: https://coveralls.io/github/Wtower/django-ninecms
+
+.. image:: https://img.shields.io/pypi/v/django-ninecms.svg
+    :target: https://pypi.python.org/pypi/django-ninecms
+    :alt: Latest PyPI version
+
+.. image:: https://img.shields.io/pypi/dm/django-ninecms.svg
+    :target: https://pypi.python.org/pypi/django-ninecms
+    :alt: Number of PyPI downloads per month
+
+Admin screenshot:
 
 .. image:: https://raw.githubusercontent.com/Wtower/django-ninecms/master/docs/screenshots/index1.png
+
+Detailed documentation soon to be published.
 
 Objectives
 ----------
@@ -51,12 +67,9 @@ Features
 - Admin interface with dashboard
 - Utilities
 
-  - Libraries
   - Character transliteration
-  - Serializers
   - Custom tags
   - Basic search functionality
-  - Template suggestions
 
 - Bootstrap
 
@@ -94,7 +107,7 @@ New project guide
 This is a full guide to create a new project. *Soon a Quick Guide will be added*.
 
 There is also a project that can be used as an
-`empty Django 9cms web site starter <http://www.github.com/Wtower/django-ninecms-starter>`_.
+`Django 9cms web site boilerplate <http://www.github.com/Wtower/django-ninecms-starter>`_.
 
 1. Create a new project
 
@@ -107,24 +120,31 @@ There is also a project that can be used as an
 
    - Add the following to the ``requirements.txt`` file::
 
-       Django>=1.9.0
+       Django~=1.9.0
        django-ninecms>=0.5.4
 
    - And optionally::
 
-       coverage>=4.0.3
-       django-admin-bootstrapped>=2.5.6
+       coverage~=4.0.3
+       django-admin-bootstrapped~=2.5.6
        django-admin-bootstrapped-plus>=0.1.1
-       django-bootstrap3>=6.2.2
-       django-debug-toolbar>=1.4.0
-       mysqlclient>=1.3.7
-       newrelic>=2.58.2.45
-       python3-memcached>=1.51
-       sqlparse>=0.1.18
+       django-bootstrap3~=7.0.1
+       django-debug-toolbar~=1.4.0
+       mysqlclient~=1.3.7
+       newrelic~=2.60.0.46
+       python3-memcached~=1.51
+       sqlparse~=0.1.18
 
    - Then run::
 
        $ pip install -r requirements.txt
+
+   - Download CKEditor (optionally) for rich text fields in admin:
+
+     - Download from http://ckeditor.com/builder
+     - Extract files under ``static/ninecms/ckeditor`` so that ``ckeditor.js`` is in this directory
+     - A recommended ``build-config.js`` file is bundled in the above directory
+     - Note: the django-ckeditor package requires a similar action too, so it is not used.
 
 3. Settings
 
@@ -419,9 +439,10 @@ Theming
 Theming is easy and straightforward. Besides from developing a custom theme, it is easy to use any ready-made
 HTML theme from the myriads available on the web.
 
+*(Changes in v0.6.0)*
+
 There is a ``base.html`` which gets extended by an ``index.html``. The base declares the doc type (HTML5),
-loads scripts (from an indicative common pre-selected list as defined in settings) and defines blocks to extend
-in index. For Drupal veterans it is the equivalent of ``html.tpl.php`` and it usually doesn't need to be overridden.
+loads scripts, all defined in blocks.
 
 The index file is the one that most probably needs to be overridden. You can check the base to see where each of
 the following blocks appears. These are defined by order of appearance:
@@ -442,43 +463,33 @@ the following blocks appears. These are defined by order of appearance:
 - ``body_scripts``: define any additional content at the bottom of the ``<body>``.
   Here add additional scripts to be loaded in the end of the document.
 
-Other important template is ``site-name.html``. This is a small template to define the site name, usually
-an image with logo. Unlike Drupal7, we decided to keep such one-off settings hard-coded and simple rather than
-dynamic in the db.
+The index file is the default template that is used, but it can be extended to be used in page types
+(see theme suggestions below).
 
-The templates ``block_content.html`` and ``block_static.html`` fine-tune how the content is displayed.
-The former loads only for the main content node as presented in index. The latter is used for any static node blocks
-as defined in the administration panel (db). Optionally override them to fine tune the fields present and therefore
-to reduce the number of queries executed.
-
-In summary, override templates such as:
-
-- ``index.html``
-- ``site-name.html``
-- ``block_content.html``
-- ``block_static.html``
+The templates in the ``ninecms/templates`` folder are examples of how to render specific contexts of blocks
+and can be used either with ``{% include %}`` or can be copied into the custom templates directly.
 
 Theme suggestions
 -----------------
 
-Add a file in the project's ``templates`` folder, with the following names, in order to override a 9cms template.
+Each page type can have its own template. Ninecms chooses template for the page type
+based in the template filename, in the following order:
 
-- content: ``[block_content]_[page_type]_[node_id]`` (eg ``block_content_basic_5.html``)
-- static node: ``[block_static]_[region]_[alias]`` (eg ``block_static_header_blog_1.html``)
-- menu: ``[block_menu]_[region]_[menu.id]`` (eg ``block_menu_header_1.html``)
-- signal (view): ``[block_signal]_[region]_[signal]`` (eg ``block_signal_header_random_video_node.html``)
-- contact form: ``[block_contact]_[region]``
-- language menu: ``[block_language]_[region]``
+- ``page_[page_type.name]``
+- ``[page_type.name]``
+- ``index.html``
 
-Any combination of ``[]`` is allowed, eg. ``block_content_basic.html`` or ``block_content_5.html``.
-Always append ``.html`` extension.
+where ``[page_type.name]`` is the machine name of the page type,
+eg. if the page type name is 'Basic Page' then this will be ``basic_page``.
+
+It is good to extend the template from index and use Django blocks at will.
 
 Page types
 ----------
 
 Page types are central to the organisation of a CMS content. In NineCMS, apart from logically organising content
 to relevant page types, which can be done also with taxonomy terms, each page type can have a different page layout,
-with different blocks specified as elements to different regions.
+with different blocks.
 
 Page types do not feature custom fields and thus cannot be used as the separation of entity-like models,
 as eg. in Drupal. There is no intention to add such a feature as Django models can be very easily be added
@@ -504,8 +515,7 @@ The following replacement tokens can be used:
 Block types
 -----------
 
-Additionally to content of any node, which is rendered anyway (unlike from eg. Drupal that has a content block),
-the following block types are supported:
+The following block types are supported:
 
 - ``static``: Static content provided by linking to a node.
   Unlike from Drupal concept of block that defines a text fields anyway.
@@ -566,22 +576,16 @@ Example of configuration of an ``editor`` group perms:
 - Image: add, change, delete
 - Page type specific permissions: add, change
 
-Libraries
----------
+Front-end libraries
+-------------------
 
-Libraries is a minor convenience feature (discussion open) that allows to easily integrate JS scripts in the template.
-A small number of files are involved: ``settings``, ``templatetags``, ``base.html``.
-The implementor may select to ignore libraries and override ``base.html`` or ``index.html`` blocks for
-adding scripts anyway.
+*(Changes in v0.6.0)*
 
-Alternatively, use ``django-bower``. Bower is a front-end packages repository that by itself requires node.js,
-but this package makes possible to use bower easily and install libraries easily. The downside is that proper
-and sometimes plenty HTML still needs to be authored in templates, which is now handled in base.html.
+Front-end package management is an important aspect of any site.
+In NineCMS, Libraries had been a minor convenience feature to integrate front-end packages.
+It has been removed because there are already several existing possibilities than can be easily used.
 
-Second alternative is to create (in future) and use separate django packages, such as django-bootstrap3,
-and other custom package for each major widely used js package. This is nice because it deals with the
-above downside with custom template tags such as ``{% bootstrap_javascript %}``, but also deals with the
-requirements issue. Downside is increased maintenance for the author of them.
+An extension to NineCMS will soon be available for this matter. Alternatively, ``django-bower`` is good.
 
 Image styles
 ------------

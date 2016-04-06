@@ -22,7 +22,7 @@ def transliterate_folder(field):  # pragma: nocover
 def migrate_path_file_name(apps, schema_editor):  # pragma: nocover
     """ Transliterate the directories of all saved files
     Transliterate the corresponding field values
-    :param apps
+    :param app registry
     :param schema_editor
     :return: None
     """
@@ -46,6 +46,18 @@ def migrate_path_file_name(apps, schema_editor):  # pragma: nocover
         video.save()
 
 
+# noinspection PyUnusedLocal
+def reverse(apps, schema_editor):  # pragma: nocover
+    """
+    Reverse the above operation
+    Nothing to do here, transliterated folder names remain
+    :param apps: app registry
+    :param schema_editor
+    :return: None
+    """
+    pass
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -53,5 +65,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(migrate_path_file_name),
+        migrations.RunPython(migrate_path_file_name, reverse),
     ]

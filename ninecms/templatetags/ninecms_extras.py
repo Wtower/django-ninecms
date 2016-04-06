@@ -6,7 +6,6 @@ __email__ = 'gkarak@9-dev.com'
 
 from django import template
 from django.template.defaultfilters import stringfilter
-from django.conf import settings
 from django.template import Context
 from ninecms.utils.media import image_style as util_image
 from ninecms.utils.transliterate import upper_no_intonation as util_upper
@@ -18,35 +17,13 @@ register = template.Library()
 
 
 @register.filter
-@stringfilter
-def image_style(url, style):
+def image_style(image, style):
     """ Return the url of different image style
-    :param url: An image url
+    :param image: An image url
     :param style: Specify style to return image
     :return: image url of specified style
     """
-    return util_image(url, style)
-
-
-@register.filter
-@stringfilter
-def image_style_form(url, style):
-    """ Return the url of an image style when given url is form image field value
-    :param url: An image url from form image field value
-    :param style: Specify style to return image
-    :return: image url of specified style
-    """
-    return image_style(settings.MEDIA_URL + url, style)
-
-
-@register.filter
-def library(name):
-    """ Check if a library is enabled in settings
-    Mutliple checks with | separator
-    :param name: the library name to check
-    :return: a boolean value
-    """
-    return any(x in name.split('|') for x in settings.LIBRARIES)
+    return util_image(image, style)
 
 
 class FieldsetNode(template.Node):  # pragma: nocover
@@ -134,7 +111,7 @@ def active_trail(menu, url):
     :param url: the current url to check against for the active path (should be request.path)
     :return: a recordset of all active menu ancestors
     """
-    return menu.filter(path=get_clean_url(url)).get_ancestors(include_self=True)
+    return menu.filter(path=get_clean_url(url)).get_ancestors(include_self=True) if menu else []
 
 
 @register.filter
@@ -144,7 +121,7 @@ def flatten(records, fld):
     :param fld: the field from the records to include in list
     :return: a list
     """
-    return [path for fields in records.values_list(fld) for path in fields]
+    return [path for fields in records.values_list(fld) for path in fields] if records else []
 
 
 @register.filter

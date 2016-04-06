@@ -8,12 +8,44 @@ from django import forms
 from django.forms.models import inlineformset_factory
 from django.contrib.auth.models import Group
 from django.utils.translation import ugettext_lazy as _
-from ninecms.models import Node, Image, File, Video
+from ninecms.models import Node, Image, File, Video, ContentBlock, PageType, TaxonomyTerm
 from ninecms.utils.sanitize import sanitize, ModelSanitizeForm
+from ninecms.utils.manytomany import ManyToManyModelForm, ModelBiMultipleChoiceField
 
 
-class ContentNodeEditForm(forms.ModelForm):
+class PageTypeForm(ManyToManyModelForm):
+    """ Override default page type form to show related blocks """
+    blocks = ModelBiMultipleChoiceField(ContentBlock.objects.all(), double_list="Blocks")
+
+    class Meta:
+        """ Meta class """
+        model = PageType
+        fields = ['name', 'description', 'guidelines', 'url_pattern']
+
+
+class ContentTypePermissionsForm(forms.Form):
+    """ Content type permissions form """
+    add_node = forms.ModelMultipleChoiceField(
+        queryset=Group.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    change_node = forms.ModelMultipleChoiceField(
+        queryset=Group.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    delete_node = forms.ModelMultipleChoiceField(
+        queryset=Group.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+
+class ContentNodeEditForm(ManyToManyModelForm):
     """ Node edit or create form """
+    terms = ModelBiMultipleChoiceField(TaxonomyTerm.objects.all(), double_list="Terms")
+
     def __init__(self, *args, **kwargs):
         """ Get user object to check if has full_html permission
         Checks if current_user is already set (eg from ModelAdmin)
@@ -135,16 +167,3 @@ class SearchForm(forms.Form):
         if 'q' in cleaned_data:
             cleaned_data['q'] = sanitize(cleaned_data['q'], allow_html=False)
         return cleaned_data
-
-
-class ContentTypePermissionsForm(forms.Form):
-    """ Content type permissions form """
-    add_node = forms.ModelMultipleChoiceField(queryset=Group.objects.all(),
-                                              widget=forms.CheckboxSelectMultiple,
-                                              required=False)
-    change_node = forms.ModelMultipleChoiceField(queryset=Group.objects.all(),
-                                                 widget=forms.CheckboxSelectMultiple,
-                                                 required=False)
-    delete_node = forms.ModelMultipleChoiceField(queryset=Group.objects.all(),
-                                                 widget=forms.CheckboxSelectMultiple,
-                                                 required=False)

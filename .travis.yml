@@ -1,0 +1,24 @@
+# http://docs.travis-ci.com/user/languages/python/
+
+language: python
+
+python:
+    - 3.4
+    - 3.5
+
+install:
+    - pip install -r requirements.txt
+    - pip install coveralls
+
+script:
+    coverage run --source='.' manage.py test ninecms
+
+after_success:
+    coveralls
+
+notifications:
+    email:
+        on_success: change
+        on_failure: change
+
+sudo: false
