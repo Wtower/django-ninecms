@@ -293,47 +293,6 @@ There is also a project that can be used as an
        SITE_KEYWORDS = "..."
        I18N_URLS = True  # False
 
-   - Optional settings for testing (separate file eg ``settings_test.py``)::
-
-       from myapp.settings import *
-       DEBUG = True
-       PASSWORD_HASHERS = (
-           'django.contrib.auth.hashers.MD5PasswordHasher',
-       )
-       TEMPLATES = [
-           {
-               'BACKEND': 'django.template.backends.django.DjangoTemplates',
-               'DIRS': [  # disable overriden templates
-               ],
-               'APP_DIRS': True,
-               'OPTIONS': {
-                   'context_processors': [
-                       'django.template.context_processors.debug',
-                       'django.template.context_processors.request',
-                       'django.contrib.auth.context_processors.auth',
-                       'django.contrib.messages.context_processors.messages',
-                   ],
-                   'debug': True,
-               },
-           },
-       ]
-       DATABASES = {
-           'default': {
-               'ENGINE': 'django.db.backends.sqlite3',
-               'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-           }
-       }
-       LANGUAGES = (  # at least 2
-           ('el', 'Greek'),
-           ('en', 'English'),
-       )
-       IMAGE_STYLES.update({
-           'thumbnail-upscale': {
-               'type': 'thumbnail-upscale',
-               'size': (150, 150)
-           },
-       })
-
    - Optional settings for live (separate file eg ``settings_live.py``)::
 
        from myapp.settings import *
