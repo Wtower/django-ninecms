@@ -14,3 +14,4 @@ class NineCMSConfig(AppConfig):
 
     def ready(self):
         import ninecms.signals
+        import ninecms.checks
