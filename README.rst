@@ -628,3 +628,8 @@ Footnote
 --------
 
 Any contribution to the project is highly appreciated and the best will be done to respond to it.
+
+
+.. image:: https://badges.gitter.im/Wtower/django-ninecms.svg
+   :alt: Join the chat at https://gitter.im/Wtower/django-ninecms
+   :target: https://gitter.im/Wtower/django-ninecms?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
