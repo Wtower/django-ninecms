@@ -7,10 +7,11 @@ Development: v0.6.1
 
 Estimated release date:  May 16 2016
 
-Update date:  Apr 6 2016
+Update date:  Apr 11 2016
 
 Planned changes
 
+- Published gulpfile-ninecms project for front-end management
 - Add migration 14 #46
 
   - remove PageLayoutElements model
