@@ -542,9 +542,11 @@ Front-end libraries
 
 Front-end package management is an important aspect of any site.
 In NineCMS, Libraries had been a minor convenience feature to integrate front-end packages.
-It has been removed because there are already several existing possibilities than can be easily used.
+It has been removed because there are already several existing possibilities than can be easily used,
+most of which (even Django ones) are based on node.js.
 
-An extension to NineCMS will soon be available for this matter. Alternatively, ``django-bower`` is good.
+The npm package `gulpfile-ninecms <https://github.com/Wtower/gulpfile-ninecms>_`
+based on gulp has been published separately for this reason.
 
 Image styles
 ------------
