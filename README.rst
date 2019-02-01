@@ -18,6 +18,8 @@ Nine CMS is a Django app to manage content. Users can create content and publish
     :target: https://pypi.python.org/pypi/django-ninecms
     :alt: Number of PyPI downloads per month
 
+Last stable version tested with Python 3.4 / Django 1.9.
+
 Admin screenshot:
 
 .. image:: https://raw.githubusercontent.com/Wtower/django-ninecms/master/docs/screenshots/index1.png

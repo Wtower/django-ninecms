@@ -50,6 +50,8 @@ ninecms/static/ninecms/ckeditor/*
 
 # except NineCMS own images, js and css
 !ninecms/static/ninecms/images/
-!ninecms/static/ninecms/*.js
-!ninecms/static/ninecms/*.css
+!ninecms/static/ninecms/admin.js
+!ninecms/static/ninecms/layout.js
+!ninecms/static/ninecms/masonry.js
+!ninecms/static/ninecms/style.css
 tests/media/ninecms/basic/image/*/
